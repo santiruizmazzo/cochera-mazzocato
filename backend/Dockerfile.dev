@@ -1,0 +1,11 @@
+FROM golang:1.24.4-bookworm
+
+WORKDIR /backend
+
+COPY . .
+
+RUN go mod tidy
+
+EXPOSE 5000
+
+CMD ["tail", "-f", "/dev/null"]

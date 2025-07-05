@@ -1,0 +1,25 @@
+{
+  "name": "Go Dev Container",
+  "context": "..",
+  "dockerFile": "../Dockerfile.dev",
+  "appPort": [5000],
+  "workspaceFolder": "/backend",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/backend,type=bind,consistency=cached"
+  ],
+  "remoteUser": "root",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "go.useLanguageServer": true,
+        "go.formatTool": "gofmt",
+        "go.lintTool": "golint",
+        "go.vetOnSave": "package",
+        "go.testOnSave": false
+      },
+      "extensions": [
+        "golang.go"
+      ]
+    }
+  }
+}

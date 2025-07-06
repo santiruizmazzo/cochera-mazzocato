@@ -1,8 +1,8 @@
 {
-  "name": "Cochera API Dev",
-  "dockerComposeFile": "../docker-compose.yml",
+  "name": "Cochera App Dev",
+  "dockerComposeFile": "../backend/docker-compose.yml",
   "service": "api",
-  "workspaceFolder": "/api",
+  "workspaceFolder": "/app",
   "remoteUser": "root",
   "remoteEnv": {
     "GIT_USER_NAME": "${localEnv:GIT_USER_NAME}",
@@ -18,7 +18,8 @@
         "go.testOnSave": false
       },
       "extensions": [
-        "golang.go"
+        "golang.go",
+        "ritwickdey.LiveServer"
       ]
     }
   },
@@ -26,7 +27,7 @@
     "ghcr.io/devcontainers/features/git:1": {}
   },
   "mounts": [
-    "source=${localWorkspaceFolder},target=/api,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached"
   ],
   "postCreateCommand": "git config --global user.name \"$GIT_USER_NAME\" && git config --global user.email \"$GIT_USER_EMAIL\""
 }

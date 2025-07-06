@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: cochera-api:latest
+    container_name: cochera-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/api
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/cochera_dev?sslmode=disable
+    command: tail -f /dev/null
+
+  db:
+    image: postgres:17.5
+    container_name: cochera-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cochera_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - api_data:/var/lib/postgresql/data
+
+volumes:
+  api_data:

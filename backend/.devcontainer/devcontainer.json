@@ -1,13 +1,13 @@
 {
-  "name": "Go Dev Container",
-  "context": "..",
-  "dockerFile": "../Dockerfile.dev",
-  "appPort": [5000],
-  "workspaceFolder": "/backend",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/backend,type=bind,consistency=cached"
-  ],
+  "name": "Cochera API Dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "api",
+  "workspaceFolder": "/api",
   "remoteUser": "root",
+  "remoteEnv": {
+    "GIT_USER_NAME": "${localEnv:GIT_USER_NAME}",
+    "GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}"
+  },
   "customizations": {
     "vscode": {
       "settings": {
@@ -21,5 +21,12 @@
         "golang.go"
       ]
     }
-  }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/api,type=bind,consistency=cached"
+  ],
+  "postCreateCommand": "git config --global user.name \"$GIT_USER_NAME\" && git config --global user.email \"$GIT_USER_EMAIL\""
 }

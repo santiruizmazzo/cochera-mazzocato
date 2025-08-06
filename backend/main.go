@@ -1,28 +1,26 @@
 package main
 
 import (
+	"cochera/config"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-
-	"github.com/joho/godotenv"
 )
 
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	response := map[string]string{"message": "Cochera actualmente operativa!"}
+	json.NewEncoder(w).Encode(response)
+}
+
 func main() {
-	err := godotenv.Load()
+	config, err := config.Load()
 	if err != nil {
-		log.Fatalf("Error cargando el archivo .env: %v", err)
+		log.Fatal("Error al cargar configuracion desde archivo .env")
 	}
 
-	puerto := os.Getenv("PUERTO")
+	http.HandleFunc("/health", healthHandler)
 
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		response := map[string]string{"message": "La cochera esta operativa actualmente!"}
-		json.NewEncoder(w).Encode(response)
-	})
-
-	http.ListenAndServe(fmt.Sprintf(":%s", puerto), nil)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", config.PORT), nil))
 }

@@ -8,11 +8,17 @@ import (
 )
 
 type Config struct {
-	PORT int
+	Port int
 }
 
 func Load(files ...string) (*Config, error) {
-	err := godotenv.Load(files[0])
+	var err error
+	if files == nil {
+		err = godotenv.Load()
+	} else {
+		err = godotenv.Load(files[0])
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -23,6 +29,6 @@ func Load(files ...string) (*Config, error) {
 	}
 
 	var config Config
-	config.PORT = port
+	config.Port = port
 	return &config, nil
 }

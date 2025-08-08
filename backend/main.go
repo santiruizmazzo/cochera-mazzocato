@@ -22,5 +22,5 @@ func main() {
 
 	http.HandleFunc("/health", healthHandler)
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", config.PORT), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", config.Port), nil))
 }

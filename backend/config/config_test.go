@@ -22,17 +22,31 @@ func TestMain(m *testing.M) {
 		log.Fatalf("%s: %s", err, "No se pudo cargar ninguna variable")
 	}
 
-	code := m.Run()
-
 	err = os.Remove(ENV_FILE_NAME)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	os.Clearenv()
+
+	code := m.Run()
+
 	os.Exit(code)
 }
 
-func TestLoadPort(t *testing.T) {
-	if config.PORT != 5000 {
-		t.Errorf("Puerto cargado %v != 5000", config.PORT)
+func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
+	os.WriteFile(".env", []byte("PORT=777"), 0666)
+
+	defaultConfig, _ := Load()
+	os.Remove(".env")
+
+	if defaultConfig.Port != 777 {
+		t.Errorf("Puerto cargado %v != 777", defaultConfig.Port)
+	}
+}
+
+func TestLoadedPortIsCorrect(t *testing.T) {
+	if config.Port != 5000 {
+		t.Errorf("Puerto cargado %v != 5000", config.Port)
 	}
 }

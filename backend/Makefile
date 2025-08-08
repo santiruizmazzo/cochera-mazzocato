@@ -2,11 +2,11 @@
 
 # Variables
 APP_NAME=cochera
-MAIN_PATH=main.go
+MAIN_PATH=./cmd/server/main.go
 
 # Development commands (always run)
 test:
-	go test -v ./...
+	go test ./...
 
 test-unit:
 	go test -v -short ./...

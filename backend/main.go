@@ -22,5 +22,8 @@ func main() {
 
 	http.HandleFunc("/health", healthHandler)
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", config.Port), nil))
+	fmt.Printf("Servidor corriendo en puerto %v\n", config.Port)
+
+	address := fmt.Sprintf(":%v", config.Port)
+	log.Fatal(http.ListenAndServe(address, nil))
 }

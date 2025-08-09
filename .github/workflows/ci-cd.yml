@@ -48,7 +48,7 @@ jobs:
     - name: Build API
       run: |
         echo "Building Go API..."
-        go build -v -o api ./cmd/server
+        go build -v -o api ./cmd/server/main.go
         echo "Build successful!"
     
     - name: Run linter

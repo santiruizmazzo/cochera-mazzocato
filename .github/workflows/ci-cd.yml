@@ -58,6 +58,7 @@ jobs:
       with:
         version: latest
         args: --timeout=5m
+        working-directory: backend
     
     - name: Run unit tests
       run: |
@@ -75,6 +76,7 @@ jobs:
         name: api-binary
         path: api
         retention-days: 7
+        working-directory: backend
   
   test-deploy:
     name: Deploy to Test Environment
@@ -96,6 +98,7 @@ jobs:
       with:
         name: api-binary
         path: ./
+        working-directory: backend
     
     - name: Make binary executable
       run: chmod +x ./api

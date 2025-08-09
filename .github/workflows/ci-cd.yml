@@ -11,7 +11,6 @@ defaults:
   run:
     working-directory: backend
 
-# Variables de entorno globales
 env:
   GO_VERSION: '1.24'
 
@@ -69,14 +68,6 @@ jobs:
       run: |
         echo "Running integration tests..."
         go test -v -run Integration -cover ./...
-    
-    - name: Upload API binary
-      uses: actions/upload-artifact@v4
-      with:
-        name: api-binary
-        path: api
-        retention-days: 7
-        working-directory: backend
   
   test-deploy:
     name: Deploy to Test Environment
@@ -84,25 +75,10 @@ jobs:
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/test'
     
-    # Variables específicas del ambiente de test
     env:
-      DEPLOY_ENV: test
       DEPLOY_URL: ${{ secrets.TEST_API_DEPLOY_HOOK }}
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Download API binary
-      uses: actions/download-artifact@v4
-      with:
-        name: api-binary
-        path: ./
-        working-directory: backend
-    
-    - name: Make binary executable
-      run: chmod +x ./api
-    
     - name: Deploy to test server
       run: |
         echo "Deploying to test environment..."

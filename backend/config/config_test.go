@@ -35,7 +35,10 @@ func TestMain(m *testing.M) {
 }
 
 func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
-	os.WriteFile(".env", []byte("PORT=777"), 0666)
+	err := os.WriteFile(".env", []byte("PORT=777"), 0666)
+	if err != nil {
+		t.Errorf("Error al crear archivo temp .env: %s", err)
+	}
 
 	defaultConfig, _ := Load()
 	os.Remove(".env")

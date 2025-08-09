@@ -4,8 +4,12 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main, test, dev ]
-  pull_request:
-    branches: [ main, test ]
+    paths:
+      - backend/**
+
+defaults:
+  run:
+    working-directory: backend
 
 # Variables de entorno globales
 env:

@@ -37,7 +37,7 @@ func TestMain(m *testing.M) {
 func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
 	err := os.WriteFile(".env", []byte("PORT=777"), 0666)
 	if err != nil {
-		t.Errorf("Error al crear archivo temp .env: %s", err)
+		t.Errorf("Error creando archivo temporal .env: %s", err)
 	}
 
 	defaultConfig, _ := Load()

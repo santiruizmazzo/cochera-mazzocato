@@ -40,8 +40,9 @@ jobs:
           ${{ runner.os }}-go-
     
     - name: Download dependencies
-      run: pwd && ls
-      run: go mod download
+      run: |
+        pwd && ls
+        go mod download
     
     - name: Verify dependencies
       run: go mod verify

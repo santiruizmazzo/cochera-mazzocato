@@ -16,7 +16,7 @@ func main() {
 
 	http.HandleFunc("/health", handlers.HealthHandler)
 
-	fmt.Printf("Servidor corriendo en puerto %v\n", config.Port)
+	fmt.Printf("🚀 Servidor corriendo en puerto %v\n", config.Port)
 
 	address := fmt.Sprintf(":%v", config.Port)
 	log.Fatal(http.ListenAndServe(address, nil))

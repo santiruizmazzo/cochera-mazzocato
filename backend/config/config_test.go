@@ -44,7 +44,7 @@ func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
 	os.Remove(".env")
 
 	if defaultConfig.Port != 777 {
-		t.Errorf("Puerto cargado %v != 777", defaultConfig.Port)
+		t.Errorf("Puerto cargado: %v != 777", defaultConfig.Port)
 	}
 }
 

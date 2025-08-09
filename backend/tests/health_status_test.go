@@ -30,7 +30,7 @@ func TestHealthStatus(t *testing.T) {
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		t.Fatalf("Error leyendo el response body: %v", err)
+		t.Fatalf("Error leyendo response body: %v", err)
 	}
 
 	responseJSON := strings.TrimSpace(string(bodyBytes))

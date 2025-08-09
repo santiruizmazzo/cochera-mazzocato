@@ -79,6 +79,9 @@ jobs:
       DEPLOY_URL: ${{ secrets.TEST_API_DEPLOY_HOOK }}
     
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
     - name: Deploy to test server
       run: |
         echo "Deploying to test environment..."

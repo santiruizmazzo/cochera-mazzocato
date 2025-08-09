@@ -1,4 +1,4 @@
-.PHONY: test test-unit test-cover clean build-dev build-prod run
+.PHONY: test test-unit test-cover clean lint build-dev build-prod run
 
 # Variables
 APP_NAME=cochera
@@ -18,6 +18,9 @@ clean:
 	rm -f $(APP_NAME)
 	go clean -cache
 	go clean -testcache
+
+lint:
+	golangci-lint run
 
 run:
 	go run $(MAIN_PATH)

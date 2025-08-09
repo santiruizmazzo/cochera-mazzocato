@@ -22,12 +22,16 @@ func TestHealthStatus(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			t.Errorf("Error cerrando el response body: %v", cerr)
+		}
+	}()
+
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Error leyendo el response body: %v", err)
 	}
-
-	defer resp.Body.Close()
 
 	responseJSON := strings.TrimSpace(string(bodyBytes))
 	expectedJSON := `{"message":"Cochera actualmente operativa!"}`

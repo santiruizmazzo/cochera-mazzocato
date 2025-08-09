@@ -41,7 +41,10 @@ func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
 	}
 
 	defaultConfig, _ := Load()
-	os.Remove(".env")
+	err = os.Remove(".env")
+	if err != nil {
+		t.Errorf("Error eliminando archivo temporal .env: %s", err)
+	}
 
 	if defaultConfig.Port != 777 {
 		t.Errorf("Puerto cargado %v != 777", defaultConfig.Port)

@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+const HealthRoute string = "/health"
+
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	response := map[string]string{"message": "Cochera actualmente operativa!"}

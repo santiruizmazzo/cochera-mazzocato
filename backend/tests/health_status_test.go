@@ -1,23 +1,19 @@
 package tests
 
 import (
-	"cochera/handlers"
+	"cochera/api"
 	"io"
 	"net/http"
-	"net/http/httptest"
 	"strings"
 	"testing"
 )
 
 func TestHealthStatus(t *testing.T) {
-	const healthEndpoint = "/health"
+	api := api.NewMock()
+	api.Run()
+	defer api.Stop()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc(healthEndpoint, handlers.HealthHandler)
-	server := httptest.NewServer(mux)
-	defer server.Close()
-
-	resp, err := http.Get(server.URL + healthEndpoint)
+	resp, err := http.Get(api.GetFullHealthRoute())
 	if err != nil {
 		t.Fatal(err)
 	}

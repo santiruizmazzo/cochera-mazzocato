@@ -1,23 +1,17 @@
 package main
 
 import (
+	"cochera/api"
 	"cochera/config"
-	"cochera/handlers"
-	"fmt"
 	"log"
-	"net/http"
 )
 
 func main() {
 	config, err := config.Load()
 	if err != nil {
-		log.Fatal("Error al cargar configuracion desde archivo .env")
+		log.Fatal("Error cargando configuración del servidor")
 	}
 
-	http.HandleFunc("/health", handlers.HealthHandler)
-
-	fmt.Printf("🚀 Servidor ejecutándose en puerto %v\n", config.Port)
-
-	address := fmt.Sprintf(":%v", config.Port)
-	log.Fatal(http.ListenAndServe(address, nil))
+	api := api.New(config)
+	api.Run()
 }

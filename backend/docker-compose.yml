@@ -13,23 +13,41 @@ services:
     volumes:
       - .:/api
     depends_on:
-      - db
+      - dev_db
+      - test_db
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/cochera_dev?sslmode=disable
+      - DEV_DB_URL=postgres://postgres:example@dev_db:5433/postgres
+      - TEST_DB_URL=postgres://postgres:example@test_db:5434/postgres
+
     command: tail -f /dev/null
 
-  db:
+  dev_db:
     image: postgres:17.5
-    container_name: cochera-db
+    container_name: cochera-dev-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cochera_db
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: dev_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - api_data:/var/lib/postgresql/data
+  
+  test_db:
+    image: postgres:17.5
+    container_name: cochera-test-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: test_db
+    ports:
+      - "5434:5432"
 
 volumes:
   api_data:
+
+networks:
+  default:
+    name: localdev

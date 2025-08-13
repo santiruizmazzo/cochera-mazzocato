@@ -24,6 +24,6 @@ func (api *MockAPI) Stop() {
 	api.server.Close()
 }
 
-func (api *MockAPI) GetFullHealthRoute() string {
+func (api *MockAPI) GetHealthFullRoute() string {
 	return api.server.URL + handlers.HealthRoute
 }

@@ -13,9 +13,9 @@ func TestHealthStatus(t *testing.T) {
 	api.Run()
 	defer api.Stop()
 
-	resp, err := http.Get(api.GetFullHealthRoute())
+	resp, err := http.Get(api.GetHealthFullRoute())
 	if err != nil {
-		t.Fatal(err)
+		t.Errorf("Error al llamar a %s: %v", api.GetHealthFullRoute(), err)
 	}
 
 	defer func() {
@@ -26,7 +26,7 @@ func TestHealthStatus(t *testing.T) {
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		t.Fatalf("Error leyendo response body: %v", err)
+		t.Errorf("Error leyendo response body: %v", err)
 	}
 
 	responseJSON := strings.TrimSpace(string(bodyBytes))

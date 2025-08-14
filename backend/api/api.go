@@ -2,35 +2,43 @@ package api
 
 import (
 	"cochera/config"
-	"cochera/handlers"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type API struct {
 	server *http.Server
+	DB     *pgxpool.Pool
 }
 
-func New(config *config.Config) *API {
-	router := setupEndpointsRouter()
+func New(config *config.Config) (*API, error) {
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%v", config.Port),
-		Handler: router,
+		Handler: nil,
 	}
-	return &API{server}
+	db, err := pgxpool.New(context.Background(), config.DatabaseURL)
+	if err != nil {
+		return nil, err
+	}
+	return &API{server: server, DB: db}, nil
 }
 
-func setupEndpointsRouter() *http.ServeMux {
+func (api *API) setupRouter() *http.ServeMux {
 	router := http.NewServeMux()
-	router.HandleFunc(handlers.HealthRoute, handlers.HealthHandler)
+	router.HandleFunc(HealthRoute, api.healthHandler)
 	return router
 }
 
 func (api *API) Run() {
+	defer api.DB.Close()
+	api.server.Handler = api.setupRouter()
 	log.Println("🚀 API corriendo en puerto:", api.server.Addr)
 
 	if err := api.server.ListenAndServe(); err != nil {
-		log.Fatalf("Error al iniciar el servidor: %v", err)
+		log.Printf("Error al iniciar el servidor: %v", err)
 	}
 }

@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	Port int
+	Port        int
+	DatabaseURL string
 }
 
 func Load(files ...string) (*Config, error) {
@@ -23,12 +24,20 @@ func Load(files ...string) (*Config, error) {
 		return nil, err
 	}
 
-	port, err := strconv.Atoi(os.Getenv("PORT"))
+	var config Config
+
+	config.Port, err = strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
 		return nil, err
 	}
 
-	var config Config
-	config.Port = port
+	apiMode := os.Getenv("API_MODE")
+	switch apiMode {
+	case "dev":
+		config.DatabaseURL = os.Getenv("DEV_DB_URL")
+		// case "test":
+		// 	config.DatabaseURL = os.Getenv("TEST_DB_URL")
+	}
+
 	return &config, nil
 }

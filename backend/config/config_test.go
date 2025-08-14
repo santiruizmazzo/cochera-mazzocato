@@ -6,53 +6,84 @@ import (
 	"testing"
 )
 
-var config *Config
-
-const ENV_FILE_NAME = ".env.test"
-const ENV_FILE_CONTENT = "PORT=5000"
+const envFileContent = `PORT=777`
 
 func TestMain(m *testing.M) {
-	err := os.WriteFile(ENV_FILE_NAME, []byte(ENV_FILE_CONTENT), 0666)
+	err := os.WriteFile(".env", []byte(envFileContent), 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	config, err = Load(ENV_FILE_NAME)
-	if err != nil {
-		log.Fatalf("%s: %s", err, "No se pudo cargar ninguna variable")
-	}
-
-	err = os.Remove(ENV_FILE_NAME)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	os.Clearenv()
 
 	code := m.Run()
 
+	err = os.Remove(".env")
+	if err != nil {
+		log.Fatalf("Error eliminando archivo temporal .env: %s", err)
+	}
 	os.Exit(code)
 }
 
 func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
-	err := os.WriteFile(".env", []byte("PORT=777"), 0666)
-	if err != nil {
-		t.Errorf("Error creando archivo temporal .env: %s", err)
-	}
-
 	defaultConfig, _ := Load()
-	err = os.Remove(".env")
-	if err != nil {
-		t.Errorf("Error eliminando archivo temporal .env: %s", err)
-	}
-
 	if defaultConfig.Port != 777 {
 		t.Errorf("Puerto cargado %v != 777", defaultConfig.Port)
 	}
+
+	os.Clearenv()
+}
+
+func TestLoadWithCustomEnvFile(t *testing.T) {
+	err := os.WriteFile(".env.test", []byte("PORT=666"), 0666)
+	if err != nil {
+		t.Errorf("Error creando archivo temporal .env.test: %s", err)
+	}
+
+	config, _ := Load(".env.test")
+	if config.Port != 666 {
+		t.Errorf("Puerto cargado %v != 666", config.Port)
+	}
+
+	err = os.Remove(".env.test")
+	if err != nil {
+		t.Errorf("Error eliminando archivo temporal .env: %s", err)
+	}
+	os.Clearenv()
 }
 
 func TestLoadedPortIsCorrect(t *testing.T) {
-	if config.Port != 5000 {
-		t.Errorf("Puerto cargado %v != 5000", config.Port)
+	err := os.Setenv("PORT", "1234")
+	if err != nil {
+		t.Errorf("Error seteando PORT como variable de entorno: %s", err)
 	}
+
+	config, err := Load()
+	if err != nil {
+		t.Errorf("Error al cargar configuración: %s", err)
+	}
+
+	if config.Port != 1234 {
+		t.Errorf("Puerto cargado %v != 1234", config.Port)
+	}
+
+	os.Clearenv()
+}
+
+func TestDatabaseURLWhenAPIModeIsDev(t *testing.T) {
+	err := os.Setenv("API_MODE", "dev")
+	if err != nil {
+		t.Errorf("Error seteando API_MODE como variable de entorno: %s", err)
+	}
+
+	const expectedDatabaseURL = "postgres://postgres:example@dev_db:5433/postgres"
+	err = os.Setenv("DEV_DB_URL", expectedDatabaseURL)
+	if err != nil {
+		t.Errorf("Error seteando DEV_DB_URL como variable de entorno: %s", err)
+	}
+
+	config, _ := Load()
+	if config.DatabaseURL != expectedDatabaseURL {
+		t.Errorf("URL cargada %s != %s", config.DatabaseURL, expectedDatabaseURL)
+	}
+
+	os.Clearenv()
 }

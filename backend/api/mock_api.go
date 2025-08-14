@@ -1,7 +1,6 @@
 package api
 
 import (
-	"cochera/handlers"
 	"net/http"
 	"net/http/httptest"
 )
@@ -12,8 +11,8 @@ type MockAPI struct {
 }
 
 func NewMock() *MockAPI {
-	router := setupEndpointsRouter()
-	return &MockAPI{router: router}
+	api := &API{server: nil, DB: nil}
+	return &MockAPI{router: api.setupRouter()}
 }
 
 func (api *MockAPI) Run() {
@@ -25,5 +24,5 @@ func (api *MockAPI) Stop() {
 }
 
 func (api *MockAPI) GetHealthFullRoute() string {
-	return api.server.URL + handlers.HealthRoute
+	return api.server.URL + "/health"
 }

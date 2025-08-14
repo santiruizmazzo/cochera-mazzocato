@@ -15,10 +15,6 @@ services:
     depends_on:
       - dev_db
       - test_db
-    environment:
-      - DEV_DB_URL=postgres://postgres:example@dev_db:5432/dev_db
-      - TEST_DB_URL=postgres://postgres:example@test_db:5432/test_db
-
     command: tail -f /dev/null
 
   dev_db:

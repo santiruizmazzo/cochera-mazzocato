@@ -2,9 +2,10 @@ package tests
 
 import (
 	"cochera/api"
+	"cochera/version"
+	"encoding/json"
 	"io"
 	"net/http"
-	"strings"
 	"testing"
 )
 
@@ -24,18 +25,25 @@ func TestHealthStatus(t *testing.T) {
 		}
 	}()
 
-	bodyBytes, err := io.ReadAll(resp.Body)
+	jsonBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Errorf("Error leyendo response body: %v", err)
 	}
 
-	responseJSON := strings.TrimSpace(string(bodyBytes))
-	expectedJSON := `{"message":"Cochera actualmente operativa!"}`
-	if responseJSON != expectedJSON {
-		t.Errorf("JSON esperado: '%s', obtenido '%s'", expectedJSON, responseJSON)
+	var jsonBody map[string]interface{}
+	if err := json.Unmarshal(jsonBytes, &jsonBody); err != nil {
+		t.Errorf("Error parseando response body: %v", err)
+	}
+
+	if expectedStatus, ok := jsonBody["status"]; !ok || expectedStatus != "operational" {
+		t.Errorf("Status no encontrado, o no coincide con esperado")
+	}
+
+	if expectedVersion, ok := jsonBody["version"]; !ok || expectedVersion != version.Current() {
+		t.Errorf("Version no encontrada, o no coincide con esperada")
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		t.Errorf("Esperado codigo 200, obtenido %d", resp.StatusCode)
+		t.Errorf("Esperado código 200, obtenido %d", resp.StatusCode)
 	}
 }

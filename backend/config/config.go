@@ -31,8 +31,7 @@ func Load(files ...string) (*Config, error) {
 		return nil, err
 	}
 
-	apiMode := os.Getenv("API_MODE")
-	switch apiMode {
+	switch os.Getenv("API_MODE") {
 	case "dev":
 		config.DatabaseURL = os.Getenv("DEV_DB_URL")
 	case "test":

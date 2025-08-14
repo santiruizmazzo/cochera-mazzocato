@@ -9,7 +9,7 @@ import (
 func main() {
 	config, err := config.Load()
 	if err != nil {
-		log.Fatal("Error cargando configuración del servidor")
+		log.Fatal("Error cargando configuración: ", err)
 	}
 
 	api, err := api.New(config)

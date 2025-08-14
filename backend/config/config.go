@@ -35,8 +35,8 @@ func Load(files ...string) (*Config, error) {
 	switch apiMode {
 	case "dev":
 		config.DatabaseURL = os.Getenv("DEV_DB_URL")
-		// case "test":
-		// 	config.DatabaseURL = os.Getenv("TEST_DB_URL")
+	case "test":
+		config.DatabaseURL = os.Getenv("TEST_DB_URL")
 	}
 
 	return &config, nil

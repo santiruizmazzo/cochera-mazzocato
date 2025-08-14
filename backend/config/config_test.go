@@ -87,3 +87,23 @@ func TestDatabaseURLWhenAPIModeIsDev(t *testing.T) {
 
 	os.Clearenv()
 }
+
+func TestDatabaseURLWhenAPIModeIsTest(t *testing.T) {
+	err := os.Setenv("API_MODE", "test")
+	if err != nil {
+		t.Errorf("Error seteando API_MODE como variable de entorno: %s", err)
+	}
+
+	const expectedDatabaseURL = "postgres://postgres:example@dev_db:5433/postgres"
+	err = os.Setenv("TEST_DB_URL", expectedDatabaseURL)
+	if err != nil {
+		t.Errorf("Error seteando TEST_DB_URL como variable de entorno: %s", err)
+	}
+
+	config, _ := Load()
+	if config.DatabaseURL != expectedDatabaseURL {
+		t.Errorf("URL cargada %s != %s", config.DatabaseURL, expectedDatabaseURL)
+	}
+
+	os.Clearenv()
+}

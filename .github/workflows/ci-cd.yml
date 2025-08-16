@@ -49,7 +49,7 @@ jobs:
     - name: Build API
       run: |
         echo "Building Go API..."
-        go build -v -o api ./cmd/server/main.go
+        make build-dev
         echo "Build successful!"
     
     - name: Run linter
@@ -62,12 +62,7 @@ jobs:
     - name: Run unit tests
       run: |
         echo "Running unit tests..."
-        go test -v -short -race -cover ./...
-    
-    - name: Run integration tests
-      run: |
-        echo "Running integration tests..."
-        go test -v -run Integration -cover ./...
+        make test-unit
   
   test-deploy:
     name: Deploy to Test Environment

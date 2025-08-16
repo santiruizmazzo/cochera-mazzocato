@@ -1,4 +1,4 @@
-.PHONY: test test-unit test-cover clean lint build-dev build-prod run
+.PHONY: test test-unit test-e2e test-cover clean lint build-dev build-prod run
 
 # Variables
 APP_NAME=cochera
@@ -9,7 +9,10 @@ test:
 	go test ./...
 
 test-unit:
-	go test -v -short ./...
+	go test -short ./...
+
+test-e2e:
+	go test -run EndToEnd ./...
 
 test-cover:
 	go test -v -cover ./...

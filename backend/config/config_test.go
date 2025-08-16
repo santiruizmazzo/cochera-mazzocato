@@ -81,8 +81,9 @@ func TestDatabaseURLWhenAPIModeIsDev(t *testing.T) {
 	}
 
 	config, _ := Load()
-	if config.DatabaseURL != expectedDatabaseURL {
-		t.Errorf("URL cargada %s != %s", config.DatabaseURL, expectedDatabaseURL)
+	resultDatabaseURL := config.DB.Config().ConnString()
+	if resultDatabaseURL != expectedDatabaseURL {
+		t.Errorf("URL cargada %s != %s", resultDatabaseURL, expectedDatabaseURL)
 	}
 
 	os.Clearenv()
@@ -101,8 +102,9 @@ func TestDatabaseURLWhenAPIModeIsTest(t *testing.T) {
 	}
 
 	config, _ := Load()
-	if config.DatabaseURL != expectedDatabaseURL {
-		t.Errorf("URL cargada %s != %s", config.DatabaseURL, expectedDatabaseURL)
+	resultDatabaseURL := config.DB.Config().ConnString()
+	if resultDatabaseURL != expectedDatabaseURL {
+		t.Errorf("URL cargada %s != %s", resultDatabaseURL, expectedDatabaseURL)
 	}
 
 	os.Clearenv()
@@ -121,8 +123,9 @@ func TestDatabaseURLWhenAPIModeIsProd(t *testing.T) {
 	}
 
 	config, _ := Load()
-	if config.DatabaseURL != expectedDatabaseURL {
-		t.Errorf("URL cargada %s != %s", config.DatabaseURL, expectedDatabaseURL)
+	resultDatabaseURL := config.DB.Config().ConnString()
+	if resultDatabaseURL != expectedDatabaseURL {
+		t.Errorf("URL cargada %s != %s", resultDatabaseURL, expectedDatabaseURL)
 	}
 
 	os.Clearenv()

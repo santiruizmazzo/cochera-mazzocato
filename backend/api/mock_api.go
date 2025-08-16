@@ -11,7 +11,7 @@ type MockAPI struct {
 }
 
 func NewMock() *MockAPI {
-	api := &API{server: nil, DB: nil}
+	api := &API{server: nil, db: nil}
 	return &MockAPI{router: api.setupRouter()}
 }
 

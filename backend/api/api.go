@@ -1,7 +1,6 @@
 package api
 
 import (
-	"cochera/config"
 	"context"
 	"fmt"
 	"log"
@@ -12,19 +11,16 @@ import (
 
 type API struct {
 	server *http.Server
-	DB     *pgxpool.Pool
+	db     *pgxpool.Pool
 }
 
-func New(config *config.Config) (*API, error) {
+func New(port int, db *pgxpool.Pool) (*API, error) {
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%v", config.Port),
+		Addr:    fmt.Sprintf(":%v", port),
 		Handler: nil,
 	}
-	db, err := pgxpool.New(context.Background(), config.DatabaseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &API{server: server, DB: db}, nil
+
+	return &API{server: server, db: db}, nil
 }
 
 func (api *API) setupRouter() *http.ServeMux {
@@ -34,10 +30,11 @@ func (api *API) setupRouter() *http.ServeMux {
 }
 
 func (api *API) Run() {
-	defer api.DB.Close()
+	defer api.db.Close()
 	api.server.Handler = api.setupRouter()
 	log.Println("🚀 API corriendo en puerto:", api.server.Addr)
-	if err := api.DB.Ping(context.Background()); err != nil {
+
+	if err := api.db.Ping(context.Background()); err != nil {
 		log.Println("Error al conectar con la base de datos: ", err)
 		return
 	}

@@ -30,7 +30,7 @@ func TestHealthStatus(t *testing.T) {
 		t.Errorf("Error leyendo response body: %v", err)
 	}
 
-	var jsonBody map[string]interface{}
+	var jsonBody map[string]any
 	if err := json.Unmarshal(jsonBytes, &jsonBody); err != nil {
 		t.Errorf("Error parseando response body: %v", err)
 	}

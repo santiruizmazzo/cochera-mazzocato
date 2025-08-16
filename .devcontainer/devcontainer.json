@@ -1,36 +1,46 @@
 {
   "name": "Cochera App Dev",
-  "dockerComposeFile": "../backend/docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "api",
-  "workspaceFolder": "/app",
-  "remoteUser": "root",
-  "remoteEnv": {
-    "GIT_USER_NAME": "${localEnv:GIT_USER_NAME}",
-    "GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}"
-  },
+  "workspaceFolder": "/home/devuser/app",
+  "remoteUser": "devuser",
+
   "customizations": {
     "vscode": {
       "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        },
         "go.useLanguageServer": true,
         "go.formatTool": "gofmt",
         "go.lintTool": "golangci-lint",
-        "go.lintFlags": [
-          "--fast"
-        ],
+        "go.lintFlags": ["--fast"],
         "go.vetOnSave": "package",
         "go.testOnSave": false
       },
-      "extensions": [
-        "golang.go",
-        "ritwickdey.LiveServer"
-      ]
+      "extensions": ["golang.go", "ritwickdey.LiveServer"]
     }
   },
+
   "features": {
     "ghcr.io/devcontainers/features/git:1": {}
   },
+
   "mounts": [
-    "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder},target=/home/devuser/app,type=bind,consistency=cached",
+    "source=${env:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
   ],
-  "postCreateCommand": "git config --global user.name \"$GIT_USER_NAME\" && git config --global user.email \"$GIT_USER_EMAIL\" && go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
+
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "/ssh-agent",
+    "GIT_USER_NAME": "Santiago Ruiz Mazzocato",
+    "GIT_USER_EMAIL": "santiago@email.com",
+    "GOPATH": "/home/devuser/go",
+    "PATH": "/home/devuser/go/bin:${containerEnv:PATH}"
+  },
+
+  "postCreateCommand": "git config --global user.name \"$GIT_USER_NAME\" && git config --global user.email \"$GIT_USER_EMAIL\""
 }

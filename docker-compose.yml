@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   api:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile.dev
     image: cochera-api:latest
     container_name: cochera-api
@@ -11,7 +9,10 @@ services:
       - "5000:5000"
       - "5500:5500"
     volumes:
-      - .:/api
+      - .:/home/devuser/app
+      - ${SSH_AUTH_SOCK}:/ssh-agent
+    environment:
+      - SSH_AUTH_SOCK=/ssh-agent
     depends_on:
       - dev_db
       - test_db

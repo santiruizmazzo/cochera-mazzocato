@@ -1,11 +1,40 @@
 FROM golang:1.24.4-bookworm
 
-WORKDIR /app
+# Argumentos para el usuario no-root
+ARG USERNAME=devuser
+ARG USER_UID=1000
+ARG USER_GID=1000
 
+# Crear usuario y grupo
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && usermod -aG sudo $USERNAME
+
+# Crear directorio de trabajo dentro del home del usuario
+RUN mkdir -p /home/$USERNAME/app
+WORKDIR /home/$USERNAME/app
+
+# Copiar todo el código al contenedor
 COPY . .
 
+# Establecer variables de entorno para Go
+ENV GOPATH=/home/$USERNAME/go
+ENV PATH=$GOPATH/bin:$PATH
+
+# Crear directorios necesarios para Go tools
+RUN mkdir -p $GOPATH/bin
+
+# Instalar dependencias Go
 RUN go mod tidy
 
+# Instalar golangci-lint
+RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+# Exponer puerto de la API
 EXPOSE 5000
 
+# Cambiar al usuario no-root
+USER $USERNAME
+
+# Mantener el contenedor vivo para devcontainer
 CMD ["tail", "-f", "/dev/null"]

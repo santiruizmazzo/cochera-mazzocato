@@ -12,9 +12,6 @@ func main() {
 		log.Fatal("Error cargando configuración: ", err)
 	}
 
-	api, err := api.New(config.Port, config.DB)
-	if err != nil {
-		log.Fatal("Error conectando a base de datos: ", err)
-	}
+	api := api.NewAPI(config.Port, config.DB)
 	api.Run()
 }

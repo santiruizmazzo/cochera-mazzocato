@@ -43,7 +43,8 @@ func Load(files ...string) (*Config, error) {
 		connString = os.Getenv("PROD_DB_URL")
 	}
 
-	if config.DB, err = pgxpool.New(context.Background(), connString); err != nil {
+	config.DB, err = pgxpool.New(context.Background(), connString)
+	if err != nil {
 		return nil, err
 	}
 

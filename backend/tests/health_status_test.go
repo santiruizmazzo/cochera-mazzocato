@@ -9,8 +9,15 @@ import (
 	"testing"
 )
 
-func TestHealthStatus(t *testing.T) {
-	api := api.NewMock()
+func TestHealthStatusEndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	api, err := api.NewTestingAPI()
+	if err != nil {
+		t.Error("Error al instanciar servidor para testing: ", err)
+	}
 	api.Run()
 	defer api.Stop()
 

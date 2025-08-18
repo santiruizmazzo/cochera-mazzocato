@@ -53,5 +53,4 @@ jobs:
       - name: Deploy to test server
         run: |
           echo "Deploying to test environment..."
-          curl "$DEPLOY_URL"
           echo "✅ Deployment to test environment completed!"

@@ -31,18 +31,6 @@ jobs:
         with:
           path: './frontend'
 
-  deploy-prod:
-    needs: deploy
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages (Prod)
-        id: deployment
-        uses: actions/deploy-pages@v4
-
   deploy-preview:
     needs: deploy
     if: github.ref == 'refs/heads/test'

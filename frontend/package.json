@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "generate-env": "bun run generateEnv.js"
+    "gen-env": "bun run generateEnv.js"
   },
   "keywords": [],
   "author": "",

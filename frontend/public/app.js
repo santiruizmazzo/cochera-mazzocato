@@ -1,6 +1,6 @@
 async function obtenerVersion() {
   try {
-    const response = await fetch("http://localhost:5000/health");
+    const response = await fetch(window.ENV.API_URL + "/health");
     if (!response.ok) {
       return "☹";
     }

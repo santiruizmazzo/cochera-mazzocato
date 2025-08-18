@@ -1,6 +1,5 @@
-name: CI/CD Pipeline
+name: Backend CI/CD Pipeline
 
-# Trigger del workflow
 on:
   push:
     branches: [ main, test, dev ]

@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "bun --watch run server.js",
-    "build": "bun build src/js/app.js --outdir=public/js",
+    "build": "bun build public/app.js --outdir=public/build",
     "test": "bun test",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "keywords": [],
   "author": "",

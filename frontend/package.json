@@ -1,0 +1,21 @@
+{
+  "name": "cochera-frontend",
+  "version": "0.0.1",
+  "description": "Frontend de Cochera Mazzocato",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch run server.js",
+    "build": "bun build src/js/app.js --outdir=public/js",
+    "test": "bun test",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^9.33.0",
+    "prettier": "^3.6.2"
+  }
+}

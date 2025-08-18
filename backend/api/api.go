@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/cors"
 )
 
 type API struct {
@@ -23,6 +24,16 @@ func NewAPI(port int, db *pgxpool.Pool) *API {
 	return &API{server: server, db: db}
 }
 
+func (api *API) addCORSToRouter(router http.Handler) http.Handler {
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: true,
+	})
+	return c.Handler(router)
+}
+
 func (api *API) Routes() *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc(HealthRoute, api.healthHandler)
@@ -31,7 +42,7 @@ func (api *API) Routes() *http.ServeMux {
 
 func (api *API) Run() {
 	defer api.db.Close()
-	api.server.Handler = api.Routes()
+	api.server.Handler = api.addCORSToRouter(api.Routes())
 
 	if err := api.db.Ping(context.Background()); err != nil {
 		log.Println("Error al conectar con la base de datos: ", err)

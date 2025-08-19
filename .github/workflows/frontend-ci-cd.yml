@@ -44,7 +44,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/test'
     
     env:
-      DEPLOY_URL: ${{ secrets.TEST_FRONTEND_DEPLOY_HOOK }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -53,4 +53,5 @@ jobs:
       - name: Deploy to test server
         run: |
           echo "Deploying to test environment..."
+          vercel deploy --confirm --target=preview --token $VERCEL_TOKEN --debug
           echo "✅ Deployment to test environment completed!"

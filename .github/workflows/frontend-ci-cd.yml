@@ -50,16 +50,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 22
+          bun-version: latest
 
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Install Vercel CLI
-        run: npm i -g vercel
+      - name: Install Vercel CLI with Bun
+        run: bun add -g vercel
 
       - name: Deploy to test server
         run: |

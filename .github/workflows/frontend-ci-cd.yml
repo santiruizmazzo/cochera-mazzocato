@@ -61,5 +61,5 @@ jobs:
       - name: Deploy to test server
         run: |
           echo "Deploying to test environment..."
-          vercel deploy --yes --project cochera-mazzocato --target=preview --token $VERCEL_TOKEN
+          vercel deploy --yes --target=preview --token $VERCEL_TOKEN
           echo "✅ Deployment to test environment completed!"

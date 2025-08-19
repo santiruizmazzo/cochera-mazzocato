@@ -8,7 +8,7 @@ async function obtenerVersion() {
       return "v" + data["version"];
     });
   } catch (error) {
-    console.error("Hubo un problema con el fetch:", error);
+    console.error("Hubo problemas con el fetch:", error);
     return "☹";
   }
 }

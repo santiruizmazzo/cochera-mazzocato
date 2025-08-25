@@ -45,7 +45,7 @@ jobs:
     
     env:
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      TEST_NETLIFY_ENVIRONMENT: test-cochera-mazzocato
+      TEST_NETLIFY_PROJECT: test-cochera-mazzocato
 
     steps:
       - name: Checkout repository
@@ -65,6 +65,9 @@ jobs:
       - name: Install Netlify CLI
         run: bun add -g netlify-cli
 
+      - name: Check existing Netlify projects
+        run: netlify sites:list --auth $NETLIFY_AUTH_TOKEN
+
       - name: Deploy to Test Environment
-        run: netlify deploy --dir=public --prod --site=$TEST_NETLIFY_ENVIRONMENT --auth $NETLIFY_AUTH_TOKEN
+        run: netlify deploy --dir=public --prod --site=$TEST_NETLIFY_PROJECT --auth $NETLIFY_AUTH_TOKEN
 

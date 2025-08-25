@@ -44,8 +44,9 @@ jobs:
     if: github.ref == 'refs/heads/test'
     
     env:
+      TEST_API_URL: ${{ secrets.TEST_API_URL }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      TEST_NETLIFY_PROJECT_ID: 27d31434-6f64-4e90-8486-d3ec9ba5f797
+      TEST_NETLIFY_PROJECT_ID: ${{ secrets.TEST_NETLIFY_PROJECT_ID }}
 
     steps:
       - name: Checkout repository

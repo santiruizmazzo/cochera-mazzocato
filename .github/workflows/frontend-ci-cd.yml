@@ -44,7 +44,7 @@ jobs:
     if: github.ref == 'refs/heads/test'
     
     env:
-      TEST_API_URL: ${{ secrets.TEST_API_URL }}
+      API_URL: ${{ secrets.TEST_API_URL }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       TEST_NETLIFY_PROJECT_ID: ${{ secrets.TEST_NETLIFY_PROJECT_ID }}
 

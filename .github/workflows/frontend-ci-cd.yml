@@ -45,7 +45,7 @@ jobs:
     
     env:
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      TEST_NETLIFY_PROJECT: test-cochera-mazzocato
+      TEST_NETLIFY_PROJECT_ID: 27d31434-6f64-4e90-8486-d3ec9ba5f797
 
     steps:
       - name: Checkout repository
@@ -69,5 +69,5 @@ jobs:
         run: netlify sites:list --auth $NETLIFY_AUTH_TOKEN
 
       - name: Deploy to Test Environment
-        run: netlify deploy --dir=public --prod --site=$TEST_NETLIFY_PROJECT --auth $NETLIFY_AUTH_TOKEN
+        run: netlify deploy --dir=public --prod --site=$TEST_NETLIFY_PROJECT_ID --auth $NETLIFY_AUTH_TOKEN
 

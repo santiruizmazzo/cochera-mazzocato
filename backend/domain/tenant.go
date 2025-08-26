@@ -1,16 +1,25 @@
 package domain
 
+import (
+	"encoding/json"
+)
+
 type Tenant struct {
-	id         uint32
-	dni        uint32
-	name       string
-	lastName   string
-	address    string
-	phone      string
-	email      string
-	entryMonth MonthOfYear
+	ID         uint32
+	DNI        uint32      `json:"dni"`
+	Name       string      `json:"name"`
+	LastName   string      `json:"last_name"`
+	Address    string      `json:"address"`
+	Phone      string      `json:"phone"`
+	Email      string      `json:"email"`
+	EntryMonth MonthOfYear `json:"entry_month"`
 }
 
 func NewTenantFromJSON(jsonBytes []byte) (*Tenant, error) {
-	panic("unimplemented")
+	var tenant Tenant
+
+	if err := json.Unmarshal(jsonBytes, &tenant); err != nil {
+		return nil, err
+	}
+	return &tenant, nil
 }

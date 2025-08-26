@@ -6,10 +6,6 @@ import (
 )
 
 func TestTenantCreatedFromJSON(t *testing.T) {
-	if testing.Short() {
-		t.Skip()
-	}
-
 	const expectedDni uint32 = 43295798
 	const expectedName string = "Santiago"
 	const expectedLastName string = "Ruiz Mazzocato"
@@ -18,38 +14,38 @@ func TestTenantCreatedFromJSON(t *testing.T) {
 	const expectedEmail string = "santimazzo98@gmail.com"
 	const expectedEntryMonth string = "05-2025"
 
-	jsonString := fmt.Sprintf("{'dni':%v,'name':%s,'last_name':%s,'address':%s,'phone':%s,'email':%s,'entry_month':%s}", expectedDni, expectedName, expectedLastName, expectedAddress, expectedPhone, expectedEmail, expectedEntryMonth)
+	jsonString := fmt.Sprintf(`{"dni":%v,"name":"%s","last_name":"%s","address":"%s","phone":"%s","email":"%s","entry_month":"%s"}`, expectedDni, expectedName, expectedLastName, expectedAddress, expectedPhone, expectedEmail, expectedEntryMonth)
 	tenant, err := NewTenantFromJSON([]byte(jsonString))
 	if err != nil {
-		t.Error("Error creando inquilino desde JSON: ", err)
+		t.Fatal("Error creando inquilino desde JSON: ", err)
 	}
 
-	if tenant.dni != expectedDni {
-		t.Errorf("Esperado DNI %v, obtenido %v", expectedDni, tenant.dni)
+	if tenant.DNI != expectedDni {
+		t.Fatalf("Esperado DNI %v, obtenido %v", expectedDni, tenant.DNI)
 	}
 
-	if tenant.name != expectedName {
-		t.Errorf("Esperado nombre %s, obtenido %s", expectedName, tenant.name)
+	if tenant.Name != expectedName {
+		t.Fatalf("Esperado nombre %s, obtenido %s", expectedName, tenant.Name)
 	}
 
-	if tenant.lastName != expectedLastName {
-		t.Errorf("Esperado apellido %s, obtenido %s", expectedLastName, tenant.lastName)
+	if tenant.LastName != expectedLastName {
+		t.Fatalf("Esperado apellido %s, obtenido %s", expectedLastName, tenant.LastName)
 	}
 
-	if tenant.address != expectedAddress {
-		t.Errorf("Esperado domicilio %s, obtenido %s", expectedAddress, tenant.address)
+	if tenant.Address != expectedAddress {
+		t.Fatalf("Esperado domicilio %s, obtenido %s", expectedAddress, tenant.Address)
 	}
 
-	if tenant.phone != expectedPhone {
-		t.Errorf("Esperado telefono %s, obtenido %s", expectedPhone, tenant.phone)
+	if tenant.Phone != expectedPhone {
+		t.Fatalf("Esperado telefono %s, obtenido %s", expectedPhone, tenant.Phone)
 	}
 
-	if tenant.email != expectedEmail {
-		t.Errorf("Esperado email %s, obtenido %s", expectedEmail, tenant.email)
+	if tenant.Email != expectedEmail {
+		t.Fatalf("Esperado email %s, obtenido %s", expectedEmail, tenant.Email)
 	}
 
 	expectedMonthOfYear, err := NewMonthOfYearFromString(expectedEntryMonth)
-	if tenant.entryMonth != expectedMonthOfYear || err != nil {
-		t.Errorf("Esperado mes de entrada %s, obtenido %s", expectedEntryMonth, tenant.entryMonth)
+	if tenant.EntryMonth != expectedMonthOfYear || err != nil {
+		t.Fatalf("Esperado mes de entrada %s, obtenido %s", expectedEntryMonth, tenant.EntryMonth)
 	}
 }

@@ -1,6 +1,7 @@
-package domain
+package tenant
 
 import (
+	"cochera/domain/time"
 	"fmt"
 	"testing"
 )
@@ -44,7 +45,7 @@ func TestTenantCreatedFromJSON(t *testing.T) {
 		t.Fatalf("Esperado email %s, obtenido %s", expectedEmail, tenant.Email)
 	}
 
-	expectedMonthOfYear, err := NewMonthOfYearFromString(expectedEntryMonth)
+	expectedMonthOfYear, err := time.NewMonthOfYearFromString(expectedEntryMonth)
 	if tenant.EntryMonth != expectedMonthOfYear || err != nil {
 		t.Fatalf("Esperado mes de entrada %s, obtenido %s", expectedEntryMonth, tenant.EntryMonth)
 	}

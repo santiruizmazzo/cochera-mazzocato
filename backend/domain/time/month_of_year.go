@@ -1,4 +1,4 @@
-package domain
+package time
 
 import (
 	"encoding/json"

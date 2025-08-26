@@ -36,7 +36,8 @@ func (api *API) addCORSToRouter(router http.Handler) http.Handler {
 
 func (api *API) Routes() *http.ServeMux {
 	router := http.NewServeMux()
-	router.HandleFunc(HealthRoute, api.healthHandler)
+	router.HandleFunc(HealthRoute, api.getHealthStatus)
+	router.HandleFunc(TenantsBaseRoute, api.createTenant)
 	return router
 }
 

@@ -38,3 +38,7 @@ func (api *TestingAPI) Stop() {
 func (api *TestingAPI) GetHealthFullRoute() string {
 	return api.server.URL + "/health"
 }
+
+func (api *TestingAPI) GetTenantCreationRoute() string {
+	panic("unimplemented")
+}

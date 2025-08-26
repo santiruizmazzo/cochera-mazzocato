@@ -8,7 +8,7 @@ import (
 
 const HealthRoute string = "/health"
 
-func (api *API) healthHandler(w http.ResponseWriter, r *http.Request) {
+func (api *API) getHealthStatus(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	response := map[string]string{"status": "operational", "version": version.Current()}
 	err := json.NewEncoder(w).Encode(response)

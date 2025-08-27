@@ -1,4 +1,4 @@
-.PHONY: test test-unit test-e2e test-cover clean lint build-dev build-prod run
+.PHONY: test test-unit test-integration test-e2e test-cover clean lint build-dev build-prod run
 
 # Variables
 APP_NAME=cochera
@@ -11,11 +11,36 @@ test:
 test-unit:
 	go test -short ./...
 
+test-integration:
+	go test -run Integration ./...
+
 test-e2e:
 	go test -run EndToEnd ./...
 
 test-cover:
 	go test -v -cover ./...
+
+# Ejecutar todas las migraciones pendientes
+migrate-up:
+	migrate -path db/migrations -database "$(DB_URL)" up
+
+# Rollback una migración
+migrate-down:
+	migrate -path db/migrations -database "$(DB_URL)" down 1
+
+# Forzar una versión específica (cuidado!)
+migrate-force:
+	@read -p "Enter version to force: " version; \
+	migrate -path db/migrations -database "$(DB_URL)" force $$version
+
+# Ver versión actual
+migrate-version:
+	migrate -path db/migrations -database "$(DB_URL)" version
+
+# Crear nueva migración
+migrate-create:
+	@read -p "Enter migration name: " name; \
+	migrate create -ext sql -dir db/migrations -seq $$name
 
 clean:
 	rm -f $(APP_NAME)

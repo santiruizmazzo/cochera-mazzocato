@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -14,8 +13,12 @@ type MonthOfYear struct {
 	year  uint16
 }
 
+func NewMonthOfYear(month uint8, year uint16) MonthOfYear {
+	return MonthOfYear{month: month, year: year}
+}
+
 func (monthOfYear MonthOfYear) String() string {
-	return fmt.Sprintf("%d-%d", monthOfYear.month, monthOfYear.year)
+	return fmt.Sprintf("%02d-%d", monthOfYear.month, monthOfYear.year)
 }
 
 func StringToUint8(s string) (uint8, error) {
@@ -64,7 +67,6 @@ func (monthOfYear *MonthOfYear) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
-	log.Println("HASTA ACA LLEGO!!!")
 
 	newMonthOfYear, err := NewMonthOfYearFromString(s)
 	if err != nil {

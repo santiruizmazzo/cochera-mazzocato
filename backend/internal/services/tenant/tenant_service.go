@@ -1,8 +1,8 @@
 package tenantservice
 
 import (
-	"cochera/domain/tenant"
-	tenantrepo "cochera/repositories/tenant"
+	"cochera/internal/domain/tenant"
+	tenantrepo "cochera/internal/repositories/tenant"
 )
 
 type TenantService struct {

@@ -2,7 +2,7 @@ package tests
 
 import (
 	"cochera/api"
-	"cochera/version"
+	"cochera/internal/version"
 	"encoding/json"
 	"io"
 	"net/http"

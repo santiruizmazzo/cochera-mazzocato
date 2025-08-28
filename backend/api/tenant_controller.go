@@ -1,7 +1,7 @@
 package api
 
 import (
-	"cochera/domain/tenant"
+	"cochera/internal/domain/tenant"
 	"net/http"
 )
 

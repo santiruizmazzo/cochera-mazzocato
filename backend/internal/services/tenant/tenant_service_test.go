@@ -1,8 +1,8 @@
 package tenantservice
 
 import (
-	"cochera/domain/tenant"
-	"cochera/domain/time"
+	"cochera/internal/domain/tenant"
+	"cochera/internal/domain/time"
 	"testing"
 )
 

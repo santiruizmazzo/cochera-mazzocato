@@ -1,7 +1,7 @@
 package api
 
 import (
-	"cochera/version"
+	"cochera/internal/version"
 	"encoding/json"
 	"net/http"
 )

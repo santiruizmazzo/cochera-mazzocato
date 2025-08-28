@@ -1,7 +1,7 @@
 package tenant
 
 import (
-	"cochera/domain/time"
+	"cochera/internal/domain/time"
 	"fmt"
 	"testing"
 )

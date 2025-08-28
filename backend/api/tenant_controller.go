@@ -15,12 +15,18 @@ func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error al leer request body", http.StatusInternalServerError)
 		return
 	}
-	defer r.Body.Close()
+
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			http.Error(w, "Error al cerrar request body", http.StatusInternalServerError)
+		}
+	}()
 
 	_, err = tenant.NewTenantFromJSON(requestBody)
 	if err != nil {
 		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
 		http.Error(w, responseBody, http.StatusBadRequest)
+		return
 	}
 
 }

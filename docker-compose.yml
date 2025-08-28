@@ -28,6 +28,8 @@ services:
       - ${SSH_AUTH_SOCK}:/ssh-agent
     environment:
       - SSH_AUTH_SOCK=/ssh-agent
+      - DEV_DB_URL=postgres://postgres:example@dev_db:5432/dev_db?sslmode=disable
+      - TEST_DB_URL=postgres://postgres:example@test_db:5432/test_db?sslmode=disable
     depends_on:
       - dev_db
       - test_db

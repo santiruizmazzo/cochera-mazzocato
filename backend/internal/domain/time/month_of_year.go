@@ -18,7 +18,7 @@ func NewMonthOfYear(month uint8, year uint16) MonthOfYear {
 }
 
 func (monthOfYear MonthOfYear) String() string {
-	return fmt.Sprintf("%02d-%d", monthOfYear.month, monthOfYear.year)
+	return fmt.Sprintf("%02d-%04d", monthOfYear.month, monthOfYear.year)
 }
 
 func StringToUint8(s string) (uint8, error) {

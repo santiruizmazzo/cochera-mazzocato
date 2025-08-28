@@ -40,5 +40,5 @@ func (api *TestingAPI) GetHealthFullRoute() string {
 }
 
 func (api *TestingAPI) GetTenantCreationRoute() string {
-	panic("unimplemented")
+	return api.server.URL + "/tenants"
 }

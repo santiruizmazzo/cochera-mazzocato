@@ -2,20 +2,25 @@ package api
 
 import (
 	"cochera/internal/domain/tenant"
+	"fmt"
+	"io"
 	"net/http"
 )
 
 const TenantsBaseRoute string = "/tenants"
 
 func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
-	var requestBody []byte
-	if _, err := r.Body.Read(requestBody); err != nil {
-		http.Error(w, "Error al leer request body", http.StatusInternalServerError)
-	}
-
-	_, err := tenant.NewTenantFromJSON(requestBody)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Inquilino invalido", http.StatusBadRequest)
+		http.Error(w, "Error al leer request body", http.StatusInternalServerError)
+		return
+	}
+	defer r.Body.Close()
+
+	_, err = tenant.NewTenantFromJSON(requestBody)
+	if err != nil {
+		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
+		http.Error(w, responseBody, http.StatusBadRequest)
 	}
 
 }

@@ -1,63 +1,106 @@
-.PHONY: test test-unit test-integration test-e2e test-cover clean lint build-dev build-prod run
-
-# Variables
 APP_NAME=cochera
 MAIN_PATH=./cmd/server/main.go
+MIGRATIONS_PATH=./migrations
+DATABASE_URL=$(DEV_DB_URL)
 
-# Development commands (always run)
-test:
-	go test ./...
+.PHONY: test
+test: migrate-test-up
+	@echo "🌎 Running all tests..."
+	@go test ./...
 
+.PHONY: test-unit
 test-unit:
-	go test -short ./...
+	@echo "🦠 Running unit tests..."
+	@go test -short ./...
 
-test-integration:
-	go test -run Integration ./...
+.PHONY: test-integration
+test-integration: migrate-test-up
+	@echo "🔌 Running integration tests..."
+	@go test -run Integration ./...
 
-test-e2e:
-	go test -run EndToEnd ./...
+.PHONY: test-e2e
+test-e2e: migrate-test-up
+	@echo "↔️  Running end to end tests..."
+	@go test -run EndToEnd ./...
 
+.PHONY: test-cover
 test-cover:
-	go test -v -cover ./...
+	@echo "☂️  Checking app's code coverage..."
+	@go test -v -cover ./...
 
-# Ejecutar todas las migraciones pendientes
+.PHONY: migrate-test-up
+migrate-test-up: DATABASE_URL = $(TEST_DB_URL)
+migrate-test-up: migrate-up
+
+.PHONY: migrate-up
 migrate-up:
-	migrate -path db/migrations -database "$(DB_URL)" up
+	@echo "🤔 Checking current migration version..."
+	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" version || true
+	@echo "⏭️  Running migrations..."
+	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" up
 
-# Rollback una migración
+.PHONY: migrate-down
 migrate-down:
-	migrate -path db/migrations -database "$(DB_URL)" down 1
+	@echo "⏮️ Rolling back migrations to previous version..."
+	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" down 1
+
+.PHONY: migrate-test-reset
+migrate-test-reset: DATABASE_URL = $(TEST_DB_URL)
+migrate-test-reset: migrate-reset
+
+.PHONY: migrate-reset
+migrate-reset:
+	@echo "🔁 Resetting database to original state..."
+	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" drop -f
+	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" up
 
 # Forzar una versión específica (cuidado!)
+.PHONY: migrate-force
 migrate-force:
 	@read -p "Enter version to force: " version; \
-	migrate -path db/migrations -database "$(DB_URL)" force $$version
+	migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" force $$version
 
-# Ver versión actual
+.PHONY: migrate-test-version
+migrate-test-version: DATABASE_URL = $(TEST_DB_URL)
+migrate-test-version: migrate-version
+
+.PHONY: migrate-version
 migrate-version:
-	migrate -path db/migrations -database "$(DB_URL)" version
+	@echo "🤔 Checking current migration version..."
+	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" version
 
-# Crear nueva migración
+.PHONY: migrate-create
 migrate-create:
+	@echo "✍️  Creating new database migration..."
 	@read -p "Enter migration name: " name; \
-	migrate create -ext sql -dir db/migrations -seq $$name
+	migrate create -ext sql -dir $(MIGRATIONS_PATH) -seq $$name
 
+.PHONY: clean
 clean:
-	rm -f $(APP_NAME)
-	go clean -cache
-	go clean -testcache
+	@echo "🧹 Cleaning app's executables & cache..."
+	@rm -f $(APP_NAME)
+	@go clean -cache
+	@go clean -testcache
 
+.PHONY: lint
 lint:
-	golangci-lint run
+	@echo "🔍 Linting project's code..."
+	@golangci-lint run
 
-run:
-	go run $(MAIN_PATH)
+.PHONY: run
+run: migrate-up
+	@echo "🚗 Starting Cochera Mazzocato API..."
+	@go run $(MAIN_PATH)
 
 # File-based commands (don't use .PHONY)
+.PHONY: build-dev
 build-dev: $(APP_NAME)
 
 $(APP_NAME): $(shell find . -name '*.go')
-	go build -o $(APP_NAME) $(MAIN_PATH)
+	@echo "📦 Building app for development environment..."
+	@go build -o $(APP_NAME) $(MAIN_PATH)
 
+.PHONY: build-prod
 build-prod:
-	CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o $(APP_NAME) $(MAIN_PATH)
+	@echo "🎁 Building app for production environment..."
+	@CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o $(APP_NAME) $(MAIN_PATH)

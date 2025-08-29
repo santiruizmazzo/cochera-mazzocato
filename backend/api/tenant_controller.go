@@ -12,13 +12,13 @@ const TenantsBaseRoute string = "/tenants"
 func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Error al leer request body", http.StatusInternalServerError)
+		http.Error(w, "Could not read request body", http.StatusInternalServerError)
 		return
 	}
 
 	defer func() {
 		if err := r.Body.Close(); err != nil {
-			http.Error(w, "Error al cerrar request body", http.StatusInternalServerError)
+			http.Error(w, "Could not close request body", http.StatusInternalServerError)
 		}
 	}()
 

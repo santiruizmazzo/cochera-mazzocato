@@ -18,35 +18,35 @@ func TestTenantCreatedFromJSON(t *testing.T) {
 	jsonString := fmt.Sprintf(`{"dni":%v,"name":"%s","last_name":"%s","address":"%s","phone":"%s","email":"%s","entry_month":"%s"}`, expectedDni, expectedName, expectedLastName, expectedAddress, expectedPhone, expectedEmail, expectedEntryMonth)
 	tenant, err := NewTenantFromJSON([]byte(jsonString))
 	if err != nil {
-		t.Fatal("Error creando inquilino desde JSON: ", err)
+		t.Fatal("Failed creating tenant from json: ", err)
 	}
 
 	if tenant.DNI != expectedDni {
-		t.Fatalf("Esperado DNI %v, obtenido %v", expectedDni, tenant.DNI)
+		t.Fatalf("Expected DNI %v, got %v", expectedDni, tenant.DNI)
 	}
 
 	if tenant.Name != expectedName {
-		t.Fatalf("Esperado nombre %s, obtenido %s", expectedName, tenant.Name)
+		t.Fatalf("Expected name %s, got %s", expectedName, tenant.Name)
 	}
 
 	if tenant.LastName != expectedLastName {
-		t.Fatalf("Esperado apellido %s, obtenido %s", expectedLastName, tenant.LastName)
+		t.Fatalf("Expected last name %s, got %s", expectedLastName, tenant.LastName)
 	}
 
 	if tenant.Address != expectedAddress {
-		t.Fatalf("Esperado domicilio %s, obtenido %s", expectedAddress, tenant.Address)
+		t.Fatalf("Expected address %s, got %s", expectedAddress, tenant.Address)
 	}
 
 	if tenant.Phone != expectedPhone {
-		t.Fatalf("Esperado telefono %s, obtenido %s", expectedPhone, tenant.Phone)
+		t.Fatalf("Expected phone %s, got %s", expectedPhone, tenant.Phone)
 	}
 
 	if tenant.Email != expectedEmail {
-		t.Fatalf("Esperado email %s, obtenido %s", expectedEmail, tenant.Email)
+		t.Fatalf("Expected email %s, got %s", expectedEmail, tenant.Email)
 	}
 
 	expectedMonthOfYear, err := time.NewMonthOfYearFromString(expectedEntryMonth)
 	if tenant.EntryMonth != expectedMonthOfYear || err != nil {
-		t.Fatalf("Esperado mes de entrada %s, obtenido %s", expectedEntryMonth, tenant.EntryMonth)
+		t.Fatalf("Expected entry month %s, got %s", expectedEntryMonth, tenant.EntryMonth)
 	}
 }

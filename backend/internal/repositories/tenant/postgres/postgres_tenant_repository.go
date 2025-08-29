@@ -26,7 +26,7 @@ func (repo *PostgresTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenan
 	row := repo.db.QueryRow(context.Background(), query, tenant.DNI, tenant.Name, tenant.LastName, tenant.Address, tenant.Phone, tenant.Email, tenant.EntryMonth.String())
 
 	if err := row.Scan(&tenant.ID); err != nil {
-		return nil, fmt.Errorf("error al insertar inquilino: %w", err)
+		return nil, fmt.Errorf("failed inserting new tenant: %w", err)
 	}
 	return tenant, nil
 }

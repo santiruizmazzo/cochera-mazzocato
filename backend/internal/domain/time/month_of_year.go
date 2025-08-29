@@ -44,8 +44,8 @@ func StringToUint(s string, maxBits int) (uint64, error) {
 	return n, nil
 }
 
-var ErrMonthNotParseable = errors.New("mes introducido imposible de parsear")
-var ErrYearNotParseable = errors.New("año introducido imposible de parsear")
+var ErrMonthNotParseable = errors.New("imposible to parse this month")
+var ErrYearNotParseable = errors.New("imposible to parse this year")
 
 func NewMonthOfYearFromString(monthOfYearString string) (MonthOfYear, error) {
 	splitString := strings.Split(monthOfYearString, "-")

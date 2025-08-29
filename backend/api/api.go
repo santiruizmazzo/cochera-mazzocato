@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/cors"
@@ -54,13 +55,15 @@ func (api *API) Run() {
 	api.server.Handler = api.addCORSToRouter(api.Routes())
 
 	if err := api.db.Ping(context.Background()); err != nil {
-		log.Println("Error al conectar con la base de datos: ", err)
+		log.Println("Failed connecting to database: ", err)
 		return
 	}
-	log.Println("🚀 API corriendo en puerto:", api.server.Addr)
+
+	port, _ := strings.CutPrefix(api.server.Addr, ":")
+	log.Printf("🚀 API successfully running on port %s!", port)
 
 	if err := api.server.ListenAndServe(); err != nil {
-		log.Printf("Error al iniciar el servidor: %v", err)
+		log.Printf("Could not start server: %v", err)
 	}
 }
 

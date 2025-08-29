@@ -42,6 +42,6 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 	}
 
 	if *tenant != *expectedTenant {
-		t.Fatal("El inquilino esperado es distinto al obtenido")
+		t.Fatal("Expected tenant is different from created tenant")
 	}
 }

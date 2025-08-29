@@ -53,7 +53,7 @@ func TestMain(m *testing.M) {
 
 	err = setupTestDatabase()
 	if err != nil {
-		log.Printf("Error al conectar con DB de tests: %v", err)
+		log.Printf("Failed connecting to test database: %v", err)
 		return
 	}
 	defer cleanupAndCloseTestDatabase()
@@ -85,6 +85,6 @@ func TestPostgresTenantRepository_Save_Successfully_Integration(t *testing.T) {
 
 	localTenant.ID = 1
 	if savedTenant != localTenant {
-		t.Fatal("El inquilino en memoria y el almacenado son diferentes")
+		t.Fatal("Expected tenant is different from saved tenant")
 	}
 }

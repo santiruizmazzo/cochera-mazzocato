@@ -5,7 +5,6 @@ import (
 	"cochera/api"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"testing"
 )
@@ -45,7 +44,6 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 	}
 
 	var jsonBody map[string]any
-	log.Println(string(jsonBytes))
 	if err := json.Unmarshal(jsonBytes, &jsonBody); err != nil {
 		t.Fatalf("Error parseando response body: %v", err)
 	}

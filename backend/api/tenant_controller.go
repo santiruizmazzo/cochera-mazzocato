@@ -2,6 +2,8 @@ package api
 
 import (
 	"cochera/internal/domain/tenant"
+	"cochera/internal/repositories/tenant/postgres"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -22,11 +24,27 @@ func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	_, err = tenant.NewTenantFromJSON(requestBody)
+	tenant, err := tenant.NewTenantFromJSON(requestBody)
 	if err != nil {
 		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
 		http.Error(w, responseBody, http.StatusBadRequest)
 		return
 	}
 
+	repo := postgres.NewPostgresTenantRepository(api.db)
+	tenant, err = repo.Save(tenant)
+	if err != nil {
+		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
+		http.Error(w, responseBody, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	err = json.NewEncoder(w).Encode(tenant)
+	if err != nil {
+		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
+		http.Error(w, responseBody, http.StatusInternalServerError)
+		return
+	}
 }

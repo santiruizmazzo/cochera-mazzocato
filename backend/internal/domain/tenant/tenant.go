@@ -8,13 +8,13 @@ import (
 )
 
 type Tenant struct {
-	ID         uint32
-	DNI        uint32           `json:"dni"`
-	Name       string           `json:"name"`
-	LastName   string           `json:"last_name"`
-	Address    string           `json:"address"`
-	Phone      string           `json:"phone"`
-	Email      string           `json:"email"`
+	ID         uint32           `json:"id,omitempty"`
+	DNI        uint32           `json:"dni,omitempty"`
+	Name       string           `json:"name,omitempty"`
+	LastName   string           `json:"last_name,omitempty"`
+	Address    string           `json:"address,omitempty"`
+	Phone      string           `json:"phone,omitempty"`
+	Email      string           `json:"email,omitempty"`
 	EntryMonth time.MonthOfYear `json:"entry_month"`
 }
 

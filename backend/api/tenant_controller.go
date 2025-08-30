@@ -1,7 +1,9 @@
 package api
 
 import (
+	myerrors "cochera/internal/errors"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -24,8 +26,12 @@ func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
 
 	tenant, err := api.tenantService.CreateTenant(requestBody)
 	if err != nil {
+		statusCode := http.StatusBadRequest
+		if errors.Is(err, myerrors.ErrDuplicateDNI) {
+			statusCode = http.StatusConflict
+		}
 		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
-		http.Error(w, responseBody, http.StatusBadRequest)
+		http.Error(w, responseBody, statusCode)
 		return
 	}
 

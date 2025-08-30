@@ -2,6 +2,7 @@ package tenantservice
 
 import (
 	"cochera/internal/domain/tenant"
+	myerrors "cochera/internal/errors"
 	tenantrepo "cochera/internal/repositories/tenant"
 )
 
@@ -17,6 +18,15 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*tenant.Tenant, e
 	tenant, err := tenant.NewTenantFromJSON(jsonTenant)
 	if err != nil {
 		return nil, err
+	}
+
+	dniAlreadyExists, err := service.repo.ExistsTenantWithDNI(tenant.DNI)
+	if err != nil {
+		return nil, err
+	}
+
+	if dniAlreadyExists {
+		return nil, myerrors.ErrDuplicateDNI
 	}
 
 	return service.repo.Save(tenant)

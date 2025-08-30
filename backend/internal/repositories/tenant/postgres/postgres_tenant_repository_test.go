@@ -88,3 +88,31 @@ func TestPostgresTenantRepository_Save_Successfully_Integration(t *testing.T) {
 		t.Fatal("Expected tenant is different from saved tenant")
 	}
 }
+
+func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	repo := NewPostgresTenantRepository(db)
+
+	existingTenant := &tenant.Tenant{
+		DNI:        22222222,
+		Name:       "Manolo",
+		LastName:   "Lamas",
+		Address:    "Avenida Siempreviva 555",
+		Phone:      "+5645551114",
+		Email:      "mlamas@gmail.com",
+		EntryMonth: time.NewMonthOfYear(8, 2025),
+	}
+
+	_, err := repo.Save(existingTenant)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dniAlreadyInUse, err := repo.ExistsTenantWithDNI(22222222)
+	if err != nil || !dniAlreadyInUse {
+		t.Fatal("Method should return that DNI already exists")
+	}
+}

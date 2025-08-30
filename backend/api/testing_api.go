@@ -22,7 +22,7 @@ func NewTestingAPI() (*TestingAPI, error) {
 		return nil, err
 	}
 
-	realAPI := &API{server: nil, db: db}
+	realAPI := NewAPI(0, db)
 	return &TestingAPI{router: realAPI.Routes(), realAPI: realAPI}, nil
 }
 

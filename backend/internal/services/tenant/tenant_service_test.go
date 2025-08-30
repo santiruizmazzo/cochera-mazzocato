@@ -3,6 +3,7 @@ package tenantservice
 import (
 	"cochera/internal/domain/tenant"
 	"cochera/internal/domain/time"
+	myerrors "cochera/internal/errors"
 	"testing"
 )
 
@@ -17,6 +18,15 @@ func (mockRepo *mockTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenan
 	}
 	tenant.ID = 1
 	return tenant, nil
+}
+
+func (mockRepo *mockTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {
+	for _, tenant := range mockRepo.tenants {
+		if tenant != nil && tenant.DNI == dni {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 func TestTenantService_CreateTenant_Successfully(t *testing.T) {
@@ -43,5 +53,33 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 
 	if *tenant != *expectedTenant {
 		t.Fatal("Expected tenant is different from created tenant")
+	}
+}
+
+func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
+	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{
+		1: {
+			ID:         1,
+			DNI:        11111111,
+			Name:       "Frodo",
+			LastName:   "Baggins",
+			Address:    "Unnamed road 123",
+			Phone:      "+5213337778",
+			Email:      "fbaggins@hobbiton.org",
+			EntryMonth: time.NewMonthOfYear(8, 2025),
+		},
+	}}
+
+	service := NewTenantService(mockRepo)
+
+	jsonTenant := []byte(`{"dni":11111111,"name":"Bilbo","last_name":"Baggins","address":"Unnamed road 123","phone":"+5213337778","email":"bilbo@baggins.corp","entry_month":"10-2024"}`)
+
+	tenant, err := service.CreateTenant(jsonTenant)
+
+	if tenant != nil {
+		t.Fatal("Tenant should not be created")
+	}
+	if err != myerrors.ErrDuplicateDNI {
+		t.Fatal("Error should be of type duplicate DNI")
 	}
 }

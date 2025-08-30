@@ -89,6 +89,48 @@ func TestPostgresTenantRepository_Save_Successfully_Integration(t *testing.T) {
 	}
 }
 
+func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	repo := NewPostgresTenantRepository(db)
+
+	existingTenant := &tenant.Tenant{
+		DNI:        33333333,
+		Name:       "Manolo",
+		LastName:   "Lamas",
+		Address:    "Avenida Siempreviva 555",
+		Phone:      "+5645551114",
+		Email:      "manololamas@gmail.com",
+		EntryMonth: time.NewMonthOfYear(8, 2025),
+	}
+
+	_, err := repo.Save(existingTenant)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newTenant := &tenant.Tenant{
+		DNI:        33333333,
+		Name:       "Solid",
+		LastName:   "Snake",
+		Address:    "123 Stealth Mode St.",
+		Phone:      "+5644440004",
+		Email:      "solid@snake.com",
+		EntryMonth: time.NewMonthOfYear(1, 2021),
+	}
+
+	createdTenant, err := repo.Save(newTenant)
+	if err == nil {
+		t.Fatal("Save should return error when it already exists a tenant with same DNI")
+	}
+
+	if createdTenant != nil {
+		t.Fatal("Save should not return tenant when it already exists one with same DNI")
+	}
+}
+
 func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) {
 	if testing.Short() {
 		t.Skip()

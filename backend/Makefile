@@ -2,6 +2,8 @@ APP_NAME=cochera
 MAIN_PATH=./cmd/server/main.go
 MIGRATIONS_PATH=./migrations
 DATABASE_URL=$(DEV_DB_URL)
+GOLANGCI_LINT_VERSION = v2.4.0
+GOBIN := $(shell go env GOPATH)/bin
 
 .PHONY: test
 test: migrate-test-up
@@ -81,6 +83,14 @@ clean:
 	@rm -f $(APP_NAME)
 	@go clean -cache
 	@go clean -testcache
+
+.PHONY: lint-install
+lint-install:
+	@echo "⚙️  Installing golangci-lint $(GOLANGCI_LINT_VERSION)..."
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+	  | sh -s -- -b $(GOBIN) $(GOLANGCI_LINT_VERSION)
+	@echo "✅ golangci-lint installed at $(GOBIN)/golangci-lint"
+	@$(GOBIN)/golangci-lint version
 
 .PHONY: lint
 lint:

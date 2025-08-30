@@ -50,6 +50,10 @@ func (api *API) Routes() *http.ServeMux {
 	return router
 }
 
+func (api *API) DB() *pgxpool.Pool {
+	return api.db
+}
+
 func (api *API) Run() {
 	defer api.db.Close()
 	api.server.Handler = api.addCORSToRouter(api.Routes())

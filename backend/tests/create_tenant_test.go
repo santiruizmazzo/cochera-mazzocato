@@ -1,35 +1,26 @@
 package tests
 
 import (
-	"cochera/api"
+	"cochera/tests/utils"
 
 	"bytes"
 	"encoding/json"
-	"io"
-	"log"
 	"net/http"
-	"os"
 	"testing"
 )
 
-var testApi *api.TestingAPI
-var err error
+func setupExistingTenant(t *testing.T) {
+	jsonData, _ := json.Marshal(map[string]any{
+		"dni":         17888423,
+		"name":        "Trevor",
+		"last_name":   "Phillips",
+		"entry_month": "09-2024",
+	})
 
-func TestMain(m *testing.M) {
-	code := 1
-	defer func() {
-		os.Exit(code)
-	}()
-
-	testApi, err = api.NewTestingAPI()
+	_, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		log.Println("Could not create testing API: ", err)
-		return
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
 	}
-
-	defer testApi.Stop()
-	testApi.Run()
-	code = m.Run()
 }
 
 func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
@@ -43,10 +34,9 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 		"entry_month": "01-2025",
 	})
 
-	createTenantRoute := testApi.GetTenantCreationRoute()
-	response, err := http.Post(createTenantRoute, "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", createTenantRoute, err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
 	}
 
 	defer func() {
@@ -55,24 +45,11 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 		}
 	}()
 
-	jsonBytes, err := io.ReadAll(response.Body)
-	if err != nil {
-		t.Fatalf("Failed reading response body: %v", err)
-	}
+	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	var jsonBody map[string]any
-	if err := json.Unmarshal(jsonBytes, &jsonBody); err != nil {
-		t.Fatalf("Failed parsing response body: %v", err)
-	}
+	utils.AssertResponseContains(responseMap, "detail", "required attributes: dni, name, last_name or entry_month", t)
 
-	expectedDetail := "required attributes: dni, name, last_name or entry_month"
-	if receivedDetail, ok := jsonBody["detail"]; !ok || receivedDetail != expectedDetail {
-		t.Fatal(expectedDetail)
-	}
-
-	if response.StatusCode != http.StatusBadRequest {
-		t.Fatalf("Expected status code 400, got %d", response.StatusCode)
-	}
+	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 }
 
 func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
@@ -89,10 +66,9 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 		"entry_month": "11-2025",
 	})
 
-	createTenantRoute := testApi.GetTenantCreationRoute()
-	response, err := http.Post(createTenantRoute, "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", createTenantRoute, err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
 	}
 
 	defer func() {
@@ -101,37 +77,9 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 		}
 	}()
 
-	jsonBytes, err := io.ReadAll(response.Body)
-	if err != nil {
-		t.Fatalf("Failed reading response body: %v", err)
-	}
+	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	var jsonBody map[string]any
-	if err := json.Unmarshal(jsonBytes, &jsonBody); err != nil {
-		t.Fatalf("Failed parsing response body: %v", err)
-	}
+	utils.AssertResponseContains(responseMap, "detail", "dni already exists", t)
 
-	expectedDetail := "dni already exists"
-	if receivedDetail, ok := jsonBody["detail"]; !ok || receivedDetail != expectedDetail {
-		t.Fatal(expectedDetail)
-	}
-
-	if response.StatusCode != http.StatusConflict {
-		t.Fatalf("Expected status code 409, got %d", response.StatusCode)
-	}
-}
-
-func setupExistingTenant(t *testing.T) {
-	jsonData, _ := json.Marshal(map[string]any{
-		"dni":         17888423,
-		"name":        "Trevor",
-		"last_name":   "Phillips",
-		"entry_month": "09-2024",
-	})
-
-	createTenantRoute := testApi.GetTenantCreationRoute()
-	_, err := http.Post(createTenantRoute, "application/json", bytes.NewBuffer(jsonData))
-	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", createTenantRoute, err)
-	}
+	utils.AssertStatusCodeIs(http.StatusConflict, response.StatusCode, t)
 }

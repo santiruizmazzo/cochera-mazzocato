@@ -1,6 +1,8 @@
-package api
+package testingapi
 
 import (
+	"cochera/api"
+	"cochera/tests/utils"
 	"context"
 	"net/http"
 	"net/http/httptest"
@@ -12,7 +14,7 @@ import (
 type TestingAPI struct {
 	server  *httptest.Server
 	router  *http.ServeMux
-	realAPI *API
+	realAPI *api.API
 }
 
 func NewTestingAPI() (*TestingAPI, error) {
@@ -22,7 +24,7 @@ func NewTestingAPI() (*TestingAPI, error) {
 		return nil, err
 	}
 
-	realAPI := NewAPI(0, db)
+	realAPI := api.NewAPI(0, db)
 	return &TestingAPI{router: realAPI.Routes(), realAPI: realAPI}, nil
 }
 
@@ -31,11 +33,11 @@ func (api *TestingAPI) Run() {
 }
 
 func (api *TestingAPI) Stop() {
-	api.realAPI.CloseDB()
+	utils.CleanupAndCloseTestDatabase(api.realAPI.DB())
 	api.server.Close()
 }
 
-func (api *TestingAPI) GetHealthFullRoute() string {
+func (api *TestingAPI) GetHealthStatusRoute() string {
 	return api.server.URL + "/health"
 }
 

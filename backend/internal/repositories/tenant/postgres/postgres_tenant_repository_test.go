@@ -3,7 +3,7 @@ package postgres
 import (
 	"cochera/internal/domain/tenant"
 	"cochera/internal/domain/time"
-	"context"
+	"cochera/tests/utils"
 	"log"
 	"os"
 	"testing"
@@ -14,36 +14,6 @@ import (
 var db *pgxpool.Pool
 var err error
 
-func setupTestDatabase() error {
-	db, err = pgxpool.New(context.Background(), os.Getenv("TEST_DB_URL"))
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func cleanupTestDatabase() {
-	_, err = db.Exec(context.Background(), `
-		DO
-		$func$
-		BEGIN
-			EXECUTE (
-				SELECT 'TRUNCATE TABLE ' || string_agg(format('%I.%I', schemaname, tablename), ', ')
-					|| ' RESTART IDENTITY CASCADE'
-				FROM pg_tables
-				WHERE schemaname = 'public'
-			);
-		END
-		$func$;
-	`)
-}
-
-func cleanupAndCloseTestDatabase() {
-	cleanupTestDatabase()
-	db.Close()
-}
-
 func TestMain(m *testing.M) {
 	code := 1
 
@@ -51,12 +21,12 @@ func TestMain(m *testing.M) {
 		os.Exit(code)
 	}()
 
-	err = setupTestDatabase()
+	db, err = utils.SetupTestDatabase()
 	if err != nil {
 		log.Printf("Failed connecting to test database: %v", err)
 		return
 	}
-	defer cleanupAndCloseTestDatabase()
+	defer utils.CleanupAndCloseTestDatabase(db)
 
 	code = m.Run()
 }

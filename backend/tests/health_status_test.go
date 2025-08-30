@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"cochera/api"
 	"cochera/internal/version"
 	"encoding/json"
 	"io"
@@ -14,16 +13,9 @@ func TestHealthStatusEndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	api, err := api.NewTestingAPI()
+	response, err := http.Get(testApi.GetHealthStatusRoute())
 	if err != nil {
-		t.Fatal("Could not create testing API: ", err)
-	}
-	api.Run()
-	defer api.Stop()
-
-	response, err := http.Get(api.GetHealthFullRoute())
-	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", api.GetHealthFullRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetHealthStatusRoute(), err)
 	}
 
 	defer func() {

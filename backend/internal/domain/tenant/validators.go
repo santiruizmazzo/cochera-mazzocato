@@ -3,6 +3,7 @@ package tenant
 import (
 	"cochera/internal/domain/calendar"
 	myerrors "cochera/internal/errors"
+	"strings"
 )
 
 func extractAndValidateDNI(tenantMap map[string]any) (uint32, error) {
@@ -96,6 +97,12 @@ func extractAndValidatePhone(tenantMap map[string]any) (string, error) {
 func validatePhone(rawPhone any) (string, error) {
 	switch value := rawPhone.(type) {
 	case string:
+		if value == "" {
+			return value, nil
+		}
+		if !strings.HasPrefix(value, "+") {
+			return "", myerrors.ErrPhoneMustStartWithPlusSign
+		}
 		return value, nil
 	default:
 		return "", myerrors.ErrPhoneMustBeString

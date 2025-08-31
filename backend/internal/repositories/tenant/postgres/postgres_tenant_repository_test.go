@@ -1,8 +1,8 @@
 package postgres
 
 import (
+	"cochera/internal/domain/calendar"
 	"cochera/internal/domain/tenant"
-	"cochera/internal/domain/time"
 	"cochera/tests/utils"
 	"log"
 	"os"
@@ -45,7 +45,7 @@ func TestPostgresTenantRepository_Save_Successfully_Integration(t *testing.T) {
 		Address:    "Avenida Siempreviva 555",
 		Phone:      "+5645551114",
 		Email:      "mlamas@fifa09.com",
-		EntryMonth: time.NewMonthOfYear(8, 2025),
+		EntryMonth: calendar.NewMonthOfYear(8, 2025),
 	}
 
 	savedTenant, err := repo.Save(localTenant)
@@ -73,7 +73,7 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 		Address:    "Avenida Siempreviva 555",
 		Phone:      "+5645551114",
 		Email:      "manololamas@gmail.com",
-		EntryMonth: time.NewMonthOfYear(8, 2025),
+		EntryMonth: calendar.NewMonthOfYear(8, 2025),
 	}
 
 	_, err := repo.Save(existingTenant)
@@ -88,7 +88,7 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 		Address:    "123 Stealth Mode St.",
 		Phone:      "+5644440004",
 		Email:      "solid@snake.com",
-		EntryMonth: time.NewMonthOfYear(1, 2021),
+		EntryMonth: calendar.NewMonthOfYear(1, 2021),
 	}
 
 	createdTenant, err := repo.Save(newTenant)
@@ -115,7 +115,7 @@ func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) 
 		Address:    "Avenida Siempreviva 555",
 		Phone:      "+5645551114",
 		Email:      "mlamas@gmail.com",
-		EntryMonth: time.NewMonthOfYear(8, 2025),
+		EntryMonth: calendar.NewMonthOfYear(8, 2025),
 	}
 
 	_, err := repo.Save(existingTenant)

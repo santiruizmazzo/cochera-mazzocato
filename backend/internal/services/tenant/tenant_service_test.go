@@ -1,8 +1,8 @@
 package tenantservice
 
 import (
+	"cochera/internal/domain/calendar"
 	"cochera/internal/domain/tenant"
-	"cochera/internal/domain/time"
 	myerrors "cochera/internal/errors"
 	"testing"
 )
@@ -40,7 +40,7 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 		Address:    "Avenida Siempreviva 555",
 		Phone:      "+5645551114",
 		Email:      "mlamas@fifa09.com",
-		EntryMonth: time.NewMonthOfYear(8, 2025),
+		EntryMonth: calendar.NewMonthOfYear(8, 2025),
 	}
 	jsonTenant := []byte(`{"dni":12345678,"name":"Manolo","last_name":"Lamas","address":"Avenida Siempreviva 555","phone":"+5645551114","email":"mlamas@fifa09.com","entry_month":"08-2025"}`)
 
@@ -66,7 +66,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 			Address:    "Unnamed road 123",
 			Phone:      "+5213337778",
 			Email:      "fbaggins@hobbiton.org",
-			EntryMonth: time.NewMonthOfYear(8, 2025),
+			EntryMonth: calendar.NewMonthOfYear(8, 2025),
 		},
 	}}
 
@@ -79,7 +79,24 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 	if tenant != nil {
 		t.Fatal("Tenant should not be created")
 	}
+
 	if err != myerrors.ErrDuplicateDNI {
 		t.Fatal("Error should be of type duplicate DNI")
+	}
+}
+
+func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
+	service := NewTenantService(&mockTenantRepository{})
+
+	jsonTenant := []byte(`{"dni":"hola","name":"Samwise","last_name":"Gamyi","address":"Beyond the Water 555","phone":"+5213337712","email":"sam@gamyi.com","entry_month":"06-2025"}`)
+
+	tenant, err := service.CreateTenant(jsonTenant)
+
+	if tenant != nil {
+		t.Fatal("Tenant should not be created")
+	}
+
+	if err != myerrors.ErrDNIMustBeNumber {
+		t.Fatal("Error should be of type DNI must be a number")
 	}
 }

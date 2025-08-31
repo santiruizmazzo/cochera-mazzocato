@@ -1,4 +1,4 @@
-package time
+package calendar
 
 import (
 	"encoding/json"
@@ -44,10 +44,20 @@ func StringToUint(s string, maxBits int) (uint64, error) {
 	return n, nil
 }
 
-var ErrMonthNotParseable = errors.New("imposible to parse this month")
-var ErrYearNotParseable = errors.New("imposible to parse this year")
+var (
+	ErrInvalidMonthOfYearString = errors.New(`month of year must come as a "MM-YYYY" string`)
+	ErrMonthNotParseable        = errors.New("imposible to parse this month")
+	ErrYearNotParseable         = errors.New("imposible to parse this year")
+)
 
-func NewMonthOfYearFromString(monthOfYearString string) (MonthOfYear, error) {
+func NewMonthOfYearFromString(rawMonthOfYear any) (MonthOfYear, error) {
+	var monthOfYearString string
+	var ok bool
+
+	if monthOfYearString, ok = rawMonthOfYear.(string); !ok {
+		return MonthOfYear{}, ErrInvalidMonthOfYearString
+	}
+
 	splitString := strings.Split(monthOfYearString, "-")
 	month, err := StringToUint8(splitString[0])
 	if err != nil {

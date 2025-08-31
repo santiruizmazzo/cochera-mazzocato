@@ -4,6 +4,7 @@ import (
 	"cochera/internal/domain/calendar"
 	myerrors "cochera/internal/errors"
 	"net/mail"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -164,6 +165,11 @@ func validateEntryMonth(rawEntryMonth any) (calendar.MonthOfYear, error) {
 	case calendar.MonthOfYear:
 		return value, nil
 	case string:
+		matched, _ := regexp.MatchString(`^\d{2}-\d{4}$`, value)
+		if !matched {
+			return calendar.MonthOfYear{}, myerrors.ErrEntryMonthInvalidFormat
+		}
+
 		return calendar.NewMonthOfYearFromString(value)
 	default:
 		return calendar.MonthOfYear{}, myerrors.ErrEntryMonthMustBeString

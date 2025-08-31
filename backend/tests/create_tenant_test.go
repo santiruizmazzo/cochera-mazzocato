@@ -395,3 +395,34 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 
 	utils.AssertResponseContains(responseMap, "detail", "email already in use", t)
 }
+
+func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	jsonData, _ := json.Marshal(map[string]any{
+		"dni":         15151515,
+		"name":        "Trevor",
+		"last_name":   "Phillips",
+		"email":       "a@b.com",
+		"entry_month": "03-20255555",
+	})
+
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "entry month must have this format: MM-YYYY", t)
+}

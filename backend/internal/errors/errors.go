@@ -31,4 +31,5 @@ var (
 	ErrInvalidEmailFormat          = errors.New("email must follow standard format")
 	ErrEmailTooLong                = errors.New("email must be 100 characters long at max")
 	ErrEntryMonthInvalidFormat     = errors.New("entry month must have this format: MM-YYYY")
+	ErrNameTooLong                 = errors.New("name must be 50 characters long at max")
 )

@@ -46,6 +46,10 @@ func extractAndValidateName(tenantMap map[string]any) (string, error) {
 func validateName(rawName any) (string, error) {
 	switch value := rawName.(type) {
 	case string:
+		if len(value) > 50 {
+			return "", myerrors.ErrNameTooLong
+		}
+
 		return value, nil
 	default:
 		return "", myerrors.ErrNameMustBeString

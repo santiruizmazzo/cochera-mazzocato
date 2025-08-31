@@ -11,12 +11,18 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+// TestingAPI is a testing-focused wrapper for the API type.
+//
+// Used in end to end tests to simulate a production-like environment for testing available endpoints.
 type TestingAPI struct {
 	server  *httptest.Server
 	router  *http.ServeMux
 	realAPI *api.API
 }
 
+// NewTestingAPI creates a TestingAPI instance which connects to a real database under the hood.
+//
+// It connects to a testing database descripted by the TEST_DB_URL environment variable.
 func NewTestingAPI() (*TestingAPI, error) {
 	databaseURL := os.Getenv("TEST_DB_URL")
 	db, err := pgxpool.New(context.Background(), databaseURL)

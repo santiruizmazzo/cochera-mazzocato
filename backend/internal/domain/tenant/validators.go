@@ -108,8 +108,13 @@ func validatePhone(rawPhone any) (string, error) {
 		if len(substring) > 15 {
 			return "", myerrors.ErrPhoneTooLong
 		}
-		if _, err := strconv.Atoi(substring); err != nil {
+
+		integerPhone, err := strconv.Atoi(substring)
+		if err != nil {
 			return "", myerrors.ErrPhoneMustContainNumbersOnly
+		}
+		if integerPhone == 0 {
+			return "", myerrors.ErrPhoneFullOfZeroes
 		}
 		return value, nil
 	default:

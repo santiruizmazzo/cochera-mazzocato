@@ -79,7 +79,7 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "dni already exists", t)
-
 	utils.AssertStatusCodeIs(http.StatusConflict, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "dni already exists", t)
 }

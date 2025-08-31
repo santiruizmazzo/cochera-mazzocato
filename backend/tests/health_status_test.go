@@ -2,13 +2,12 @@ package tests
 
 import (
 	"cochera/internal/version"
-	"encoding/json"
-	"io"
+	"cochera/tests/utils"
 	"net/http"
 	"testing"
 )
 
-func TestHealthStatusEndToEnd(t *testing.T) {
+func TestHealthStatus_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -24,25 +23,11 @@ func TestHealthStatusEndToEnd(t *testing.T) {
 		}
 	}()
 
-	jsonBytes, err := io.ReadAll(response.Body)
-	if err != nil {
-		t.Fatalf("Failed reading response body: %v", err)
-	}
+	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	var jsonBody map[string]any
-	if err := json.Unmarshal(jsonBytes, &jsonBody); err != nil {
-		t.Fatalf("Failed parsing response body: %v", err)
-	}
+	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 
-	if expectedStatus, ok := jsonBody["status"]; !ok || expectedStatus != "operational" {
-		t.Fatalf("Status not found, or does not match with expected")
-	}
+	utils.AssertResponseContains(responseMap, "status", "operational", t)
 
-	if expectedVersion, ok := jsonBody["version"]; !ok || expectedVersion != version.Current() {
-		t.Fatalf("Version not found, or does not match with expected")
-	}
-
-	if response.StatusCode != http.StatusOK {
-		t.Fatalf("Expected status code 200, got %d", response.StatusCode)
-	}
+	utils.AssertResponseContains(responseMap, "version", version.Current(), t)
 }

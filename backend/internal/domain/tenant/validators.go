@@ -90,6 +90,10 @@ func extractAndValidateAddress(tenantMap map[string]any) (string, error) {
 func validateAddress(rawAddress any) (string, error) {
 	switch value := rawAddress.(type) {
 	case string:
+		if len(value) > 100 {
+			return "", myerrors.ErrAddressTooLong
+		}
+
 		return value, nil
 	default:
 		return "", myerrors.ErrAddressMustBeString

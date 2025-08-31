@@ -33,4 +33,5 @@ var (
 	ErrEntryMonthInvalidFormat     = errors.New("entry month must have this format: MM-YYYY")
 	ErrNameTooLong                 = errors.New("name must be 50 characters long at max")
 	ErrLastNameTooLong             = errors.New("last name must be 50 characters long at max")
+	ErrAddressTooLong              = errors.New("address must be 100 characters long at max")
 )

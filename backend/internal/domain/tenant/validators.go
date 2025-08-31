@@ -3,6 +3,7 @@ package tenant
 import (
 	"cochera/internal/domain/calendar"
 	myerrors "cochera/internal/errors"
+	"strconv"
 	"strings"
 )
 
@@ -102,6 +103,10 @@ func validatePhone(rawPhone any) (string, error) {
 		}
 		if !strings.HasPrefix(value, "+") {
 			return "", myerrors.ErrPhoneMustStartWithPlusSign
+		}
+		substring := strings.TrimPrefix(value, "+")
+		if _, err := strconv.Atoi(substring); err != nil {
+			return "", myerrors.ErrPhoneMustContainNumbersOnly
 		}
 		return value, nil
 	default:

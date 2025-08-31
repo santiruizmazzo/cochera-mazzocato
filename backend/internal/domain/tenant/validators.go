@@ -141,6 +141,9 @@ func validateEmail(rawEmail any) (string, error) {
 		if _, err := mail.ParseAddress(value); err != nil {
 			return "", myerrors.ErrInvalidEmailFormat
 		}
+		if len(value) > 100 {
+			return "", myerrors.ErrEmailTooLong
+		}
 		return value, nil
 	default:
 		return "", myerrors.ErrEmailMustBeString

@@ -332,3 +332,34 @@ func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
 
 	utils.AssertResponseContains(responseMap, "detail", "email must follow standard format", t)
 }
+
+func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	jsonData, _ := json.Marshal(map[string]any{
+		"dni":         8888888,
+		"name":        "Sonny",
+		"last_name":   "Forelli",
+		"email":       "sonny@forelliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.com",
+		"entry_month": "03-2025",
+	})
+
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "email must be 100 characters long at max", t)
+}

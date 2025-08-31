@@ -3,6 +3,7 @@ package tenant
 import (
 	"cochera/internal/domain/calendar"
 	myerrors "cochera/internal/errors"
+	"net/mail"
 	"strconv"
 	"strings"
 )
@@ -134,6 +135,12 @@ func extractAndValidateEmail(tenantMap map[string]any) (string, error) {
 func validateEmail(rawEmail any) (string, error) {
 	switch value := rawEmail.(type) {
 	case string:
+		if value == "" {
+			return value, nil
+		}
+		if _, err := mail.ParseAddress(value); err != nil {
+			return "", myerrors.ErrInvalidEmailFormat
+		}
 		return value, nil
 	default:
 		return "", myerrors.ErrEmailMustBeString

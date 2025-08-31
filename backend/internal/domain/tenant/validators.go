@@ -68,6 +68,10 @@ func extractAndValidateLastName(tenantMap map[string]any) (string, error) {
 func validateLastName(rawLastName any) (string, error) {
 	switch value := rawLastName.(type) {
 	case string:
+		if len(value) > 50 {
+			return "", myerrors.ErrLastNameTooLong
+		}
+
 		return value, nil
 	default:
 		return "", myerrors.ErrLastNameMustBeString

@@ -18,7 +18,7 @@ func validateDNI(rawDNI any) (uint32, error) {
 	switch value := rawDNI.(type) {
 	case float64: // float64 is how json.Unmarshal decodes every number by default
 		if value < 1 || value > 4294967295 {
-			return 0, myerrors.ErrDNIOutOfRange
+			return 0, myerrors.ErrDNIMustBeNumber
 		}
 		return uint32(value), nil
 	case int:

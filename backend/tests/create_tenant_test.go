@@ -84,13 +84,13 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "dni already exists", t)
 }
 
-func TestCreateTenantWithNonNumericDNI_EndToEnd(t *testing.T) {
+func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
 
 	jsonData, _ := json.Marshal(map[string]any{
-		"dni":         "17888420",
+		"dni":         "hola",
 		"name":        "Toni",
 		"last_name":   "Cipriani",
 		"entry_month": "02-2023",
@@ -111,5 +111,65 @@ func TestCreateTenantWithNonNumericDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "dni must be a positive number", t)
+	utils.AssertResponseContains(responseMap, "detail", "dni must be a positive integer", t)
+}
+
+func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	jsonData, _ := json.Marshal(map[string]any{
+		"dni":         -10,
+		"name":        "Victor",
+		"last_name":   "Vance",
+		"entry_month": "02-2023",
+	})
+
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "dni must be a positive integer", t)
+}
+
+func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	jsonData, _ := json.Marshal(map[string]any{
+		"dni":         0,
+		"name":        "Victor",
+		"last_name":   "Vance",
+		"entry_month": "02-2023",
+	})
+
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "dni must be a positive integer", t)
 }

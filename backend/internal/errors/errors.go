@@ -4,8 +4,7 @@ import "errors"
 
 var (
 	ErrRequiredDNI            = errors.New("dni is required")
-	ErrDNIOutOfRange          = errors.New("dni goes out of valid range")
-	ErrDNIMustBeNumber        = errors.New("dni must be a positive number")
+	ErrDNIMustBeNumber        = errors.New("dni must be a positive integer")
 	ErrDuplicateDNI           = errors.New("dni already exists")
 	ErrRequiredName           = errors.New("name is required")
 	ErrNameMustBeString       = errors.New("name must be a string")

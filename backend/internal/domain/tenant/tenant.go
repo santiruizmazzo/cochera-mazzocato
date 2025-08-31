@@ -3,7 +3,6 @@ package tenant
 import (
 	"cochera/internal/domain/calendar"
 	"encoding/json"
-	"errors"
 	"fmt"
 )
 
@@ -112,24 +111,4 @@ func buildValidTenant(tenantMap map[string]any) (*Tenant, error) {
 	}
 
 	return NewTenant(dni, name, lastName, address, phone, email, entryMonth)
-}
-
-func (tenant *Tenant) ValidateAttributes() error {
-	if tenant.DNI == 0 {
-		return errors.New("dni is required")
-	}
-
-	if tenant.Name == "" {
-		return errors.New("name is required")
-	}
-
-	if tenant.LastName == "" {
-		return errors.New("last_name is required")
-	}
-
-	if tenant.EntryMonth.String() == "00-0000" {
-		return errors.New("entry_month is required")
-	}
-
-	return nil
 }

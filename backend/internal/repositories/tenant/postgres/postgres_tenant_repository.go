@@ -29,6 +29,18 @@ func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, err
 	return exists, nil
 }
 
+func (repo *PostgresTenantRepository) ExistsTenantWithEmail(email string) (bool, error) {
+	query := `SELECT COUNT(*) > 0 AS exists FROM tenants WHERE email = $1;`
+
+	var exists bool
+	err := repo.db.QueryRow(context.Background(), query, email).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
 func (repo *PostgresTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenant, error) {
 	query := `
 		INSERT INTO tenants (dni, name, last_name, address, phone, email, entry_month)

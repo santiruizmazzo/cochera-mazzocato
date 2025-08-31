@@ -27,7 +27,7 @@ func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
 	tenant, err := api.tenantService.CreateTenant(requestBody)
 	if err != nil {
 		statusCode := http.StatusBadRequest
-		if errors.Is(err, myerrors.ErrDuplicateDNI) {
+		if errors.Is(err, myerrors.ErrDuplicateDNI) || errors.Is(err, myerrors.ErrDuplicateEmail) {
 			statusCode = http.StatusConflict
 		}
 		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())

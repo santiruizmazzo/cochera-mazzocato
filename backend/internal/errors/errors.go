@@ -9,7 +9,7 @@ var (
 	ErrRequiredName                = errors.New("name is required")
 	ErrNameMustBeString            = errors.New("name must be a string")
 	ErrInvalidName                 = errors.New("name must be a string")
-	ErrDuplicateEmail              = errors.New("email already exists")
+	ErrDuplicateEmail              = errors.New("email already in use")
 	ErrInvalidLastName             = errors.New("last name must be a string")
 	ErrInvalidAddress              = errors.New("address must be a string")
 	ErrInvalidPhone                = errors.New("phone must be a string")

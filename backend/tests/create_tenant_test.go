@@ -15,6 +15,7 @@ func setupExistingTenant(t *testing.T) {
 		"name":        "Trevor",
 		"last_name":   "Phillips",
 		"entry_month": "09-2024",
+		"email":       "trevor@phillips.com",
 	})
 
 	_, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
@@ -362,4 +363,35 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "email must be 100 characters long at max", t)
+}
+
+func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	jsonData, _ := json.Marshal(map[string]any{
+		"dni":         8888888,
+		"name":        "Trevor",
+		"last_name":   "Phillips",
+		"email":       "trevor@phillips.com",
+		"entry_month": "03-2025",
+	})
+
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusConflict, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "email already in use", t)
 }

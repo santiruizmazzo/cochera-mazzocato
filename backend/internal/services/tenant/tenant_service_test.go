@@ -29,6 +29,15 @@ func (mockRepo *mockTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, err
 	return false, nil
 }
 
+func (mockRepo *mockTenantRepository) ExistsTenantWithEmail(email string) (bool, error) {
+	for _, tenant := range mockRepo.tenants {
+		if tenant != nil && tenant.Email == email {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{}}
 

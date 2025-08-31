@@ -215,7 +215,7 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 		"dni":         1212121,
 		"name":        "Phil",
 		"last_name":   "Cassidy",
-		"phone":       "+hola, que tal como estas?",
+		"phone":       "+hola, que tal?",
 		"email":       "phil@cassidy.gun",
 		"entry_month": "02-2023",
 	})
@@ -236,4 +236,36 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "phone must contain numbers only", t)
+}
+
+func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	jsonData, _ := json.Marshal(map[string]any{
+		"dni":         1212121,
+		"name":        "Phil",
+		"last_name":   "Cassidy",
+		"phone":       "+5434424072773442407277",
+		"email":       "phil@cassidy.gun",
+		"entry_month": "02-2023",
+	})
+
+	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "phone must have 15 digits max", t)
 }

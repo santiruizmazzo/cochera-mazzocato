@@ -105,6 +105,9 @@ func validatePhone(rawPhone any) (string, error) {
 			return "", myerrors.ErrPhoneMustStartWithPlusSign
 		}
 		substring := strings.TrimPrefix(value, "+")
+		if len(substring) > 15 {
+			return "", myerrors.ErrPhoneTooLong
+		}
 		if _, err := strconv.Atoi(substring); err != nil {
 			return "", myerrors.ErrPhoneMustContainNumbersOnly
 		}

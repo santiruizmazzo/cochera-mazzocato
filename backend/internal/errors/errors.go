@@ -26,4 +26,5 @@ var (
 	ErrEmailMustBeString           = errors.New("email must be a string")
 	ErrPhoneMustStartWithPlusSign  = errors.New("phone must start with + sign")
 	ErrPhoneMustContainNumbersOnly = errors.New("phone must contain numbers only")
+	ErrPhoneTooLong                = errors.New("phone must have 15 digits max")
 )

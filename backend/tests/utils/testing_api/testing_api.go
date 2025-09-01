@@ -44,9 +44,9 @@ func (api *TestingAPI) Stop() {
 }
 
 func (api *TestingAPI) GetHealthStatusRoute() string {
-	return api.server.URL + "/health"
+	return api.server.URL + "/api/health"
 }
 
-func (api *TestingAPI) GetTenantCreationRoute() string {
-	return api.server.URL + "/tenants"
+func (api *TestingAPI) GetTenantsRoute() string {
+	return api.server.URL + "/api/tenants"
 }

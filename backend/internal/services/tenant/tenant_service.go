@@ -14,6 +14,10 @@ func NewTenantService(repo tenantrepo.TenantRepository) *TenantService {
 	return &TenantService{repo: repo}
 }
 
+func (service *TenantService) GetTenantByID(id int) (*tenant.Tenant, error) {
+	return service.repo.GetTenantByID(id)
+}
+
 func (service *TenantService) CreateTenant(jsonTenant []byte) (*tenant.Tenant, error) {
 	tenant, err := tenant.NewTenantFromJSON(jsonTenant)
 	if err != nil {

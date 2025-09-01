@@ -12,6 +12,10 @@ type mockTenantRepository struct {
 	err     error
 }
 
+func (mockRepo *mockTenantRepository) GetTenantByID(id int) (*tenant.Tenant, error) {
+	return nil, myerrors.ErrTenantNotFound
+}
+
 func (mockRepo *mockTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenant, error) {
 	if mockRepo.err != nil {
 		return nil, mockRepo.err
@@ -107,5 +111,19 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 
 	if err != myerrors.ErrDNIMustBeNumber {
 		t.Fatal("Error should be of type DNI must be a number")
+	}
+}
+
+func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
+	service := NewTenantService(&mockTenantRepository{})
+
+	tenant, err := service.GetTenantByID(9)
+
+	if tenant != nil {
+		t.Fatal("Tenant should not be found")
+	}
+
+	if err != myerrors.ErrTenantNotFound {
+		t.Fatal("Error should be of type tenant not found")
 	}
 }

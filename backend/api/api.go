@@ -44,10 +44,15 @@ func (api *API) addCORSToRouter(router http.Handler) http.Handler {
 }
 
 func (api *API) Routes() *http.ServeMux {
-	router := http.NewServeMux()
-	router.HandleFunc(HealthRoute, api.getHealthStatus)
-	router.HandleFunc(TenantsBaseRoute, api.createTenant)
-	return router
+	apiRouter := http.NewServeMux()
+	apiRouter.HandleFunc(HealthRoute, api.getHealthStatus)
+	apiRouter.HandleFunc(TenantsBaseRoute, api.tenantHandler)
+	apiRouter.HandleFunc(TenantsBaseRoute+"/", api.tenantByIDHandler)
+
+	mainRouter := http.NewServeMux()
+	mainRouter.Handle("/api/", http.StripPrefix("/api", apiRouter))
+
+	return mainRouter
 }
 
 func (api *API) DB() *pgxpool.Pool {

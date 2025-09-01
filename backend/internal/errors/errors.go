@@ -34,4 +34,5 @@ var (
 	ErrNameTooLong                 = errors.New("name must be 50 characters long at max")
 	ErrLastNameTooLong             = errors.New("last name must be 50 characters long at max")
 	ErrAddressTooLong              = errors.New("address must be 100 characters long at max")
+	ErrTenantNotFound              = errors.New("tenant not found")
 )

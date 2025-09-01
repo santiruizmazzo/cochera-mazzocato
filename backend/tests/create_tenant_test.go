@@ -18,9 +18,9 @@ func setupExistingTenant(t *testing.T) {
 		"email":       "trevor@phillips.com",
 	})
 
-	_, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 }
 
@@ -35,9 +35,9 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 		"entry_month": "01-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -67,9 +67,9 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 		"entry_month": "11-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -97,9 +97,9 @@ func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 		"entry_month": "02-2023",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -127,9 +127,9 @@ func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
 		"entry_month": "02-2023",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -157,9 +157,9 @@ func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
 		"entry_month": "02-2023",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -189,9 +189,9 @@ func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
 		"entry_month": "02-2023",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -221,9 +221,9 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 		"entry_month": "02-2023",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -253,9 +253,9 @@ func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
 		"entry_month": "02-2023",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -285,9 +285,9 @@ func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
 		"entry_month": "02-2023",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -316,9 +316,9 @@ func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
 		"entry_month": "03-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -347,9 +347,9 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 		"entry_month": "03-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -378,9 +378,9 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 		"entry_month": "03-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -409,9 +409,9 @@ func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
 		"entry_month": "03-20255555",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -440,9 +440,9 @@ func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
 		"entry_month": "03-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -471,9 +471,9 @@ func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
 		"entry_month": "03-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -503,9 +503,9 @@ func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
 		"entry_month": "03-2025",
 	})
 
-	response, err := http.Post(testApi.GetTenantCreationRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantCreationRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	defer func() {

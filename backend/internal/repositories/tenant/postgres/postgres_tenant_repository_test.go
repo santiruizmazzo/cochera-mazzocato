@@ -198,3 +198,20 @@ func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T
 		t.Fatal("Method should return that email is already in use")
 	}
 }
+
+func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	repo := NewPostgresTenantRepository(db)
+
+	tenant, err := repo.GetTenantByID(2)
+	if err == nil {
+		t.Fatal("GetTenantByID should return error when it tenant does not exist")
+	}
+
+	if tenant != nil {
+		t.Fatal("Tenant shouldn't be created when it is not found")
+	}
+}

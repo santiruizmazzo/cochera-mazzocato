@@ -18,16 +18,23 @@ func NewPostgresTenantRepository(db *pgxpool.Pool) *PostgresTenantRepository {
 }
 
 func (repo *PostgresTenantRepository) GetTenantByID(id int) (*tenant.Tenant, error) {
-	query := `SELECT * FROM tenants WHERE id = $1;`
+	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE id = $1;`
 
 	row := repo.db.QueryRow(context.Background(), query, id)
 
 	var tenant tenant.Tenant
 	var rawEntryMonth string
+	var rawEmail *string
 
-	err := row.Scan(&tenant.ID, &tenant.DNI, &tenant.Name, &tenant.LastName, &tenant.Address, &tenant.Phone, &tenant.Email, &rawEntryMonth)
+	err := row.Scan(&tenant.ID, &tenant.DNI, &tenant.Name, &tenant.LastName, &tenant.Address, &tenant.Phone, &rawEmail, &rawEntryMonth)
 	if err != nil {
 		return nil, myerrors.ErrTenantNotFound
+	}
+
+	if rawEmail == nil {
+		tenant.Email = ""
+	} else {
+		tenant.Email = *rawEmail
 	}
 
 	tenant.EntryMonth, err = calendar.NewMonthOfYearFromString(rawEntryMonth)
@@ -51,6 +58,10 @@ func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, err
 }
 
 func (repo *PostgresTenantRepository) ExistsTenantWithEmail(email string) (bool, error) {
+	if email == "" {
+		return false, nil
+	}
+
 	query := `SELECT COUNT(*) > 0 AS exists FROM tenants WHERE email = $1;`
 
 	var exists bool
@@ -69,7 +80,14 @@ func (repo *PostgresTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenan
 		RETURNING id
 	`
 
-	row := repo.db.QueryRow(context.Background(), query, tenant.DNI, tenant.Name, tenant.LastName, tenant.Address, tenant.Phone, tenant.Email, tenant.EntryMonth.String())
+	var storableEmail any
+	if tenant.Email == "" {
+		storableEmail = nil
+	} else {
+		storableEmail = tenant.Email
+	}
+
+	row := repo.db.QueryRow(context.Background(), query, tenant.DNI, tenant.Name, tenant.LastName, tenant.Address, tenant.Phone, storableEmail, tenant.EntryMonth.String())
 
 	if err := row.Scan(&tenant.ID); err != nil {
 		return nil, err

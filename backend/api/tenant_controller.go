@@ -1,10 +1,7 @@
 package api
 
 import (
-	myerrors "cochera/internal/errors"
-	"encoding/json"
-	"errors"
-	"fmt"
+	"cochera/internal/formatting"
 	"io"
 	"net/http"
 	"strconv"
@@ -18,41 +15,35 @@ func (api *API) tenantHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		api.createTenant(w, r)
 	default:
-		http.Error(w, `{"detail":"method not allowed"}`, http.StatusMethodNotAllowed)
+		formatter := formatting.NewResponseFormatter(w)
+		formatter.RespondMethodIsNotAllowed()
 	}
 }
 
 func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
+	formatter := formatting.NewResponseFormatter(w)
+
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Could not read request body", http.StatusInternalServerError)
+		formatter.RespondCouldNotReadRequestBody()
 		return
 	}
 
 	defer func() {
 		if err := r.Body.Close(); err != nil {
-			http.Error(w, "Could not close request body", http.StatusInternalServerError)
+			formatter.RespondCouldNotCloseRequestBody()
 		}
 	}()
 
 	tenant, err := api.tenantService.CreateTenant(requestBody)
 	if err != nil {
-		statusCode := http.StatusBadRequest
-		if errors.Is(err, myerrors.ErrDuplicateDNI) || errors.Is(err, myerrors.ErrDuplicateEmail) {
-			statusCode = http.StatusConflict
-		}
-		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
-		http.Error(w, responseBody, statusCode)
+		formatter.RespondCouldNotCreateTenant(err)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(tenant)
+	err = formatter.RespondTenantWasCreatedSuccessfully(tenant)
 	if err != nil {
-		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
-		http.Error(w, responseBody, http.StatusInternalServerError)
-		return
+		formatter.RespondCouldNotWriteResponse(err)
 	}
 }
 
@@ -61,40 +52,34 @@ func (api *API) tenantByIDHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		api.getTenantByID(w, r)
 	default:
-		http.Error(w, `{"detail":"method not allowed"}`, http.StatusMethodNotAllowed)
+		formatter := formatting.NewResponseFormatter(w)
+		formatter.RespondMethodIsNotAllowed()
 	}
 }
 
 func (api *API) getTenantByID(w http.ResponseWriter, r *http.Request) {
+	formatter := formatting.NewResponseFormatter(w)
+
 	path := strings.TrimPrefix(r.URL.Path, TenantsBaseRoute+"/")
 	if path == "" {
-		http.Error(w, `{"detail":"tenant id required"}`, http.StatusBadRequest)
+		formatter.RespondTenantIDMustNotBeMissing()
 		return
 	}
 
 	id, err := strconv.Atoi(path)
 	if err != nil {
-		http.Error(w, `{"detail":"invalid tenant id format"}`, http.StatusBadRequest)
+		formatter.RespondTenantIDMustBeAnInteger()
 		return
 	}
 
 	tenant, err := api.tenantService.GetTenantByID(id)
 	if err != nil {
-		statusCode := http.StatusInternalServerError
-		if errors.Is(err, myerrors.ErrTenantNotFound) {
-			statusCode = http.StatusNotFound
-		}
-		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
-		http.Error(w, responseBody, statusCode)
+		formatter.RespondCouldNotGetTenant(err)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(w).Encode(tenant)
+	err = formatter.RespondTenantGotSuccessfully(tenant)
 	if err != nil {
-		responseBody := fmt.Sprintf(`{"detail":"%s"}`, err.Error())
-		http.Error(w, responseBody, http.StatusInternalServerError)
-		return
+		formatter.RespondCouldNotWriteResponse(err)
 	}
 }

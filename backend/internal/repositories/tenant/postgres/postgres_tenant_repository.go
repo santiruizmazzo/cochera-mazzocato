@@ -23,26 +23,31 @@ func (repo *PostgresTenantRepository) GetTenantByID(id int) (*tenant.Tenant, err
 	row := repo.db.QueryRow(context.Background(), query, id)
 
 	var tenant tenant.Tenant
-	var rawEntryMonth string
-	var rawEmail *string
+	var entryMonth string
+	var address, phone, email *string
 
-	err := row.Scan(&tenant.ID, &tenant.DNI, &tenant.Name, &tenant.LastName, &tenant.Address, &tenant.Phone, &rawEmail, &rawEntryMonth)
+	err := row.Scan(&tenant.ID, &tenant.DNI, &tenant.Name, &tenant.LastName, &address, &phone, &email, &entryMonth)
 	if err != nil {
 		return nil, myerrors.ErrTenantNotFound
 	}
 
-	if rawEmail == nil {
-		tenant.Email = ""
-	} else {
-		tenant.Email = *rawEmail
-	}
+	tenant.Address = pointerToString(address)
+	tenant.Phone = pointerToString(phone)
+	tenant.Email = pointerToString(email)
 
-	tenant.EntryMonth, err = calendar.NewMonthOfYearFromString(rawEntryMonth)
+	tenant.EntryMonth, err = calendar.NewMonthOfYearFromString(entryMonth)
 	if err != nil {
 		return nil, err
 	}
 
 	return &tenant, nil
+}
+
+func pointerToString(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
 }
 
 func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {
@@ -80,6 +85,20 @@ func (repo *PostgresTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenan
 		RETURNING id
 	`
 
+	var storableAddress any
+	if tenant.Address == "" {
+		storableAddress = nil
+	} else {
+		storableAddress = tenant.Address
+	}
+
+	var storablePhone any
+	if tenant.Phone == "" {
+		storablePhone = nil
+	} else {
+		storablePhone = tenant.Phone
+	}
+
 	var storableEmail any
 	if tenant.Email == "" {
 		storableEmail = nil
@@ -87,7 +106,7 @@ func (repo *PostgresTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenan
 		storableEmail = tenant.Email
 	}
 
-	row := repo.db.QueryRow(context.Background(), query, tenant.DNI, tenant.Name, tenant.LastName, tenant.Address, tenant.Phone, storableEmail, tenant.EntryMonth.String())
+	row := repo.db.QueryRow(context.Background(), query, tenant.DNI, tenant.Name, tenant.LastName, storableAddress, storablePhone, storableEmail, tenant.EntryMonth.String())
 
 	if err := row.Scan(&tenant.ID); err != nil {
 		return nil, err

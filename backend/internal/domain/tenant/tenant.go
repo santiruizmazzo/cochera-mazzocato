@@ -112,3 +112,33 @@ func buildValidTenant(tenantMap map[string]any) (*Tenant, error) {
 
 	return NewTenant(dni, name, lastName, address, phone, email, entryMonth)
 }
+
+func (tenant *Tenant) MarshalJSON() ([]byte, error) {
+	result := map[string]any{
+		"id":          tenant.ID,
+		"dni":         tenant.DNI,
+		"name":        tenant.Name,
+		"last_name":   tenant.LastName,
+		"entry_month": tenant.EntryMonth.String(),
+	}
+
+	if tenant.Address != "" {
+		result["address"] = tenant.Address
+	} else {
+		result["address"] = nil
+	}
+
+	if tenant.Phone != "" {
+		result["phone"] = tenant.Phone
+	} else {
+		result["phone"] = nil
+	}
+
+	if tenant.Email != "" {
+		result["email"] = tenant.Email
+	} else {
+		result["email"] = nil
+	}
+
+	return json.Marshal(result)
+}

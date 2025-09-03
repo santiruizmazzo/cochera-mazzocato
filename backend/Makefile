@@ -34,6 +34,10 @@ test-cover:
 migrate-test-up: DATABASE_URL = $(TEST_DB_URL)
 migrate-test-up: migrate-up
 
+.PHONY: migrate-prod-up
+migrate-prod-up: DATABASE_URL = $(PROD_DB_URL)
+migrate-prod-up: migrate-up
+
 .PHONY: migrate-up
 migrate-up:
 	@echo "🤔 Checking current migration version..."
@@ -102,6 +106,11 @@ run: migrate-up
 	@echo "🚗 Starting Cochera Mazzocato API..."
 	@go run $(MAIN_PATH)
 
+.PHONY: run-prod
+run-prod: migrate-prod-up
+	@echo "🚗 Starting Cochera Mazzocato API..."
+	@./$(APP_NAME)
+
 # File-based commands (don't use .PHONY)
 .PHONY: build-dev
 build-dev: $(APP_NAME)
@@ -113,4 +122,4 @@ $(APP_NAME): $(shell find . -name '*.go')
 .PHONY: build-prod
 build-prod:
 	@echo "🎁 Building app for production environment..."
-	@CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o $(APP_NAME) $(MAIN_PATH)
+	@GOARCH=amd64 CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o $(APP_NAME) $(MAIN_PATH)

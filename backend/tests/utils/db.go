@@ -16,7 +16,7 @@ func SetupTestDatabase() (*pgxpool.Pool, error) {
 	return db, nil
 }
 
-func cleanupTestDatabase(db *pgxpool.Pool) {
+func CleanupTestDatabase(db *pgxpool.Pool) {
 	_, _ = db.Exec(context.Background(), `
 		DO
 		$func$
@@ -33,6 +33,6 @@ func cleanupTestDatabase(db *pgxpool.Pool) {
 }
 
 func CleanupAndCloseTestDatabase(db *pgxpool.Pool) {
-	cleanupTestDatabase(db)
+	CleanupTestDatabase(db)
 	db.Close()
 }

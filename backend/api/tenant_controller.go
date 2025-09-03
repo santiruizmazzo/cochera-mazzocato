@@ -12,12 +12,29 @@ const TenantsBaseRoute string = "/tenants"
 
 func (api *API) tenantHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
+	case http.MethodGet:
+		api.getTenants(w, r)
 	case http.MethodPost:
 		api.createTenant(w, r)
 	default:
 		formatter := formatting.NewResponseFormatter(w)
 		formatter.RespondMethodIsNotAllowed()
 	}
+}
+
+func (api *API) getTenants(w http.ResponseWriter, _ *http.Request) {
+	// _ := formatting.NewResponseFormatter(w)
+
+	_, err := api.tenantService.GetTenants()
+	if err != nil {
+		// formatter.RespondCouldNotFindAnyTenants(err)
+		return
+	}
+
+	// err = formatter.RespondTenantsGotSuccessfully(tenants)
+	// if err != nil {
+	// 	formatter.RespondCouldNotWriteResponse(err)
+	// }
 }
 
 func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {

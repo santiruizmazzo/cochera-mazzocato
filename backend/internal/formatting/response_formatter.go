@@ -92,3 +92,11 @@ func (formatter *ResponseFormatter) RespondCurrentHealthStatus(currentVersion st
 	formatter.w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(formatter.w).Encode(response)
 }
+
+func (formatter *ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingError error) {
+	panic("unimplemented")
+}
+
+func (formatter *ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*tenant.Tenant) error {
+	panic("unimplemented")
+}

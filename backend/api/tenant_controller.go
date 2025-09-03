@@ -25,7 +25,7 @@ func (api *API) tenantHandler(w http.ResponseWriter, r *http.Request) {
 func (api *API) getTenants(w http.ResponseWriter, _ *http.Request) {
 	// _ := formatting.NewResponseFormatter(w)
 
-	_, err := api.tenantService.GetTenants()
+	_, err := api.tenantService.GetAllTenants()
 	if err != nil {
 		// formatter.RespondCouldNotFindAnyTenants(err)
 		return

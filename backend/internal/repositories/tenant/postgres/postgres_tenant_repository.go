@@ -50,6 +50,10 @@ func pointerToString(s *string) string {
 	return *s
 }
 
+func (repo *PostgresTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) {
+	panic("unimplemented")
+}
+
 func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {
 	query := `SELECT COUNT(*) > 0 AS exists FROM tenants WHERE dni = $1;`
 

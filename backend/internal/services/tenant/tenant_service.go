@@ -18,8 +18,8 @@ func (service *TenantService) GetTenantByID(id int) (*tenant.Tenant, error) {
 	return service.repo.GetTenantByID(id)
 }
 
-func (service *TenantService) GetTenants() ([]*tenant.Tenant, error) {
-	panic("unimplemented")
+func (service *TenantService) GetAllTenants() ([]*tenant.Tenant, error) {
+	return service.repo.GetAllTenants()
 }
 
 func (service *TenantService) CreateTenant(jsonTenant []byte) (*tenant.Tenant, error) {

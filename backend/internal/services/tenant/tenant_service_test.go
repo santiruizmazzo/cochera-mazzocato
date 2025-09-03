@@ -12,6 +12,14 @@ type mockTenantRepository struct {
 	err     error
 }
 
+func (mockRepo *mockTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) {
+	var list []*tenant.Tenant
+	for _, v := range mockRepo.tenants {
+		list = append(list, v)
+	}
+	return list, nil
+}
+
 func (mockRepo *mockTenantRepository) GetTenantByID(id int) (*tenant.Tenant, error) {
 	return nil, myerrors.ErrTenantNotFound
 }
@@ -125,5 +133,37 @@ func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
 
 	if err != myerrors.ErrTenantNotFound {
 		t.Fatal("Error should be of type tenant not found")
+	}
+}
+
+func TestTenantService_GetTenants_Successfully(t *testing.T) {
+	mockRepo := mockTenantRepository{tenants: map[int]*tenant.Tenant{}}
+	expectedTenant1 := &tenant.Tenant{
+		ID:         1,
+		DNI:        233223,
+		Name:       "Ricardo",
+		LastName:   "Díaz",
+		EntryMonth: calendar.NewMonthOfYear(8, 2025),
+	}
+	expectedTenant2 := &tenant.Tenant{
+		ID:         2,
+		DNI:        111,
+		Name:       "Ken",
+		LastName:   "Rosenberg",
+		EntryMonth: calendar.NewMonthOfYear(1, 2024),
+	}
+	mockRepo.tenants[1] = expectedTenant1
+	mockRepo.tenants[2] = expectedTenant2
+
+	service := NewTenantService(&mockRepo)
+
+	tenants, err := service.GetAllTenants()
+
+	if err != nil {
+		t.Fatal("GetTenants shouldn't fail here")
+	}
+
+	if len(tenants) != 2 {
+		t.Fatal("Incorrect number of tenants retrieved")
 	}
 }

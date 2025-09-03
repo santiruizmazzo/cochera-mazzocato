@@ -89,7 +89,7 @@ migrate-create:
 	@read -p "Enter migration name: " name; \
 	migrate create -ext sql -dir $(MIGRATIONS_PATH) -seq $$name
 
-.PHONY: install-migrate
+.PHONY: install-migrate-prod
 install-migrate-prod:
 	curl -L $(MIGRATE_URL) | tar xvz
 	chmod +x migrate

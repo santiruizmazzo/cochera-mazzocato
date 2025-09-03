@@ -40,7 +40,11 @@ migrate-test-up: migrate-up
 
 .PHONY: migrate-prod-up
 migrate-prod-up: DATABASE_URL = $(PROD_DB_URL)
-migrate-prod-up: migrate-up
+migrate-prod-up:
+	@echo "🤔 Checking current migration version..."
+	@./migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" version || true
+	@echo "⏭️  Running migrations..."
+	@./migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" up
 
 .PHONY: migrate-up
 migrate-up:
@@ -86,10 +90,9 @@ migrate-create:
 	migrate create -ext sql -dir $(MIGRATIONS_PATH) -seq $$name
 
 .PHONY: install-migrate
-install-migrate:
+install-migrate-prod:
 	curl -L $(MIGRATE_URL) | tar xvz
-	mv migrate /usr/local/bin/
-	chmod +x /usr/local/bin/migrate
+	chmod +x migrate
 
 .PHONY: clean
 clean:
@@ -117,7 +120,7 @@ run: migrate-up
 	@go run $(MAIN_PATH)
 
 .PHONY: run-prod
-run-prod: install-migrate migrate-prod-up
+run-prod: install-migrate-prod migrate-prod-up
 	@echo "🚗 Starting Cochera Mazzocato API..."
 	@./$(APP_NAME)
 

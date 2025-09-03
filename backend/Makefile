@@ -88,7 +88,7 @@ migrate-create:
 .PHONY: install-migrate
 install-migrate:
 	curl -L $(MIGRATE_URL) | tar xvz
-	sudo mv migrate /usr/local/bin/
+	mv migrate /usr/local/bin/
 	chmod +x /usr/local/bin/migrate
 
 .PHONY: clean

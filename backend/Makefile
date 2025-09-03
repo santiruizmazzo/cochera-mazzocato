@@ -1,9 +1,13 @@
 APP_NAME=cochera
 MAIN_PATH=./cmd/server/main.go
-MIGRATIONS_PATH=./migrations
-DATABASE_URL=$(DEV_DB_URL)
+
 GOLANGCI_LINT_VERSION = v2.4.0
 GOBIN := $(shell go env GOPATH)/bin
+
+DATABASE_URL=$(DEV_DB_URL)
+MIGRATIONS_PATH=./migrations
+MIGRATE_VERSION := v4.18.1
+MIGRATE_URL := https://github.com/golang-migrate/migrate/releases/download/$(MIGRATE_VERSION)/migrate.linux-amd64.tar.gz
 
 .PHONY: test
 test: migrate-test-up
@@ -81,6 +85,12 @@ migrate-create:
 	@read -p "Enter migration name: " name; \
 	migrate create -ext sql -dir $(MIGRATIONS_PATH) -seq $$name
 
+.PHONY: install-migrate
+install-migrate:
+	curl -L $(MIGRATE_URL) | tar xvz
+	sudo mv migrate /usr/local/bin/
+	chmod +x /usr/local/bin/migrate
+
 .PHONY: clean
 clean:
 	@echo "🧹 Cleaning app's executables & cache..."
@@ -107,7 +117,7 @@ run: migrate-up
 	@go run $(MAIN_PATH)
 
 .PHONY: run-prod
-run-prod: migrate-prod-up
+run-prod: install-migrate migrate-prod-up
 	@echo "🚗 Starting Cochera Mazzocato API..."
 	@./$(APP_NAME)
 

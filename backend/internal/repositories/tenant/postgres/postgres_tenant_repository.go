@@ -64,9 +64,18 @@ func (repo *PostgresTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) 
 	}
 	defer rows.Close()
 
-	return pgx.CollectRows(rows, func(row pgx.CollectableRow) (*tenant.Tenant, error) {
+	tenants, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*tenant.Tenant, error) {
 		return createTenantFromRow(row)
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(tenants) == 0 {
+		return nil, myerrors.ErrNoTenantsCreated
+	}
+
+	return tenants, nil
 }
 
 func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {

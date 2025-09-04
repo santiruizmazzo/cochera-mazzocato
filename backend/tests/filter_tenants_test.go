@@ -73,3 +73,28 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 }
+
+func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	testApi.ResetDB()
+
+	response, err := http.Get(testApi.GetTenantsRoute())
+	if err != nil {
+		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "there are no tenants created", t)
+
+	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+}

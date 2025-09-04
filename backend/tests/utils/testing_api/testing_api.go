@@ -1,7 +1,7 @@
 package testingapi
 
 import (
-	"cochera/api"
+	"cochera/application/api"
 	"cochera/tests/utils"
 	"context"
 	"net/http"

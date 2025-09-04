@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cochera/api"
+	"cochera/application/api"
 	"cochera/internal/config"
 	"log"
 )

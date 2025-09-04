@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"cochera/internal/domain/calendar"
-	"cochera/internal/domain/tenant"
+	"cochera/domain/calendar"
+	"cochera/domain/tenant"
 	myerrors "cochera/internal/errors"
 	"context"
 

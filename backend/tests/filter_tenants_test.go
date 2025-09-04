@@ -2,7 +2,7 @@ package tests
 
 import (
 	"bytes"
-	"cochera/internal/domain/tenant"
+	"cochera/domain/tenant"
 	"cochera/tests/utils"
 	"encoding/json"
 	"net/http"

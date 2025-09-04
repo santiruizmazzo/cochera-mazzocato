@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"cochera/internal/domain/tenant"
+	"cochera/domain/tenant"
 	"cochera/tests/utils"
 
 	"bytes"

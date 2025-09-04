@@ -1,7 +1,7 @@
 package tenantservice
 
 import (
-	"cochera/internal/domain/tenant"
+	"cochera/domain/tenant"
 	myerrors "cochera/internal/errors"
 	"encoding/json"
 	"testing"

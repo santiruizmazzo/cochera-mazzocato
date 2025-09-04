@@ -1,7 +1,7 @@
 package tenant
 
 import (
-	"cochera/internal/domain/calendar"
+	"cochera/domain/calendar"
 	"encoding/json"
 	"fmt"
 )

@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	"cochera/internal/domain/tenant"
+	"cochera/domain/tenant"
 	"cochera/tests/utils"
 	"log"
 	"os"

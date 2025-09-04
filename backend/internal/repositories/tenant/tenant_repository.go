@@ -1,6 +1,6 @@
 package tenantrepo
 
-import "cochera/internal/domain/tenant"
+import "cochera/domain/tenant"
 
 type TenantRepository interface {
 	GetTenantByID(id int) (*tenant.Tenant, error)

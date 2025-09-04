@@ -1,6 +1,6 @@
 package tenant
 
-import "cochera/internal/domain/calendar"
+import "cochera/domain/calendar"
 
 type TenantBuilder struct {
 	tenant *Tenant

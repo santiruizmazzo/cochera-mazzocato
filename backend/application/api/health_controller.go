@@ -1,8 +1,8 @@
 package api
 
 import (
-	"cochera/internal/formatting"
-	"cochera/internal/version"
+	"cochera/application/formatting"
+	"cochera/application/version"
 	"net/http"
 )
 

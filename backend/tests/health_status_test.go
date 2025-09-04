@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"cochera/internal/version"
+	"cochera/application/version"
 	"cochera/tests/utils"
 	"net/http"
 	"testing"

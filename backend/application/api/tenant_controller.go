@@ -1,7 +1,7 @@
 package api
 
 import (
-	"cochera/internal/formatting"
+	"cochera/application/formatting"
 	"io"
 	"net/http"
 	"strconv"

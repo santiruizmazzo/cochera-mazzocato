@@ -1,9 +1,9 @@
 package tenantservice
 
 import (
-	"cochera/internal/domain/calendar"
 	"cochera/internal/domain/tenant"
 	myerrors "cochera/internal/errors"
+	"encoding/json"
 	"testing"
 )
 
@@ -53,17 +53,8 @@ func (mockRepo *mockTenantRepository) ExistsTenantWithEmail(email string) (bool,
 func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{}}
 
-	expectedTenant := &tenant.Tenant{
-		ID:         1,
-		DNI:        12345678,
-		Name:       "Manolo",
-		LastName:   "Lamas",
-		Address:    "Avenida Siempreviva 555",
-		Phone:      "+5645551114",
-		Email:      "mlamas@fifa09.com",
-		EntryMonth: calendar.NewMonthOfYear(8, 2025),
-	}
-	jsonTenant := []byte(`{"dni":12345678,"name":"Manolo","last_name":"Lamas","address":"Avenida Siempreviva 555","phone":"+5645551114","email":"mlamas@fifa09.com","entry_month":"08-2025"}`)
+	expectedTenant := tenant.NewTenantBuilder().WithID(1).Build()
+	jsonTenant, _ := json.Marshal(expectedTenant)
 
 	service := NewTenantService(mockRepo)
 
@@ -72,29 +63,19 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if *tenant != *expectedTenant {
+	if *expectedTenant != *tenant {
 		t.Fatal("Expected tenant is different from created tenant")
 	}
 }
 
 func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
-	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{
-		1: {
-			ID:         1,
-			DNI:        11111111,
-			Name:       "Frodo",
-			LastName:   "Baggins",
-			Address:    "Unnamed road 123",
-			Phone:      "+5213337778",
-			Email:      "fbaggins@hobbiton.org",
-			EntryMonth: calendar.NewMonthOfYear(8, 2025),
-		},
-	}}
+	existingTenant := tenant.NewTenantBuilder().Build()
+	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{1: existingTenant}}
+
+	newTenant := tenant.NewTenantBuilder().WithEmail("another@email.com").Build()
+	jsonTenant, _ := json.Marshal(newTenant)
 
 	service := NewTenantService(mockRepo)
-
-	jsonTenant := []byte(`{"dni":11111111,"name":"Bilbo","last_name":"Baggins","address":"Unnamed road 123","phone":"+5213337778","email":"bilbo@baggins.corp","entry_month":"10-2024"}`)
-
 	tenant, err := service.CreateTenant(jsonTenant)
 
 	if tenant != nil {
@@ -109,7 +90,12 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 	service := NewTenantService(&mockTenantRepository{})
 
-	jsonTenant := []byte(`{"dni":"hola","name":"Samwise","last_name":"Gamyi","address":"Beyond the Water 555","phone":"+5213337712","email":"sam@gamyi.com","entry_month":"06-2025"}`)
+	jsonTenant, _ := json.Marshal(map[string]any{
+		"dni":         "hola",
+		"name":        "Samwise",
+		"last_name":   "Gamyi",
+		"entry_month": "06-2025",
+	})
 
 	tenant, err := service.CreateTenant(jsonTenant)
 
@@ -137,25 +123,15 @@ func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
 }
 
 func TestTenantService_GetTenants_Successfully(t *testing.T) {
-	mockRepo := mockTenantRepository{tenants: map[int]*tenant.Tenant{}}
-	expectedTenant1 := &tenant.Tenant{
-		ID:         1,
-		DNI:        233223,
-		Name:       "Ricardo",
-		LastName:   "Díaz",
-		EntryMonth: calendar.NewMonthOfYear(8, 2025),
-	}
-	expectedTenant2 := &tenant.Tenant{
-		ID:         2,
-		DNI:        111,
-		Name:       "Ken",
-		LastName:   "Rosenberg",
-		EntryMonth: calendar.NewMonthOfYear(1, 2024),
-	}
-	mockRepo.tenants[1] = expectedTenant1
-	mockRepo.tenants[2] = expectedTenant2
+	expectedTenant1 := tenant.NewTenantBuilder().WithID(1).WithDNI(43295798).WithEmail("1@2.com").Build()
+	expectedTenant2 := tenant.NewTenantBuilder().WithID(2).WithDNI(41630284).WithEmail("3@4.com").Build()
 
-	service := NewTenantService(&mockRepo)
+	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{
+		1: expectedTenant1,
+		2: expectedTenant2,
+	}}
+
+	service := NewTenantService(mockRepo)
 
 	tenants, err := service.GetAllTenants()
 
@@ -165,5 +141,13 @@ func TestTenantService_GetTenants_Successfully(t *testing.T) {
 
 	if len(tenants) != 2 {
 		t.Fatal("Incorrect number of tenants retrieved")
+	}
+
+	if *expectedTenant1 != *tenants[0] {
+		t.Fatalf("Expected %v, got %v", expectedTenant1, tenants[0])
+	}
+
+	if *expectedTenant2 != *tenants[1] {
+		t.Fatalf("Expected %v, got %v", expectedTenant2, tenants[1])
 	}
 }

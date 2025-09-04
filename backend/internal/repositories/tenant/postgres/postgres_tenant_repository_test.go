@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"cochera/internal/domain/calendar"
 	"cochera/internal/domain/tenant"
 	"cochera/tests/utils"
 	"log"
@@ -38,23 +37,14 @@ func TestPostgresTenantRepository_Save_Successfully_Integration(t *testing.T) {
 
 	repo := NewPostgresTenantRepository(db)
 
-	localTenant := &tenant.Tenant{
-		DNI:        12345678,
-		Name:       "Manolo",
-		LastName:   "Lamas",
-		Address:    "Avenida Siempreviva 555",
-		Phone:      "+5645551114",
-		Email:      "mlamas@fifa09.com",
-		EntryMonth: calendar.NewMonthOfYear(8, 2025),
-	}
+	localTenant := tenant.NewTenantBuilder().WithID(1).Build()
 
 	savedTenant, err := repo.Save(localTenant)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	localTenant.ID = 1
-	if savedTenant != localTenant {
+	if *localTenant != *savedTenant {
 		t.Fatal("Expected tenant is different from saved tenant")
 	}
 }
@@ -64,32 +54,17 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 		t.Skip()
 	}
 
+	utils.CleanupTestDatabase(db)
 	repo := NewPostgresTenantRepository(db)
 
-	existingTenant := &tenant.Tenant{
-		DNI:        33333333,
-		Name:       "Manolo",
-		LastName:   "Lamas",
-		Address:    "Avenida Siempreviva 555",
-		Phone:      "+5645551114",
-		Email:      "manololamas@gmail.com",
-		EntryMonth: calendar.NewMonthOfYear(8, 2025),
-	}
+	existingTenant := tenant.NewTenantBuilder().WithEmail("a@b.com").Build()
 
 	_, err := repo.Save(existingTenant)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	newTenant := &tenant.Tenant{
-		DNI:        33333333,
-		Name:       "Solid",
-		LastName:   "Snake",
-		Address:    "123 Stealth Mode St.",
-		Phone:      "+5644440004",
-		Email:      "solid@snake.com",
-		EntryMonth: calendar.NewMonthOfYear(1, 2021),
-	}
+	newTenant := tenant.NewTenantBuilder().WithEmail("c@d.com").Build()
 
 	createdTenant, err := repo.Save(newTenant)
 	if err == nil {
@@ -106,17 +81,10 @@ func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) 
 		t.Skip()
 	}
 
+	utils.CleanupTestDatabase(db)
 	repo := NewPostgresTenantRepository(db)
 
-	existingTenant := &tenant.Tenant{
-		DNI:        22222222,
-		Name:       "Manolo",
-		LastName:   "Lamas",
-		Address:    "Avenida Siempreviva 555",
-		Phone:      "+5645551114",
-		Email:      "mlamas@gmail.com",
-		EntryMonth: calendar.NewMonthOfYear(8, 2025),
-	}
+	existingTenant := tenant.NewTenantBuilder().WithDNI(22222222).Build()
 
 	_, err := repo.Save(existingTenant)
 	if err != nil {
@@ -134,32 +102,17 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateEmail_Integration(t *testi
 		t.Skip()
 	}
 
+	utils.CleanupTestDatabase(db)
 	repo := NewPostgresTenantRepository(db)
 
-	existingTenant := &tenant.Tenant{
-		DNI:        123,
-		Name:       "Max",
-		LastName:   "Payne",
-		Address:    "745 Suicidal Av.",
-		Phone:      "+56423456714",
-		Email:      "max@payne.com",
-		EntryMonth: calendar.NewMonthOfYear(6, 2025),
-	}
+	existingTenant := tenant.NewTenantBuilder().WithDNI(1).Build()
 
 	_, err := repo.Save(existingTenant)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	newTenant := &tenant.Tenant{
-		DNI:        4231,
-		Name:       "Mack",
-		LastName:   "Paind",
-		Address:    "123 Full Gaga St.",
-		Phone:      "+56111111",
-		Email:      "max@payne.com",
-		EntryMonth: calendar.NewMonthOfYear(1, 2021),
-	}
+	newTenant := tenant.NewTenantBuilder().WithDNI(2).Build()
 
 	createdTenant, err := repo.Save(newTenant)
 	if err == nil {
@@ -176,17 +129,10 @@ func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T
 		t.Skip()
 	}
 
+	utils.CleanupTestDatabase(db)
 	repo := NewPostgresTenantRepository(db)
 
-	existingTenant := &tenant.Tenant{
-		DNI:        777777777,
-		Name:       "Neo",
-		LastName:   "Cortex",
-		Address:    "123 I hate Crash st.",
-		Phone:      "+1999999999",
-		Email:      "neo@cortex.com",
-		EntryMonth: calendar.NewMonthOfYear(8, 2025),
-	}
+	existingTenant := tenant.NewTenantBuilder().WithEmail("neo@cortex.com").Build()
 
 	_, err := repo.Save(existingTenant)
 	if err != nil {
@@ -204,6 +150,7 @@ func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) 
 		t.Skip()
 	}
 
+	utils.CleanupTestDatabase(db)
 	repo := NewPostgresTenantRepository(db)
 
 	tenant, err := repo.GetTenantByID(666)
@@ -224,31 +171,13 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 	utils.CleanupTestDatabase(db)
 	repo := NewPostgresTenantRepository(db)
 
-	existingTenant1 := &tenant.Tenant{
-		DNI:        1,
-		Name:       "Zhou",
-		LastName:   "Ming",
-		Address:    "123 Beijing st.",
-		Phone:      "+19991",
-		Email:      "zhou@ming.com",
-		EntryMonth: calendar.NewMonthOfYear(1, 1999),
-	}
-
+	existingTenant1 := tenant.NewTenantBuilder().WithDNI(433).WithEmail("first@tenant.com").Build()
 	_, err := repo.Save(existingTenant1)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	existingTenant2 := &tenant.Tenant{
-		DNI:        3333,
-		Name:       "Wade",
-		LastName:   "Heston",
-		Address:    "555 FIB av.",
-		Phone:      "+555555",
-		Email:      "wade@heston.com",
-		EntryMonth: calendar.NewMonthOfYear(1, 1999),
-	}
-
+	existingTenant2 := tenant.NewTenantBuilder().WithDNI(442).WithEmail("second@tenant.com").Build()
 	_, err = repo.Save(existingTenant2)
 	if err != nil {
 		t.Fatal(err)
@@ -263,11 +192,11 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 		t.Fatal("Returned a tenants list with a different size as expected")
 	}
 
-	if *tenants[0] != *existingTenant1 {
+	if *existingTenant1 != *tenants[0] {
 		t.Fatalf("Got %v, expected %v", tenants[0], existingTenant1)
 	}
 
-	if *tenants[1] != *existingTenant2 {
+	if *existingTenant2 != *tenants[1] {
 		t.Fatalf("Got %v, expected %v", tenants[1], existingTenant2)
 	}
 }

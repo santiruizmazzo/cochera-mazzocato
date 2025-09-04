@@ -29,6 +29,16 @@ func (builder *TenantBuilder) WithDNI(dni int) *TenantBuilder {
 	return builder
 }
 
+func (builder *TenantBuilder) WithName(name string) *TenantBuilder {
+	builder.tenant.Name = name
+	return builder
+}
+
+func (builder *TenantBuilder) WithLastName(lastName string) *TenantBuilder {
+	builder.tenant.LastName = lastName
+	return builder
+}
+
 func (builder *TenantBuilder) WithAddress(address string) *TenantBuilder {
 	builder.tenant.Address = address
 	return builder

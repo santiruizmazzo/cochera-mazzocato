@@ -2,6 +2,7 @@ package tests
 
 import (
 	"bytes"
+	"cochera/internal/domain/tenant"
 	"cochera/tests/utils"
 	"encoding/json"
 	"net/http"
@@ -62,7 +63,7 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 	}()
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
-	tenantsList := utils.AssertSliceOfMaps(t, responseMap["data"])
+	tenantsList := utils.AssertSliceOfMaps(responseMap["data"], t)
 
 	if !reflect.DeepEqual(tenantsList[0], firstExpectedTenant) {
 		t.Fatalf("Expected %+v, got %+v", firstExpectedTenant, tenantsList[0])
@@ -97,4 +98,60 @@ func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "there are no tenants created", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+}
+
+func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
+	t.Skip("Skipping this test temporarily...")
+
+	if testing.Short() {
+		t.Skip()
+	}
+
+	testApi.ResetDB()
+
+	nameToFilter := "Salvatore"
+	expectedTenant := tenant.NewTenantBuilder().WithName(nameToFilter).Build()
+	jsonTenant, _ := json.Marshal(expectedTenant)
+	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	expectedTenant = tenant.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
+	jsonTenant, _ = json.Marshal(expectedTenant)
+	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	expectedTenant = tenant.NewTenantBuilder().WithDNI(2).WithName(nameToFilter).WithEmail("b@b.com").Build()
+	jsonTenant, _ = json.Marshal(expectedTenant)
+	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	response, err := http.Get(testApi.GetTenantsRoute() + "?name=" + nameToFilter)
+	if err != nil {
+		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	tenantsList := utils.AssertSliceOfMaps(responseMap["data"], t)
+
+	if len(tenantsList) != 2 {
+		t.Fatal("Expected a list of tenants of size 2, got ", len(tenantsList))
+	}
+
+	utils.AssertResponseContains(tenantsList[0], "name", nameToFilter, t)
+	utils.AssertResponseContains(tenantsList[1], "name", nameToFilter, t)
+
+	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 }

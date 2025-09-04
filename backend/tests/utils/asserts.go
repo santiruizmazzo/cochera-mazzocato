@@ -17,7 +17,7 @@ func AssertStatusCodeIs(expectedCode, receivedCode int, t *testing.T) {
 	}
 }
 
-func AssertSliceOfMaps(t *testing.T, data any) []map[string]any {
+func AssertSliceOfMaps(data any, t *testing.T) []map[string]any {
 	// Manejar []map[string]any
 	if slice, ok := data.([]map[string]any); ok {
 		result := make([]map[string]any, len(slice))

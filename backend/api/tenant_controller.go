@@ -23,18 +23,18 @@ func (api *API) tenantHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) getTenants(w http.ResponseWriter, _ *http.Request) {
-	// _ := formatting.NewResponseFormatter(w)
+	formatter := formatting.NewResponseFormatter(w)
 
-	_, err := api.tenantService.GetAllTenants()
+	tenants, err := api.tenantService.GetAllTenants()
 	if err != nil {
-		// formatter.RespondCouldNotFindAnyTenants(err)
+		formatter.RespondCouldNotFindAnyTenants(err)
 		return
 	}
 
-	// err = formatter.RespondTenantsGotSuccessfully(tenants)
-	// if err != nil {
-	// 	formatter.RespondCouldNotWriteResponse(err)
-	// }
+	err = formatter.RespondTenantsGotSuccessfully(tenants)
+	if err != nil {
+		formatter.RespondCouldNotWriteResponse(err)
+	}
 }
 
 func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {

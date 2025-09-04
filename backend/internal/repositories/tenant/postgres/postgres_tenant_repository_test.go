@@ -215,3 +215,59 @@ func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) 
 		t.Fatal("Tenant shouldn't be created when it is not found")
 	}
 }
+
+func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	utils.CleanupTestDatabase(db)
+	repo := NewPostgresTenantRepository(db)
+
+	existingTenant1 := &tenant.Tenant{
+		DNI:        1,
+		Name:       "Zhou",
+		LastName:   "Ming",
+		Address:    "123 Beijing st.",
+		Phone:      "+19991",
+		Email:      "zhou@ming.com",
+		EntryMonth: calendar.NewMonthOfYear(1, 1999),
+	}
+
+	_, err := repo.Save(existingTenant1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	existingTenant2 := &tenant.Tenant{
+		DNI:        3333,
+		Name:       "Wade",
+		LastName:   "Heston",
+		Address:    "555 FIB av.",
+		Phone:      "+555555",
+		Email:      "wade@heston.com",
+		EntryMonth: calendar.NewMonthOfYear(1, 1999),
+	}
+
+	_, err = repo.Save(existingTenant2)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tenants, err := repo.GetAllTenants()
+	if err != nil {
+		t.Fatal("GetAllTenants shouldn't fail when there exists tenants: ", err)
+	}
+
+	if len(tenants) != 2 {
+		t.Fatal("Returned a tenants list with a different size as expected")
+	}
+
+	if *tenants[0] != *existingTenant1 {
+		t.Fatalf("Got %v, expected %v", tenants[0], existingTenant1)
+	}
+
+	if *tenants[1] != *existingTenant2 {
+		t.Fatalf("Got %v, expected %v", tenants[1], existingTenant2)
+	}
+}

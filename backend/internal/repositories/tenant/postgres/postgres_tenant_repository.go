@@ -6,6 +6,7 @@ import (
 	myerrors "cochera/internal/errors"
 	"context"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -22,6 +23,10 @@ func (repo *PostgresTenantRepository) GetTenantByID(id int) (*tenant.Tenant, err
 
 	row := repo.db.QueryRow(context.Background(), query, id)
 
+	return createTenantFromRow(row)
+}
+
+func createTenantFromRow(row pgx.Row) (*tenant.Tenant, error) {
 	var tenant tenant.Tenant
 	var entryMonth string
 	var address, phone, email *string
@@ -51,7 +56,17 @@ func pointerToString(s *string) string {
 }
 
 func (repo *PostgresTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) {
-	panic("unimplemented")
+	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants;`
+
+	rows, err := repo.db.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return pgx.CollectRows(rows, func(row pgx.CollectableRow) (*tenant.Tenant, error) {
+		return createTenantFromRow(row)
+	})
 }
 
 func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {

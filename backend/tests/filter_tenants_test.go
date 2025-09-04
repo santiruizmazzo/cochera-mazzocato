@@ -10,8 +10,6 @@ import (
 )
 
 func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
-	t.Skip("Skipping this test temporarily...")
-
 	if testing.Short() {
 		t.Skip()
 	}
@@ -19,10 +17,14 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 	testApi.ResetDB()
 
 	firstExpectedTenant := map[string]any{
-		"dni":         123,
+		"id":          float64(1),
+		"dni":         float64(123),
 		"name":        "Hsin",
 		"last_name":   "Jaoming",
 		"entry_month": "07-2008",
+		"address":     nil,
+		"email":       nil,
+		"phone":       nil,
 	}
 	jsonData, _ := json.Marshal(firstExpectedTenant)
 
@@ -32,10 +34,14 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 	}
 
 	secondExpectedTenant := map[string]any{
-		"dni":         321,
+		"id":          float64(2),
+		"dni":         float64(321),
 		"name":        "Chan",
 		"last_name":   "Jaoming",
 		"entry_month": "07-2008",
+		"address":     nil,
+		"email":       nil,
+		"phone":       nil,
 	}
 	jsonData, _ = json.Marshal(secondExpectedTenant)
 
@@ -56,23 +62,14 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 	}()
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
+	tenantsList := utils.AssertSliceOfMaps(t, responseMap["data"])
 
-	switch value := responseMap["data"].(type) {
-	case []map[string]any:
-		if !reflect.DeepEqual(value[0], firstExpectedTenant) {
-			t.Fatalf("Expected %s, got %s", firstExpectedTenant, value[0])
-		}
-		if !reflect.DeepEqual(value[1], secondExpectedTenant) {
-			t.Fatalf("Expected %s, got %s", secondExpectedTenant, value[1])
-		}
-	default:
-		t.Fatal("ERRORRRRRRR")
+	if !reflect.DeepEqual(tenantsList[0], firstExpectedTenant) {
+		t.Fatalf("Expected %+v, got %+v", firstExpectedTenant, tenantsList[0])
 	}
-
-	// utils.AssertResponseContains(responseMap, "id", float64(tenantID), t)
-	// utils.AssertResponseContains(responseMap, "name", "Wu 'Kenny'", t)
-	// utils.AssertResponseContains(responseMap, "last_name", "Lee", t)
-	// utils.AssertResponseContains(responseMap, "entry_month", "07-2008", t)
+	if !reflect.DeepEqual(tenantsList[1], secondExpectedTenant) {
+		t.Fatalf("Expected %+v, got %+v", secondExpectedTenant, tenantsList[1])
+	}
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 }

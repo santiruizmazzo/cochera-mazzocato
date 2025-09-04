@@ -95,6 +95,8 @@ func validateAddress(rawAddress any) (string, error) {
 		}
 
 		return value, nil
+	case nil:
+		return "", nil
 	default:
 		return "", myerrors.ErrAddressMustBeString
 	}
@@ -131,6 +133,8 @@ func validatePhone(rawPhone any) (string, error) {
 			return "", myerrors.ErrPhoneFullOfZeroes
 		}
 		return value, nil
+	case nil:
+		return "", nil
 	default:
 		return "", myerrors.ErrPhoneMustBeString
 	}
@@ -158,6 +162,8 @@ func validateEmail(rawEmail any) (string, error) {
 			return "", myerrors.ErrEmailTooLong
 		}
 		return value, nil
+	case nil:
+		return "", nil
 	default:
 		return "", myerrors.ErrEmailMustBeString
 	}

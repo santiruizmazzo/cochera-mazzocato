@@ -94,9 +94,13 @@ func (formatter *ResponseFormatter) RespondCurrentHealthStatus(currentVersion st
 }
 
 func (formatter *ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingError error) {
-	panic("unimplemented")
+	statusCode := http.StatusNotFound
+	responseBody := formatter.CreateErrorBodyWith(retrievingError.Error())
+	http.Error(formatter.w, responseBody, statusCode)
 }
 
 func (formatter *ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*tenant.Tenant) error {
-	panic("unimplemented")
+	response := map[string]any{"data": tenants}
+	formatter.w.Header().Set("Content-Type", "application/json")
+	return json.NewEncoder(formatter.w).Encode(response)
 }

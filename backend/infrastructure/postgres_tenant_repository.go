@@ -1,4 +1,4 @@
-package postgres
+package infrastructure
 
 import (
 	"cochera/domain/calendar"

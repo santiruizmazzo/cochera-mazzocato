@@ -1,7 +1,8 @@
-package postgres
+package integration
 
 import (
 	"cochera/domain/tenant"
+	"cochera/infrastructure"
 	"cochera/tests/utils"
 	"log"
 	"os"
@@ -35,7 +36,7 @@ func TestPostgresTenantRepository_Save_Successfully_Integration(t *testing.T) {
 		t.Skip()
 	}
 
-	repo := NewPostgresTenantRepository(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
 
 	localTenant := tenant.NewTenantBuilder().WithID(1).Build()
 
@@ -55,7 +56,7 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := NewPostgresTenantRepository(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
 
 	existingTenant := tenant.NewTenantBuilder().WithEmail("a@b.com").Build()
 
@@ -82,7 +83,7 @@ func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) 
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := NewPostgresTenantRepository(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
 
 	existingTenant := tenant.NewTenantBuilder().WithDNI(22222222).Build()
 
@@ -103,7 +104,7 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateEmail_Integration(t *testi
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := NewPostgresTenantRepository(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
 
 	existingTenant := tenant.NewTenantBuilder().WithDNI(1).Build()
 
@@ -130,7 +131,7 @@ func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := NewPostgresTenantRepository(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
 
 	existingTenant := tenant.NewTenantBuilder().WithEmail("neo@cortex.com").Build()
 
@@ -151,7 +152,7 @@ func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) 
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := NewPostgresTenantRepository(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
 
 	tenant, err := repo.GetTenantByID(666)
 	if err == nil {
@@ -169,7 +170,7 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := NewPostgresTenantRepository(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
 
 	existingTenant1 := tenant.NewTenantBuilder().WithDNI(433).WithEmail("first@tenant.com").Build()
 	_, err := repo.Save(existingTenant1)

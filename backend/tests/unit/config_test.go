@@ -1,6 +1,7 @@
-package config
+package unit
 
 import (
+	"cochera/application/config"
 	"log"
 	"os"
 	"testing"
@@ -24,7 +25,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
-	defaultConfig, _ := Load()
+	defaultConfig, _ := config.Load()
 	if defaultConfig.Port != 777 {
 		t.Fatalf("Loaded port %v != 777", defaultConfig.Port)
 	}
@@ -38,7 +39,7 @@ func TestLoadWithCustomEnvFile(t *testing.T) {
 		t.Fatalf("Failed creating temp file .env.test: %s", err)
 	}
 
-	config, _ := Load(".env.test")
+	config, _ := config.Load(".env.test")
 	if config.Port != 666 {
 		t.Fatalf("Loaded port %v != 666", config.Port)
 	}
@@ -56,7 +57,7 @@ func TestLoadedPortIsCorrect(t *testing.T) {
 		t.Fatalf("Failed setting PORT as environment variable: %s", err)
 	}
 
-	config, err := Load()
+	config, err := config.Load()
 	if err != nil {
 		t.Fatalf("Failed loading configuration: %s", err)
 	}
@@ -80,7 +81,7 @@ func TestDatabaseURLWhenAPIModeIsDev(t *testing.T) {
 		t.Fatalf("Failed setting DEV_DB_URL as environment variable: %s", err)
 	}
 
-	config, _ := Load()
+	config, _ := config.Load()
 	resultDatabaseURL := config.DB.Config().ConnString()
 	if resultDatabaseURL != expectedDatabaseURL {
 		t.Fatalf("Loaded URL %s != %s", resultDatabaseURL, expectedDatabaseURL)
@@ -101,7 +102,7 @@ func TestDatabaseURLWhenAPIModeIsTest(t *testing.T) {
 		t.Fatalf("Failed setting TEST_DB_URL as environment variable: %s", err)
 	}
 
-	config, _ := Load()
+	config, _ := config.Load()
 	resultDatabaseURL := config.DB.Config().ConnString()
 	if resultDatabaseURL != expectedDatabaseURL {
 		t.Fatalf("Loaded URL %s != %s", resultDatabaseURL, expectedDatabaseURL)
@@ -122,7 +123,7 @@ func TestDatabaseURLWhenAPIModeIsProd(t *testing.T) {
 		t.Fatalf("Failed setting PROD_DB_URL as environment variable: %s", err)
 	}
 
-	config, _ := Load()
+	config, _ := config.Load()
 	resultDatabaseURL := config.DB.Config().ConnString()
 	if resultDatabaseURL != expectedDatabaseURL {
 		t.Fatalf("Loaded URL %s != %s", resultDatabaseURL, expectedDatabaseURL)

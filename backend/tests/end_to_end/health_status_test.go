@@ -1,4 +1,4 @@
-package tests
+package endtoend
 
 import (
 	"cochera/application/version"

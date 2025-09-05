@@ -1,8 +1,9 @@
-package tests
+package endtoend
 
 import (
 	"cochera/domain/tenant"
 	"cochera/tests/utils"
+	"log"
 
 	"bytes"
 	"encoding/json"
@@ -10,20 +11,12 @@ import (
 	"testing"
 )
 
-func setupExistingTenant(t *testing.T) {
-	existingTenant := tenant.NewTenantBuilder().Build()
-	jsonData, _ := json.Marshal(existingTenant)
-
-	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
-	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
-	}
-}
-
 func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
+
+	testApi.ResetDB()
 
 	jsonData, _ := json.Marshal(map[string]string{
 		"name":        "Carl",
@@ -54,10 +47,19 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	setupExistingTenant(t)
+	// setupExistingTenant(t)
+	existingTenant := tenant.NewTenantBuilder().Build()
+	jsonData, _ := json.Marshal(existingTenant)
+	log.Println(existingTenant)
+
+	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
 
 	newTenant := tenant.NewTenantBuilder().WithEmail("another@email.com").Build()
-	jsonData, _ := json.Marshal(newTenant)
+	log.Println(newTenant)
+	jsonData, _ = json.Marshal(newTenant)
 
 	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -82,6 +84,7 @@ func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	jsonData, _ := json.Marshal(map[string]any{
 		"dni":         "hola",
 		"name":        "Toni",
@@ -112,6 +115,7 @@ func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	jsonData, _ := json.Marshal(map[string]any{
 		"dni":         -10,
 		"name":        "Victor",
@@ -142,6 +146,7 @@ func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithDNI(0).Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -168,6 +173,7 @@ func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithPhone("85718852").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -194,6 +200,7 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithPhone("+hola, que tal").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -220,6 +227,7 @@ func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithPhone("+5434424072773442407277").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -246,6 +254,7 @@ func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithPhone("+000000000").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -272,6 +281,7 @@ func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithEmail("hi, there").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -298,6 +308,7 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithEmail("sonny@forelliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.com").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -322,6 +333,15 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
+	}
+
+	existingTenant := tenant.NewTenantBuilder().Build()
+	jsonData, _ := json.Marshal(existingTenant)
+	log.Println(existingTenant)
+
+	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
 	newTenant := tenant.NewTenantBuilder().WithDNI(1).Build()
@@ -350,6 +370,7 @@ func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	jsonData, _ := json.Marshal(map[string]any{
 		"dni":         15151515,
 		"name":        "Trevor",
@@ -381,6 +402,7 @@ func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithName("Trevorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -407,6 +429,7 @@ func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithLastName("Phillipssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
@@ -433,6 +456,7 @@ func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testApi.ResetDB()
 	newTenant := tenant.NewTenantBuilder().WithAddress("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 

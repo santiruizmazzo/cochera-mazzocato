@@ -1,6 +1,7 @@
-package tenantservice
+package unit
 
 import (
+	tenantservice "cochera/application/services"
 	myerrors "cochera/domain/errors"
 	"cochera/domain/tenant"
 	"encoding/json"
@@ -56,7 +57,7 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 	expectedTenant := tenant.NewTenantBuilder().WithID(1).Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
 
-	service := NewTenantService(mockRepo)
+	service := tenantservice.NewTenantService(mockRepo)
 
 	tenant, err := service.CreateTenant(jsonTenant)
 	if err != nil {
@@ -75,7 +76,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 	newTenant := tenant.NewTenantBuilder().WithEmail("another@email.com").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
-	service := NewTenantService(mockRepo)
+	service := tenantservice.NewTenantService(mockRepo)
 	tenant, err := service.CreateTenant(jsonTenant)
 
 	if tenant != nil {
@@ -88,7 +89,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 }
 
 func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
-	service := NewTenantService(&mockTenantRepository{})
+	service := tenantservice.NewTenantService(&mockTenantRepository{})
 
 	jsonTenant, _ := json.Marshal(map[string]any{
 		"dni":         "hola",
@@ -109,7 +110,7 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 }
 
 func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
-	service := NewTenantService(&mockTenantRepository{})
+	service := tenantservice.NewTenantService(&mockTenantRepository{})
 
 	tenant, err := service.GetTenantByID(9)
 
@@ -131,7 +132,7 @@ func TestTenantService_GetTenants_Successfully(t *testing.T) {
 		2: expectedTenant2,
 	}}
 
-	service := NewTenantService(mockRepo)
+	service := tenantservice.NewTenantService(mockRepo)
 
 	tenants, err := service.GetAllTenants()
 

@@ -1,4 +1,4 @@
-package tests
+package endtoend
 
 import (
 	testingapi "cochera/tests/utils/testing_api"

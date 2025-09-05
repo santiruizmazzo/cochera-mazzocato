@@ -12,22 +12,22 @@ MIGRATE_URL := https://github.com/golang-migrate/migrate/releases/download/$(MIG
 .PHONY: test
 test: migrate-test-up
 	@echo "🌎 Running all tests..."
-	@go test ./...
+	@go test ./tests/...
 
 .PHONY: test-unit
 test-unit:
 	@echo "🦠 Running unit tests..."
-	@go test -short ./...
+	@go test -short ./tests/unit/...
 
 .PHONY: test-integration
 test-integration: migrate-test-up
 	@echo "🔌 Running integration tests..."
-	@go test -run Integration ./...
+	@go test -run Integration ./tests/integration/...
 
 .PHONY: test-e2e
 test-e2e: migrate-test-up
 	@echo "↔️  Running end to end tests..."
-	@go test -run EndToEnd ./...
+	@go test -run EndToEnd ./tests/end_to_end/...
 
 .PHONY: test-cover
 test-cover:

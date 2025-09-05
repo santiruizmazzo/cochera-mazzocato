@@ -9,16 +9,16 @@ import (
 )
 
 type MonthOfYear struct {
-	month uint8
-	year  uint16
+	Month uint8
+	Year  uint16
 }
 
 func NewMonthOfYear(month uint8, year uint16) MonthOfYear {
-	return MonthOfYear{month: month, year: year}
+	return MonthOfYear{Month: month, Year: year}
 }
 
 func (monthOfYear MonthOfYear) String() string {
-	return fmt.Sprintf("%02d-%04d", monthOfYear.month, monthOfYear.year)
+	return fmt.Sprintf("%02d-%04d", monthOfYear.Month, monthOfYear.Year)
 }
 
 func StringToUint8(s string) (uint8, error) {
@@ -69,7 +69,7 @@ func NewMonthOfYearFromString(rawMonthOfYear any) (MonthOfYear, error) {
 		return MonthOfYear{}, ErrYearNotParseable
 	}
 
-	return MonthOfYear{month: month, year: year}, nil
+	return MonthOfYear{Month: month, Year: year}, nil
 }
 
 func (monthOfYear *MonthOfYear) MarshalJSON() ([]byte, error) {

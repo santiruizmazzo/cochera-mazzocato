@@ -1,7 +1,7 @@
 package unit
 
 import (
-	"cochera/application/config"
+	"cochera/application"
 	"log"
 	"os"
 	"testing"
@@ -25,7 +25,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestDefaultEnvFileWhenNonePassed(t *testing.T) {
-	defaultConfig, _ := config.Load()
+	defaultConfig, _ := application.NewConfig()
 	if defaultConfig.Port != 777 {
 		t.Fatalf("Loaded port %v != 777", defaultConfig.Port)
 	}
@@ -39,7 +39,7 @@ func TestLoadWithCustomEnvFile(t *testing.T) {
 		t.Fatalf("Failed creating temp file .env.test: %s", err)
 	}
 
-	config, _ := config.Load(".env.test")
+	config, _ := application.NewConfig(".env.test")
 	if config.Port != 666 {
 		t.Fatalf("Loaded port %v != 666", config.Port)
 	}
@@ -57,7 +57,7 @@ func TestLoadedPortIsCorrect(t *testing.T) {
 		t.Fatalf("Failed setting PORT as environment variable: %s", err)
 	}
 
-	config, err := config.Load()
+	config, err := application.NewConfig()
 	if err != nil {
 		t.Fatalf("Failed loading configuration: %s", err)
 	}
@@ -81,7 +81,7 @@ func TestDatabaseURLWhenAPIModeIsDev(t *testing.T) {
 		t.Fatalf("Failed setting DEV_DB_URL as environment variable: %s", err)
 	}
 
-	config, _ := config.Load()
+	config, _ := application.NewConfig()
 	resultDatabaseURL := config.DB.Config().ConnString()
 	if resultDatabaseURL != expectedDatabaseURL {
 		t.Fatalf("Loaded URL %s != %s", resultDatabaseURL, expectedDatabaseURL)
@@ -102,7 +102,7 @@ func TestDatabaseURLWhenAPIModeIsTest(t *testing.T) {
 		t.Fatalf("Failed setting TEST_DB_URL as environment variable: %s", err)
 	}
 
-	config, _ := config.Load()
+	config, _ := application.NewConfig()
 	resultDatabaseURL := config.DB.Config().ConnString()
 	if resultDatabaseURL != expectedDatabaseURL {
 		t.Fatalf("Loaded URL %s != %s", resultDatabaseURL, expectedDatabaseURL)
@@ -123,7 +123,7 @@ func TestDatabaseURLWhenAPIModeIsProd(t *testing.T) {
 		t.Fatalf("Failed setting PROD_DB_URL as environment variable: %s", err)
 	}
 
-	config, _ := config.Load()
+	config, _ := application.NewConfig()
 	resultDatabaseURL := config.DB.Config().ConnString()
 	if resultDatabaseURL != expectedDatabaseURL {
 		t.Fatalf("Loaded URL %s != %s", resultDatabaseURL, expectedDatabaseURL)

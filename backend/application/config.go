@@ -1,4 +1,4 @@
-package config
+package application
 
 import (
 	"context"
@@ -14,7 +14,7 @@ type Config struct {
 	DB   *pgxpool.Pool
 }
 
-func Load(files ...string) (*Config, error) {
+func NewConfig(files ...string) (*Config, error) {
 	var err error
 	if files == nil {
 		err = godotenv.Load()

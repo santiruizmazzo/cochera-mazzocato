@@ -1,13 +1,13 @@
 package main
 
 import (
+	"cochera/application"
 	"cochera/application/api"
-	"cochera/application/config"
 	"log"
 )
 
 func main() {
-	config, err := config.Load()
+	config, err := application.NewConfig()
 	if err != nil {
 		log.Fatal("Failed loading configuration: ", err)
 	}

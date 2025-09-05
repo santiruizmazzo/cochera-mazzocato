@@ -2,7 +2,7 @@ package api
 
 import (
 	tenantservice "cochera/application/services/tenant"
-	"cochera/internal/repositories/tenant/postgres"
+	"cochera/infrastructure/repositories/tenant/postgres"
 	"context"
 	"fmt"
 	"log"

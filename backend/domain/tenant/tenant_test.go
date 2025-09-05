@@ -1,7 +1,7 @@
 package tenant
 
 import (
-	myerrors "cochera/internal/errors"
+	myerrors "cochera/domain/errors"
 	"encoding/json"
 	"errors"
 	"testing"

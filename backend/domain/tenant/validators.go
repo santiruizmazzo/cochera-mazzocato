@@ -2,7 +2,7 @@ package tenant
 
 import (
 	"cochera/domain/calendar"
-	myerrors "cochera/internal/errors"
+	myerrors "cochera/domain/errors"
 	"net/mail"
 	"regexp"
 	"strconv"

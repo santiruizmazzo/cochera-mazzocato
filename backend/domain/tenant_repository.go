@@ -1,4 +1,4 @@
-package tenantrepo
+package domain
 
 import "cochera/domain/tenant"
 

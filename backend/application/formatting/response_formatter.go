@@ -1,8 +1,8 @@
 package formatting
 
 import (
+	myerrors "cochera/domain/errors"
 	"cochera/domain/tenant"
-	myerrors "cochera/internal/errors"
 	"encoding/json"
 	"errors"
 	"fmt"

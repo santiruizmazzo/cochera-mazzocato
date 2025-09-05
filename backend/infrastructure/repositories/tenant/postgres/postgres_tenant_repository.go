@@ -2,8 +2,8 @@ package postgres
 
 import (
 	"cochera/domain/calendar"
+	myerrors "cochera/domain/errors"
 	"cochera/domain/tenant"
-	myerrors "cochera/internal/errors"
 	"context"
 
 	"github.com/jackc/pgx/v5"

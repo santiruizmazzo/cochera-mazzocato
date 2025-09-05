@@ -1,16 +1,16 @@
 package tenantservice
 
 import (
+	"cochera/domain"
+	myerrors "cochera/domain/errors"
 	"cochera/domain/tenant"
-	myerrors "cochera/internal/errors"
-	tenantrepo "cochera/internal/repositories/tenant"
 )
 
 type TenantService struct {
-	repo tenantrepo.TenantRepository
+	repo domain.TenantRepository
 }
 
-func NewTenantService(repo tenantrepo.TenantRepository) *TenantService {
+func NewTenantService(repo domain.TenantRepository) *TenantService {
 	return &TenantService{repo: repo}
 }
 

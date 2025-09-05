@@ -2,30 +2,29 @@ package unit
 
 import (
 	tenantservice "cochera/application/services"
-	myerrors "cochera/domain/errors"
-	"cochera/domain/tenant"
+	"cochera/domain"
 	"encoding/json"
 	"testing"
 )
 
 type mockTenantRepository struct {
-	tenants map[int]*tenant.Tenant
+	tenants map[int]*domain.Tenant
 	err     error
 }
 
-func (mockRepo *mockTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) {
-	var list []*tenant.Tenant
+func (mockRepo *mockTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
+	var list []*domain.Tenant
 	for _, v := range mockRepo.tenants {
 		list = append(list, v)
 	}
 	return list, nil
 }
 
-func (mockRepo *mockTenantRepository) GetTenantByID(id int) (*tenant.Tenant, error) {
-	return nil, myerrors.ErrTenantNotFound
+func (mockRepo *mockTenantRepository) GetTenantByID(id int) (*domain.Tenant, error) {
+	return nil, domain.ErrTenantNotFound
 }
 
-func (mockRepo *mockTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenant, error) {
+func (mockRepo *mockTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenant, error) {
 	if mockRepo.err != nil {
 		return nil, mockRepo.err
 	}
@@ -52,9 +51,9 @@ func (mockRepo *mockTenantRepository) ExistsTenantWithEmail(email string) (bool,
 }
 
 func TestTenantService_CreateTenant_Successfully(t *testing.T) {
-	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{}}
+	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{}}
 
-	expectedTenant := tenant.NewTenantBuilder().WithID(1).Build()
+	expectedTenant := domain.NewTenantBuilder().WithID(1).Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
 
 	service := tenantservice.NewTenantService(mockRepo)
@@ -70,10 +69,10 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 }
 
 func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
-	existingTenant := tenant.NewTenantBuilder().Build()
-	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{1: existingTenant}}
+	existingTenant := domain.NewTenantBuilder().Build()
+	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{1: existingTenant}}
 
-	newTenant := tenant.NewTenantBuilder().WithEmail("another@email.com").Build()
+	newTenant := domain.NewTenantBuilder().WithEmail("another@email.com").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
 	service := tenantservice.NewTenantService(mockRepo)
@@ -83,7 +82,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 		t.Fatal("Tenant should not be created")
 	}
 
-	if err != myerrors.ErrDuplicateDNI {
+	if err != domain.ErrDuplicateDNI {
 		t.Fatal("Error should be of type duplicate DNI")
 	}
 }
@@ -104,7 +103,7 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 		t.Fatal("Tenant should not be created")
 	}
 
-	if err != myerrors.ErrDNIMustBeNumber {
+	if err != domain.ErrDNIMustBeNumber {
 		t.Fatal("Error should be of type DNI must be a number")
 	}
 }
@@ -118,16 +117,16 @@ func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
 		t.Fatal("Tenant should not be found")
 	}
 
-	if err != myerrors.ErrTenantNotFound {
+	if err != domain.ErrTenantNotFound {
 		t.Fatal("Error should be of type tenant not found")
 	}
 }
 
 func TestTenantService_GetTenants_Successfully(t *testing.T) {
-	expectedTenant1 := tenant.NewTenantBuilder().WithID(1).WithDNI(43295798).WithEmail("1@2.com").Build()
-	expectedTenant2 := tenant.NewTenantBuilder().WithID(2).WithDNI(41630284).WithEmail("3@4.com").Build()
+	expectedTenant1 := domain.NewTenantBuilder().WithID(1).WithDNI(43295798).WithEmail("1@2.com").Build()
+	expectedTenant2 := domain.NewTenantBuilder().WithID(2).WithDNI(41630284).WithEmail("3@4.com").Build()
 
-	mockRepo := &mockTenantRepository{tenants: map[int]*tenant.Tenant{
+	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{
 		1: expectedTenant1,
 		2: expectedTenant2,
 	}}

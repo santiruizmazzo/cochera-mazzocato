@@ -2,8 +2,6 @@ package tenantservice
 
 import (
 	"cochera/domain"
-	myerrors "cochera/domain/errors"
-	"cochera/domain/tenant"
 )
 
 type TenantService struct {
@@ -14,16 +12,16 @@ func NewTenantService(repo domain.TenantRepository) *TenantService {
 	return &TenantService{repo: repo}
 }
 
-func (service *TenantService) GetTenantByID(id int) (*tenant.Tenant, error) {
+func (service *TenantService) GetTenantByID(id int) (*domain.Tenant, error) {
 	return service.repo.GetTenantByID(id)
 }
 
-func (service *TenantService) GetAllTenants() ([]*tenant.Tenant, error) {
+func (service *TenantService) GetAllTenants() ([]*domain.Tenant, error) {
 	return service.repo.GetAllTenants()
 }
 
-func (service *TenantService) CreateTenant(jsonTenant []byte) (*tenant.Tenant, error) {
-	tenant, err := tenant.NewTenantFromJSON(jsonTenant)
+func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, error) {
+	tenant, err := domain.NewTenantFromJSON(jsonTenant)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +32,7 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*tenant.Tenant, e
 	}
 
 	if dniAlreadyExists {
-		return nil, myerrors.ErrDuplicateDNI
+		return nil, domain.ErrDuplicateDNI
 	}
 
 	emailAlreadyExists, err := service.repo.ExistsTenantWithEmail(tenant.Email)
@@ -43,7 +41,7 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*tenant.Tenant, e
 	}
 
 	if emailAlreadyExists {
-		return nil, myerrors.ErrDuplicateEmail
+		return nil, domain.ErrDuplicateEmail
 	}
 
 	return service.repo.Save(tenant)

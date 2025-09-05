@@ -1,8 +1,6 @@
-package tenant
+package domain
 
 import (
-	"cochera/domain/calendar"
-	myerrors "cochera/domain/errors"
 	"net/mail"
 	"regexp"
 	"strconv"
@@ -12,7 +10,7 @@ import (
 func extractAndValidateDNI(tenantMap map[string]any) (uint32, error) {
 	raw, exists := tenantMap["dni"]
 	if !exists {
-		return 0, myerrors.ErrRequiredDNI
+		return 0, ErrRequiredDNI
 	}
 
 	return validateDNI(raw)
@@ -22,7 +20,7 @@ func validateDNI(rawDNI any) (uint32, error) {
 	switch value := rawDNI.(type) {
 	case float64: // float64 is how json.Unmarshal decodes every number by default
 		if value < 1 || value > 4294967295 {
-			return 0, myerrors.ErrDNIMustBeNumber
+			return 0, ErrDNIMustBeNumber
 		}
 		return uint32(value), nil
 	case int:
@@ -30,14 +28,14 @@ func validateDNI(rawDNI any) (uint32, error) {
 	case uint32:
 		return value, nil
 	default:
-		return 0, myerrors.ErrDNIMustBeNumber
+		return 0, ErrDNIMustBeNumber
 	}
 }
 
 func extractAndValidateName(tenantMap map[string]any) (string, error) {
 	raw, exists := tenantMap["name"]
 	if !exists {
-		return "", myerrors.ErrRequiredName
+		return "", ErrRequiredName
 	}
 
 	return validateName(raw)
@@ -47,19 +45,19 @@ func validateName(rawName any) (string, error) {
 	switch value := rawName.(type) {
 	case string:
 		if len(value) > 50 {
-			return "", myerrors.ErrNameTooLong
+			return "", ErrNameTooLong
 		}
 
 		return value, nil
 	default:
-		return "", myerrors.ErrNameMustBeString
+		return "", ErrNameMustBeString
 	}
 }
 
 func extractAndValidateLastName(tenantMap map[string]any) (string, error) {
 	raw, exists := tenantMap["last_name"]
 	if !exists {
-		return "", myerrors.ErrRequiredLastName
+		return "", ErrRequiredLastName
 	}
 
 	return validateLastName(raw)
@@ -69,12 +67,12 @@ func validateLastName(rawLastName any) (string, error) {
 	switch value := rawLastName.(type) {
 	case string:
 		if len(value) > 50 {
-			return "", myerrors.ErrLastNameTooLong
+			return "", ErrLastNameTooLong
 		}
 
 		return value, nil
 	default:
-		return "", myerrors.ErrLastNameMustBeString
+		return "", ErrLastNameMustBeString
 	}
 }
 
@@ -91,14 +89,14 @@ func validateAddress(rawAddress any) (string, error) {
 	switch value := rawAddress.(type) {
 	case string:
 		if len(value) > 100 {
-			return "", myerrors.ErrAddressTooLong
+			return "", ErrAddressTooLong
 		}
 
 		return value, nil
 	case nil:
 		return "", nil
 	default:
-		return "", myerrors.ErrAddressMustBeString
+		return "", ErrAddressMustBeString
 	}
 }
 
@@ -118,25 +116,25 @@ func validatePhone(rawPhone any) (string, error) {
 			return value, nil
 		}
 		if !strings.HasPrefix(value, "+") {
-			return "", myerrors.ErrPhoneMustStartWithPlusSign
+			return "", ErrPhoneMustStartWithPlusSign
 		}
 		substring := strings.TrimPrefix(value, "+")
 		if len(substring) > 15 {
-			return "", myerrors.ErrPhoneTooLong
+			return "", ErrPhoneTooLong
 		}
 
 		integerPhone, err := strconv.Atoi(substring)
 		if err != nil {
-			return "", myerrors.ErrPhoneMustContainNumbersOnly
+			return "", ErrPhoneMustContainNumbersOnly
 		}
 		if integerPhone == 0 {
-			return "", myerrors.ErrPhoneFullOfZeroes
+			return "", ErrPhoneFullOfZeroes
 		}
 		return value, nil
 	case nil:
 		return "", nil
 	default:
-		return "", myerrors.ErrPhoneMustBeString
+		return "", ErrPhoneMustBeString
 	}
 }
 
@@ -156,40 +154,40 @@ func validateEmail(rawEmail any) (string, error) {
 			return value, nil
 		}
 		if _, err := mail.ParseAddress(value); err != nil {
-			return "", myerrors.ErrInvalidEmailFormat
+			return "", ErrInvalidEmailFormat
 		}
 		if len(value) > 100 {
-			return "", myerrors.ErrEmailTooLong
+			return "", ErrEmailTooLong
 		}
 		return value, nil
 	case nil:
 		return "", nil
 	default:
-		return "", myerrors.ErrEmailMustBeString
+		return "", ErrEmailMustBeString
 	}
 }
 
-func extractAndValidateEntryMonth(tenantMap map[string]any) (calendar.MonthOfYear, error) {
+func extractAndValidateEntryMonth(tenantMap map[string]any) (MonthOfYear, error) {
 	raw, exists := tenantMap["entry_month"]
 	if !exists {
-		return calendar.MonthOfYear{}, myerrors.ErrRequiredEntryMonth
+		return MonthOfYear{}, ErrRequiredEntryMonth
 	}
 
 	return validateEntryMonth(raw)
 }
 
-func validateEntryMonth(rawEntryMonth any) (calendar.MonthOfYear, error) {
+func validateEntryMonth(rawEntryMonth any) (MonthOfYear, error) {
 	switch value := rawEntryMonth.(type) {
-	case calendar.MonthOfYear:
+	case MonthOfYear:
 		return value, nil
 	case string:
 		matched, _ := regexp.MatchString(`^\d{2}-\d{4}$`, value)
 		if !matched {
-			return calendar.MonthOfYear{}, myerrors.ErrEntryMonthInvalidFormat
+			return MonthOfYear{}, ErrEntryMonthInvalidFormat
 		}
 
-		return calendar.NewMonthOfYearFromString(value)
+		return NewMonthOfYearFromString(value)
 	default:
-		return calendar.MonthOfYear{}, myerrors.ErrEntryMonthMustBeString
+		return MonthOfYear{}, ErrEntryMonthMustBeString
 	}
 }

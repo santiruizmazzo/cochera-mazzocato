@@ -1,6 +1,4 @@
-package tenant
-
-import "cochera/domain/calendar"
+package domain
 
 type TenantBuilder struct {
 	tenant *Tenant
@@ -14,7 +12,7 @@ func NewTenantBuilder() *TenantBuilder {
 		Address:    "22 Beer Heights St.",
 		Phone:      "+98151526",
 		Email:      "huang@lee.com",
-		EntryMonth: calendar.NewMonthOfYear(1, 2025),
+		EntryMonth: NewMonthOfYear(1, 2025),
 	}
 	return &TenantBuilder{tenant: &tenant}
 }

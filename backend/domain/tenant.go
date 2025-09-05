@@ -1,20 +1,19 @@
-package tenant
+package domain
 
 import (
-	"cochera/domain/calendar"
 	"encoding/json"
 	"fmt"
 )
 
 type Tenant struct {
-	ID         uint32               `json:"id"`
-	DNI        uint32               `json:"dni"`
-	Name       string               `json:"name"`
-	LastName   string               `json:"last_name"`
-	Address    string               `json:"address"`
-	Phone      string               `json:"phone"`
-	Email      string               `json:"email"`
-	EntryMonth calendar.MonthOfYear `json:"entry_month"`
+	ID         uint32      `json:"id"`
+	DNI        uint32      `json:"dni"`
+	Name       string      `json:"name"`
+	LastName   string      `json:"last_name"`
+	Address    string      `json:"address"`
+	Phone      string      `json:"phone"`
+	Email      string      `json:"email"`
+	EntryMonth MonthOfYear `json:"entry_month"`
 }
 
 func NewTenant(dni, name, lastName, address, phone, email, entryMonth any) (*Tenant, error) {

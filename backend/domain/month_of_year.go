@@ -1,4 +1,4 @@
-package calendar
+package domain
 
 import (
 	"encoding/json"

@@ -2,7 +2,7 @@ package endtoend
 
 import (
 	"bytes"
-	"cochera/domain/tenant"
+	"cochera/domain"
 	"cochera/tests/utils"
 	"encoding/json"
 	"net/http"
@@ -110,21 +110,21 @@ func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
 	testApi.ResetDB()
 
 	nameToFilter := "Salvatore"
-	expectedTenant := tenant.NewTenantBuilder().WithName(nameToFilter).Build()
+	expectedTenant := domain.NewTenantBuilder().WithName(nameToFilter).Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
 	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
 		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
-	expectedTenant = tenant.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
+	expectedTenant = domain.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
 	jsonTenant, _ = json.Marshal(expectedTenant)
 	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
 		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
 	}
 
-	expectedTenant = tenant.NewTenantBuilder().WithDNI(2).WithName(nameToFilter).WithEmail("b@b.com").Build()
+	expectedTenant = domain.NewTenantBuilder().WithDNI(2).WithName(nameToFilter).WithEmail("b@b.com").Build()
 	jsonTenant, _ = json.Marshal(expectedTenant)
 	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {

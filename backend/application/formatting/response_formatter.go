@@ -1,8 +1,7 @@
 package formatting
 
 import (
-	myerrors "cochera/domain/errors"
-	"cochera/domain/tenant"
+	"cochera/domain"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -41,7 +40,7 @@ func (formatter *ResponseFormatter) RespondCouldNotCloseRequestBody() {
 func (formatter *ResponseFormatter) RespondCouldNotCreateTenant(creationError error) {
 	statusCode := http.StatusBadRequest
 
-	if errors.Is(creationError, myerrors.ErrDuplicateDNI) || errors.Is(creationError, myerrors.ErrDuplicateEmail) {
+	if errors.Is(creationError, domain.ErrDuplicateDNI) || errors.Is(creationError, domain.ErrDuplicateEmail) {
 		statusCode = http.StatusConflict
 	}
 
@@ -49,7 +48,7 @@ func (formatter *ResponseFormatter) RespondCouldNotCreateTenant(creationError er
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter *ResponseFormatter) RespondTenantWasCreatedSuccessfully(tenant *tenant.Tenant) error {
+func (formatter *ResponseFormatter) RespondTenantWasCreatedSuccessfully(tenant *domain.Tenant) error {
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusCreated)
 	return json.NewEncoder(formatter.w).Encode(tenant)
@@ -73,7 +72,7 @@ func (formatter *ResponseFormatter) RespondTenantIDMustBeAnInteger() {
 func (formatter *ResponseFormatter) RespondCouldNotGetTenant(retrievingError error) {
 	statusCode := http.StatusInternalServerError
 
-	if errors.Is(retrievingError, myerrors.ErrTenantNotFound) {
+	if errors.Is(retrievingError, domain.ErrTenantNotFound) {
 		statusCode = http.StatusNotFound
 	}
 
@@ -81,7 +80,7 @@ func (formatter *ResponseFormatter) RespondCouldNotGetTenant(retrievingError err
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter *ResponseFormatter) RespondTenantGotSuccessfully(tenant *tenant.Tenant) error {
+func (formatter *ResponseFormatter) RespondTenantGotSuccessfully(tenant *domain.Tenant) error {
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(formatter.w).Encode(tenant)
@@ -99,7 +98,7 @@ func (formatter *ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingErro
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter *ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*tenant.Tenant) error {
+func (formatter *ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*domain.Tenant) error {
 	response := map[string]any{"data": tenants}
 	formatter.w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(formatter.w).Encode(response)

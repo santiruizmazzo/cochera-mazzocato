@@ -1,9 +1,7 @@
 package infrastructure
 
 import (
-	"cochera/domain/calendar"
-	myerrors "cochera/domain/errors"
-	"cochera/domain/tenant"
+	"cochera/domain"
 	"context"
 
 	"github.com/jackc/pgx/v5"
@@ -18,7 +16,7 @@ func NewPostgresTenantRepository(db *pgxpool.Pool) *PostgresTenantRepository {
 	return &PostgresTenantRepository{db: db}
 }
 
-func (repo *PostgresTenantRepository) GetTenantByID(id int) (*tenant.Tenant, error) {
+func (repo *PostgresTenantRepository) GetTenantByID(id int) (*domain.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE id = $1;`
 
 	row := repo.db.QueryRow(context.Background(), query, id)
@@ -26,21 +24,21 @@ func (repo *PostgresTenantRepository) GetTenantByID(id int) (*tenant.Tenant, err
 	return createTenantFromRow(row)
 }
 
-func createTenantFromRow(row pgx.Row) (*tenant.Tenant, error) {
-	var tenant tenant.Tenant
+func createTenantFromRow(row pgx.Row) (*domain.Tenant, error) {
+	var tenant domain.Tenant
 	var entryMonth string
 	var address, phone, email *string
 
 	err := row.Scan(&tenant.ID, &tenant.DNI, &tenant.Name, &tenant.LastName, &address, &phone, &email, &entryMonth)
 	if err != nil {
-		return nil, myerrors.ErrTenantNotFound
+		return nil, domain.ErrTenantNotFound
 	}
 
 	tenant.Address = pointerToString(address)
 	tenant.Phone = pointerToString(phone)
 	tenant.Email = pointerToString(email)
 
-	tenant.EntryMonth, err = calendar.NewMonthOfYearFromString(entryMonth)
+	tenant.EntryMonth, err = domain.NewMonthOfYearFromString(entryMonth)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +53,7 @@ func pointerToString(s *string) string {
 	return *s
 }
 
-func (repo *PostgresTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) {
+func (repo *PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants;`
 
 	rows, err := repo.db.Query(context.Background(), query)
@@ -64,7 +62,7 @@ func (repo *PostgresTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) 
 	}
 	defer rows.Close()
 
-	tenants, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*tenant.Tenant, error) {
+	tenants, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*domain.Tenant, error) {
 		return createTenantFromRow(row)
 	})
 	if err != nil {
@@ -72,7 +70,7 @@ func (repo *PostgresTenantRepository) GetAllTenants() ([]*tenant.Tenant, error) 
 	}
 
 	if len(tenants) == 0 {
-		return nil, myerrors.ErrNoTenantsCreated
+		return nil, domain.ErrNoTenantsCreated
 	}
 
 	return tenants, nil
@@ -106,7 +104,7 @@ func (repo *PostgresTenantRepository) ExistsTenantWithEmail(email string) (bool,
 	return exists, nil
 }
 
-func (repo *PostgresTenantRepository) Save(tenant *tenant.Tenant) (*tenant.Tenant, error) {
+func (repo *PostgresTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenant, error) {
 	query := `
 		INSERT INTO tenants (dni, name, last_name, address, phone, email, entry_month)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)

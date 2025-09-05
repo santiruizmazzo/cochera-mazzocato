@@ -1,13 +1,13 @@
 package unit
 
 import (
-	"cochera/domain/calendar"
+	"cochera/domain"
 	"testing"
 )
 
 func TestMonthOfYearCreatedFromString(t *testing.T) {
 	expectedMonthOfYear := "05-2001"
-	monthOfYear, err := calendar.NewMonthOfYearFromString(expectedMonthOfYear)
+	monthOfYear, err := domain.NewMonthOfYearFromString(expectedMonthOfYear)
 	if err != nil {
 		t.Fatal("Failed creating month of year: ", err)
 	}

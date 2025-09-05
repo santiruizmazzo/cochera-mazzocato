@@ -1,18 +1,17 @@
 package unit
 
 import (
-	myerrors "cochera/domain/errors"
-	"cochera/domain/tenant"
+	"cochera/domain"
 	"encoding/json"
 	"errors"
 	"testing"
 )
 
 func TestTenantCreatedFromJSON(t *testing.T) {
-	expectedTenant := tenant.NewTenantBuilder().Build()
+	expectedTenant := domain.NewTenantBuilder().Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
 
-	tenant, err := tenant.NewTenantFromJSON(jsonTenant)
+	tenant, err := domain.NewTenantFromJSON(jsonTenant)
 	if err != nil {
 		t.Fatal("Failed creating tenant from json: ", err)
 	}
@@ -30,13 +29,13 @@ func TestNewTenantFromJSONReturnsCustomErrorWhenGivenNonNumericDNI(t *testing.T)
 		"entry_month": "02-2023",
 	})
 
-	tenant, err := tenant.NewTenantFromJSON(jsonTenant)
+	tenant, err := domain.NewTenantFromJSON(jsonTenant)
 
 	if tenant != nil || err == nil {
 		t.Fatal("Tenant creation from json should fail when DNI is not a number")
 	}
 
-	if !errors.Is(err, myerrors.ErrDNIMustBeNumber) {
+	if !errors.Is(err, domain.ErrDNIMustBeNumber) {
 		t.Fatal("Returned error should be of type ErrInvalidDNI")
 	}
 }

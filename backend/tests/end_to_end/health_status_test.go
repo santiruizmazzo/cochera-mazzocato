@@ -1,7 +1,7 @@
 package endtoend
 
 import (
-	"cochera/application/version"
+	"cochera/application"
 	"cochera/tests/utils"
 	"net/http"
 	"testing"
@@ -29,5 +29,5 @@ func TestHealthStatus_EndToEnd(t *testing.T) {
 
 	utils.AssertResponseContains(responseMap, "status", "operational", t)
 
-	utils.AssertResponseContains(responseMap, "version", version.Current(), t)
+	utils.AssertResponseContains(responseMap, "version", application.CurrentVersion(), t)
 }

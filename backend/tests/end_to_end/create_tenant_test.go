@@ -3,7 +3,6 @@ package endtoend
 import (
 	"cochera/domain"
 	"cochera/tests/utils"
-	"log"
 
 	"bytes"
 	"encoding/json"
@@ -50,7 +49,6 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 	// setupExistingTenant(t)
 	existingTenant := domain.NewTenantBuilder().Build()
 	jsonData, _ := json.Marshal(existingTenant)
-	log.Println(existingTenant)
 
 	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -58,7 +56,6 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 	}
 
 	newTenant := domain.NewTenantBuilder().WithEmail("another@email.com").Build()
-	log.Println(newTenant)
 	jsonData, _ = json.Marshal(newTenant)
 
 	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
@@ -337,7 +334,6 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 
 	existingTenant := domain.NewTenantBuilder().Build()
 	jsonData, _ := json.Marshal(existingTenant)
-	log.Println(existingTenant)
 
 	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {

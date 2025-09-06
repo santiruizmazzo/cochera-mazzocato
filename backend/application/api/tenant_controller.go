@@ -2,6 +2,7 @@ package api
 
 import (
 	"cochera/application/formatting"
+	"cochera/domain"
 	"io"
 	"net/http"
 	"strconv"
@@ -22,10 +23,20 @@ func (api *API) tenantHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api *API) getTenants(w http.ResponseWriter, _ *http.Request) {
+func (api *API) getTenants(w http.ResponseWriter, r *http.Request) {
 	formatter := formatting.NewResponseFormatter(w)
 
-	tenants, err := api.tenantService.GetAllTenants()
+	queryParams := r.URL.Query()
+	name := queryParams.Get("name")
+
+	var tenants []*domain.Tenant
+	var err error
+	if name != "" {
+		tenants, err = api.tenantService.GetAllTenantsByName(name)
+	} else {
+		tenants, err = api.tenantService.GetAllTenants()
+	}
+
 	if err != nil {
 		formatter.RespondCouldNotFindAnyTenants(err)
 		return

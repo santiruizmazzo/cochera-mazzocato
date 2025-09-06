@@ -66,9 +66,10 @@ func (repo *PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) 
 }
 
 func (repo *PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
-	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE name = $1;`
+	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE name ILIKE $1;`
 
-	rows, err := repo.db.Query(context.Background(), query, name)
+	wildcardString := "%" + name + "%"
+	rows, err := repo.db.Query(context.Background(), query, wildcardString)
 	if err != nil {
 		return nil, err
 	}

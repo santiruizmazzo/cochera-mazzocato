@@ -95,7 +95,7 @@ func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "there are no tenants created", t)
+	utils.AssertResponseContains(responseMap, "detail", "no matching tenants were found", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
 }

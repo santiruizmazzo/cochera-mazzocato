@@ -36,4 +36,5 @@ var (
 	ErrEntryMonthInvalidFormat     = errors.New("entry month must have this format: MM-YYYY")
 	ErrTenantNotFound              = errors.New("tenant not found")
 	ErrNoTenantsCreated            = errors.New("there are no tenants created")
+	ErrNoMatchingTenantsFound      = errors.New("no matching tenants were found")
 )

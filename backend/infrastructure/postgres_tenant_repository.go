@@ -87,7 +87,7 @@ func createListOfTenantsFromRows(rows pgx.Rows) ([]*domain.Tenant, error) {
 	}
 
 	if len(tenants) == 0 {
-		return nil, domain.ErrNoTenantsCreated
+		return nil, domain.ErrNoMatchingTenantsFound
 	}
 
 	return tenants, nil

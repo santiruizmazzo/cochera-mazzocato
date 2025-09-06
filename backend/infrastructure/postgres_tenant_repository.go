@@ -76,6 +76,10 @@ func (repo *PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) 
 	return tenants, nil
 }
 
+func (repo *PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
+	panic("unimplemented")
+}
+
 func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {
 	query := `SELECT COUNT(*) > 0 AS exists FROM tenants WHERE dni = $1;`
 

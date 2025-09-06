@@ -1,4 +1,4 @@
-package tenantservice
+package services
 
 import (
 	"cochera/domain"
@@ -21,7 +21,7 @@ func (service *TenantService) GetAllTenants() ([]*domain.Tenant, error) {
 }
 
 func (service *TenantService) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
-	panic("unimplemented")
+	return service.repo.GetAllTenantsByName(name)
 }
 
 func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, error) {

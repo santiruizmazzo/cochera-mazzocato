@@ -1,7 +1,7 @@
 package api
 
 import (
-	tenantservice "cochera/application/services"
+	"cochera/application/services"
 	"cochera/infrastructure"
 	"context"
 	"fmt"
@@ -16,7 +16,7 @@ import (
 type API struct {
 	server        *http.Server
 	db            *pgxpool.Pool
-	tenantService *tenantservice.TenantService
+	tenantService *services.TenantService
 }
 
 func NewAPI(port int, db *pgxpool.Pool) *API {
@@ -28,9 +28,9 @@ func NewAPI(port int, db *pgxpool.Pool) *API {
 	return &API{server: server, db: db, tenantService: setupTenantService(db)}
 }
 
-func setupTenantService(db *pgxpool.Pool) *tenantservice.TenantService {
+func setupTenantService(db *pgxpool.Pool) *services.TenantService {
 	repo := infrastructure.NewPostgresTenantRepository(db)
-	return tenantservice.NewTenantService(repo)
+	return services.NewTenantService(repo)
 }
 
 func (api *API) addCORSToRouter(router http.Handler) http.Handler {

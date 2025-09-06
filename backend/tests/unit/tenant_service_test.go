@@ -1,7 +1,7 @@
 package unit
 
 import (
-	tenantservice "cochera/application/services"
+	"cochera/application/services"
 	"cochera/domain"
 	"encoding/json"
 	"testing"
@@ -14,8 +14,18 @@ type mockTenantRepository struct {
 
 func (mockRepo *mockTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
 	var list []*domain.Tenant
-	for _, v := range mockRepo.tenants {
-		list = append(list, v)
+	for _, tenant := range mockRepo.tenants {
+		list = append(list, tenant)
+	}
+	return list, nil
+}
+
+func (mockRepo *mockTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
+	var list []*domain.Tenant
+	for _, tenant := range mockRepo.tenants {
+		if tenant.Name == name {
+			list = append(list, tenant)
+		}
 	}
 	return list, nil
 }
@@ -56,7 +66,7 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 	expectedTenant := domain.NewTenantBuilder().WithID(1).Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
 
-	service := tenantservice.NewTenantService(mockRepo)
+	service := services.NewTenantService(mockRepo)
 
 	tenant, err := service.CreateTenant(jsonTenant)
 	if err != nil {
@@ -75,7 +85,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 	newTenant := domain.NewTenantBuilder().WithEmail("another@email.com").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
 
-	service := tenantservice.NewTenantService(mockRepo)
+	service := services.NewTenantService(mockRepo)
 	tenant, err := service.CreateTenant(jsonTenant)
 
 	if tenant != nil {
@@ -88,7 +98,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 }
 
 func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
-	service := tenantservice.NewTenantService(&mockTenantRepository{})
+	service := services.NewTenantService(&mockTenantRepository{})
 
 	jsonTenant, _ := json.Marshal(map[string]any{
 		"dni":         "hola",
@@ -109,7 +119,7 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 }
 
 func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
-	service := tenantservice.NewTenantService(&mockTenantRepository{})
+	service := services.NewTenantService(&mockTenantRepository{})
 
 	tenant, err := service.GetTenantByID(9)
 
@@ -122,7 +132,7 @@ func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
 	}
 }
 
-func TestTenantService_GetTenants_Successfully(t *testing.T) {
+func TestTenantService_GetAllTenants_Successfully(t *testing.T) {
 	expectedTenant1 := domain.NewTenantBuilder().WithID(1).WithDNI(43295798).WithEmail("1@2.com").Build()
 	expectedTenant2 := domain.NewTenantBuilder().WithID(2).WithDNI(41630284).WithEmail("3@4.com").Build()
 
@@ -131,7 +141,7 @@ func TestTenantService_GetTenants_Successfully(t *testing.T) {
 		2: expectedTenant2,
 	}}
 
-	service := tenantservice.NewTenantService(mockRepo)
+	service := services.NewTenantService(mockRepo)
 
 	tenants, err := service.GetAllTenants()
 
@@ -142,12 +152,33 @@ func TestTenantService_GetTenants_Successfully(t *testing.T) {
 	if len(tenants) != 2 {
 		t.Fatal("Incorrect number of tenants retrieved")
 	}
+}
 
-	if *expectedTenant1 != *tenants[0] {
-		t.Fatalf("Expected %v, got %v", expectedTenant1, tenants[0])
+func TestTenantService_GetAllTenantsByName_Successfully(t *testing.T) {
+	nameToFilter := "Salvatore"
+
+	expectedTenant1 := domain.NewTenantBuilder().WithName(nameToFilter).Build()
+	expectedTenant2 := domain.NewTenantBuilder().WithName("Giuseppe").Build()
+	expectedTenant3 := domain.NewTenantBuilder().WithName(nameToFilter).Build()
+	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{
+		1: expectedTenant1,
+		2: expectedTenant2,
+		3: expectedTenant3,
+	}}
+
+	service := services.NewTenantService(mockRepo)
+
+	tenants, err := service.GetAllTenantsByName(nameToFilter)
+
+	if err != nil {
+		t.Fatal("GetAllTenantsByName should not fail: ", err)
 	}
 
-	if *expectedTenant2 != *tenants[1] {
-		t.Fatalf("Expected %v, got %v", expectedTenant2, tenants[1])
+	if len(tenants) != 2 {
+		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
+	}
+
+	if tenants[0].Name != nameToFilter || tenants[1].Name != nameToFilter {
+		t.Fatal("Failed to get all tenants with same name")
 	}
 }

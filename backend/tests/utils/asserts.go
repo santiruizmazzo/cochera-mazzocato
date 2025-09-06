@@ -2,6 +2,7 @@ package utils
 
 import (
 	"maps"
+	"strings"
 	"testing"
 )
 
@@ -48,4 +49,17 @@ func AssertSliceOfMaps(data any, t *testing.T) []map[string]any {
 
 	t.Fatalf("Data is not a slice of maps, got %T", data)
 	return nil
+}
+
+func AssertResponseStringContains(data any, substring string, t *testing.T) {
+	responseString, ok := data.(string)
+	if !ok {
+		t.Fatal("Triying to assert content of non-string type value")
+		return
+	}
+
+	contains := strings.Contains(strings.ToLower(responseString), strings.ToLower(substring))
+	if !contains {
+		t.Fatalf("String %s does not contain %s substring", responseString, substring)
+	}
 }

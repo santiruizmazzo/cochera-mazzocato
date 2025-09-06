@@ -153,3 +153,66 @@ func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 }
+
+func TestGetTenantsFilteredByNameMatchPartially_EndToEnd(t *testing.T) {
+	t.Skip("Skipping this test temporarily...")
+
+	if testing.Short() {
+		t.Skip()
+	}
+
+	testApi.ResetDB()
+
+	expectedTenant := domain.NewTenantBuilder().WithName("Martín").Build()
+	jsonTenant, _ := json.Marshal(expectedTenant)
+	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	expectedTenant = domain.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
+	jsonTenant, _ = json.Marshal(expectedTenant)
+	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	expectedTenant = domain.NewTenantBuilder().WithDNI(2).WithName("Mario").WithEmail("b@b.com").Build()
+	jsonTenant, _ = json.Marshal(expectedTenant)
+	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	expectedTenant = domain.NewTenantBuilder().WithDNI(3).WithName("Lamar").WithEmail("c@c.com").Build()
+	jsonTenant, _ = json.Marshal(expectedTenant)
+	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	response, err := http.Get(testApi.GetTenantsRoute() + "?name=" + "Mar")
+	if err != nil {
+		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	tenantsList := utils.AssertSliceOfMaps(responseMap["data"], t)
+
+	if len(tenantsList) != 3 {
+		t.Fatal("Expected a list of tenants of size 3, got ", len(tenantsList))
+	}
+
+	utils.AssertResponseStringContains(tenantsList[0]["name"], "Mar", t)
+	utils.AssertResponseStringContains(tenantsList[1]["name"], "Mar", t)
+	utils.AssertResponseStringContains(tenantsList[2]["name"], "Mar", t)
+
+	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+}

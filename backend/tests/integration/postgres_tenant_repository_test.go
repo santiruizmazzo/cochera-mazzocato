@@ -201,3 +201,45 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 		t.Fatalf("Got %v, expected %v", tenants[1], existingTenant2)
 	}
 }
+
+func TestPostgresTenantRepository_GetAllTenantsByName_Successfully_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	utils.CleanupTestDatabase(db)
+	repo := infrastructure.NewPostgresTenantRepository(db)
+
+	nameToFilter := "Toni"
+
+	existingTenant1 := domain.NewTenantBuilder().WithName(nameToFilter).Build()
+	_, err := repo.Save(existingTenant1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	existingTenant2 := domain.NewTenantBuilder().WithDNI(2).WithEmail("second@tenant.com").Build()
+	_, err = repo.Save(existingTenant2)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	existingTenant3 := domain.NewTenantBuilder().WithName(nameToFilter).WithDNI(3).WithEmail("third@tenant.com").Build()
+	_, err = repo.Save(existingTenant3)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tenants, err := repo.GetAllTenantsByName(nameToFilter)
+	if err != nil {
+		t.Fatal("GetAllTenantsByName shouldn't fail when there exists tenants with that name: ", err)
+	}
+
+	if len(tenants) != 2 {
+		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
+	}
+
+	if tenants[0].Name != nameToFilter || tenants[1].Name != nameToFilter {
+		t.Fatal("Names of filtered tenants are incorrect")
+	}
+}

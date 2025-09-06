@@ -62,6 +62,22 @@ func (repo *PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) 
 	}
 	defer rows.Close()
 
+	return createListOfTenantsFromRows(rows)
+}
+
+func (repo *PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
+	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE name = $1;`
+
+	rows, err := repo.db.Query(context.Background(), query, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return createListOfTenantsFromRows(rows)
+}
+
+func createListOfTenantsFromRows(rows pgx.Rows) ([]*domain.Tenant, error) {
 	tenants, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*domain.Tenant, error) {
 		return createTenantFromRow(row)
 	})
@@ -74,10 +90,6 @@ func (repo *PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) 
 	}
 
 	return tenants, nil
-}
-
-func (repo *PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
-	panic("unimplemented")
 }
 
 func (repo *PostgresTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {

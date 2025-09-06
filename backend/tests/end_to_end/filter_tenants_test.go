@@ -101,8 +101,6 @@ func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
 }
 
 func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
-	t.Skip("Skipping this test temporarily...")
-
 	if testing.Short() {
 		t.Skip()
 	}

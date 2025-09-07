@@ -1,9 +1,7 @@
 package endtoend
 
 import (
-	"bytes"
 	"cochera/tests/utils"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"testing"
@@ -14,16 +12,16 @@ func TestGetTenantByIDThatDoesNotExist_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	jsonData, _ := json.Marshal(map[string]any{
+	newTenant := map[string]any{
 		"dni":         123123,
 		"name":        "Huang",
 		"last_name":   "Lee",
 		"entry_month": "07-2008",
-	})
+	}
 
-	_, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	_, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	response, err := http.Get(testAPI.GetTenantsRoute() + "/999")
@@ -49,16 +47,16 @@ func TestGetTenantByIDSuccessfully_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	jsonData, _ := json.Marshal(map[string]any{
+	newTenant := map[string]any{
 		"dni":         171616,
 		"name":        "Wu 'Kenny'",
 		"last_name":   "Lee",
 		"entry_month": "07-2008",
-	})
+	}
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)

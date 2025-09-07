@@ -4,8 +4,6 @@ import (
 	"cochera/domain"
 	"cochera/tests/utils"
 
-	"bytes"
-	"encoding/json"
 	"net/http"
 	"testing"
 )
@@ -17,15 +15,15 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 
-	jsonData, _ := json.Marshal(map[string]string{
+	expectedTenant := map[string]string{
 		"name":        "Carl",
 		"last_name":   "Johnson",
 		"entry_month": "01-2025",
-	})
+	}
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -46,21 +44,18 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	// setupExistingTenant(t)
 	existingTenant := domain.NewTenantBuilder().Build()
-	jsonData, _ := json.Marshal(existingTenant)
 
-	_, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(existingTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	newTenant := domain.NewTenantBuilder().WithEmail("another@email.com").Build()
-	jsonData, _ = json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err = testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -82,16 +77,17 @@ func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 	}
 
 	testAPI.ClearTenants()
-	jsonData, _ := json.Marshal(map[string]any{
+
+	newTenant := map[string]any{
 		"dni":         "hola",
 		"name":        "Toni",
 		"last_name":   "Cipriani",
 		"entry_month": "02-2023",
-	})
+	}
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -113,16 +109,17 @@ func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
 	}
 
 	testAPI.ClearTenants()
-	jsonData, _ := json.Marshal(map[string]any{
+
+	newTenant := map[string]any{
 		"dni":         -10,
 		"name":        "Victor",
 		"last_name":   "Vance",
 		"entry_month": "02-2023",
-	})
+	}
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -145,11 +142,10 @@ func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithDNI(0).Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -172,11 +168,10 @@ func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithPhone("85718852").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -199,11 +194,10 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithPhone("+hola, que tal").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -226,11 +220,10 @@ func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithPhone("+5434424072773442407277").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -253,11 +246,10 @@ func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithPhone("+000000000").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -280,11 +272,10 @@ func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithEmail("hi, there").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -307,11 +298,10 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithEmail("sonny@forelliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.com").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -333,19 +323,16 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 	}
 
 	existingTenant := domain.NewTenantBuilder().Build()
-	jsonData, _ := json.Marshal(existingTenant)
 
-	_, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(existingTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	newTenant := domain.NewTenantBuilder().WithDNI(1).Build()
-	jsonTenant, _ := json.Marshal(newTenant)
-
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err = testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -367,17 +354,17 @@ func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
 	}
 
 	testAPI.ClearTenants()
-	jsonData, _ := json.Marshal(map[string]any{
+	newTenant := map[string]any{
 		"dni":         15151515,
 		"name":        "Trevor",
 		"last_name":   "Phillips",
 		"email":       "a@b.com",
 		"entry_month": "03-20255555",
-	})
+	}
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -400,11 +387,10 @@ func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithName("Trevorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -427,11 +413,10 @@ func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithLastName("Phillipssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {
@@ -454,11 +439,10 @@ func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithAddress("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").Build()
-	jsonTenant, _ := json.Marshal(newTenant)
 
-	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(newTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	defer func() {

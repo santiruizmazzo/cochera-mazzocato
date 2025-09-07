@@ -1,10 +1,8 @@
 package endtoend
 
 import (
-	"bytes"
 	"cochera/domain"
 	"cochera/tests/utils"
-	"encoding/json"
 	"net/http"
 	"reflect"
 	"testing"
@@ -27,11 +25,10 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 		"email":       nil,
 		"phone":       nil,
 	}
-	jsonData, _ := json.Marshal(firstExpectedTenant)
 
-	_, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := testAPI.CreateTenant(firstExpectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	secondExpectedTenant := map[string]any{
@@ -44,14 +41,13 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 		"email":       nil,
 		"phone":       nil,
 	}
-	jsonData, _ = json.Marshal(secondExpectedTenant)
 
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err = testAPI.CreateTenant(secondExpectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
-	response, err := http.Get(testAPI.GetTenantsRoute())
+	response, err = http.Get(testAPI.GetTenantsRoute())
 	if err != nil {
 		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -109,27 +105,24 @@ func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
 
 	nameToFilter := "Salvatore"
 	expectedTenant := domain.NewTenantBuilder().WithName(nameToFilter).Build()
-	jsonTenant, _ := json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
-	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err = testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(2).WithName(nameToFilter).WithEmail("b@b.com").Build()
-	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err = testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
-	response, err := http.Get(testAPI.GetTenantsRoute() + "?name=" + nameToFilter)
+	response, err = http.Get(testAPI.GetTenantsRoute() + "?name=" + nameToFilter)
 	if err != nil {
 		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -162,34 +155,30 @@ func TestGetTenantsFilteredByNameMatchPartially_EndToEnd(t *testing.T) {
 	testAPI.ClearTenants()
 
 	expectedTenant := domain.NewTenantBuilder().WithName("Martín").Build()
-	jsonTenant, _ := json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
-	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err = testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(2).WithName("Mario").WithEmail("b@b.com").Build()
-	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err = testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(3).WithName("Lamar").WithEmail("c@c.com").Build()
-	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err = testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
-	response, err := http.Get(testAPI.GetTenantsRoute() + "?name=" + "Mar")
+	response, err = http.Get(testAPI.GetTenantsRoute() + "?name=" + "Mar")
 	if err != nil {
 		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -223,10 +212,40 @@ func TestGetTenantsFilteredByNameDoesNotMatch_EndToEnd(t *testing.T) {
 	testAPI.ClearTenants()
 
 	expectedTenant := domain.NewTenantBuilder().Build()
-	jsonTenant, _ := json.Marshal(expectedTenant)
-	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	response, err := testAPI.CreateTenant(expectedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed creating tenant: %v", err)
+	}
+
+	response, err = http.Get(testAPI.GetTenantsRoute() + "?name=" + "Agustín")
+	if err != nil {
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "no matching tenants were found", t)
+
+	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+}
+
+func TestGetTenantsFilteredByLastNameMatchCompletely_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	testAPI.ClearTenants()
+
+	_, err = testAPI.CreateTenant(domain.NewTenantBuilder().Build())
+
+	if err != nil {
+		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
 	response, err := http.Get(testAPI.GetTenantsRoute() + "?name=" + "Agustín")

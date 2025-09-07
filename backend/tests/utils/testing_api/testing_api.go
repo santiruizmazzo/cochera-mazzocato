@@ -1,9 +1,11 @@
 package testingapi
 
 import (
+	"bytes"
 	"cochera/application/api"
 	"cochera/tests/utils"
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -43,10 +45,6 @@ func (api *TestingAPI) Stop() {
 	api.server.Close()
 }
 
-func (api *TestingAPI) ResetDB() {
-	utils.CleanupTestDatabase(api.realAPI.DB())
-}
-
 func (api *TestingAPI) ClearTenants() {
 	utils.ClearTenantsTable(api.realAPI.DB())
 }
@@ -57,4 +55,9 @@ func (api *TestingAPI) GetHealthStatusRoute() string {
 
 func (api *TestingAPI) GetTenantsRoute() string {
 	return api.server.URL + "/api/tenants"
+}
+
+func (api *TestingAPI) CreateTenant(tenant any) (*http.Response, error) {
+	jsonTenant, _ := json.Marshal(tenant)
+	return http.Post(api.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 }

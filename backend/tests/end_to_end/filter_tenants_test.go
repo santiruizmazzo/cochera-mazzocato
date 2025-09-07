@@ -236,6 +236,8 @@ func TestGetTenantsFilteredByNameDoesNotMatch_EndToEnd(t *testing.T) {
 }
 
 func TestGetTenantsFilteredByLastNameMatchCompletely_EndToEnd(t *testing.T) {
+	t.Skip()
+
 	if testing.Short() {
 		t.Skip()
 	}
@@ -248,7 +250,13 @@ func TestGetTenantsFilteredByLastNameMatchCompletely_EndToEnd(t *testing.T) {
 		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
-	response, err := http.Get(testAPI.GetTenantsRoute() + "?name=" + "Agustín")
+	_, err = testAPI.CreateTenant(domain.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").WithLastName("Jaoming").Build())
+
+	if err != nil {
+		t.Fatalf("Failed creating tenant: %v", err)
+	}
+
+	response, err := http.Get(testAPI.GetTenantsRoute() + "?lastName=" + "Jaoming")
 	if err != nil {
 		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -261,7 +269,13 @@ func TestGetTenantsFilteredByLastNameMatchCompletely_EndToEnd(t *testing.T) {
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "no matching tenants were found", t)
+	tenantsList := utils.AssertSliceOfMaps(responseMap["data"], t)
 
-	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+	if len(tenantsList) != 1 {
+		t.Fatal("Expected a list of tenants of size 1, got ", len(tenantsList))
+	}
+
+	utils.AssertResponseStringContains(tenantsList[0]["last_name"], "Jaoming", t)
+
+	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 }

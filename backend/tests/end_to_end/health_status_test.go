@@ -12,9 +12,9 @@ func TestHealthStatus_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	response, err := http.Get(testApi.GetHealthStatusRoute())
+	response, err := http.Get(testAPI.GetHealthStatusRoute())
 	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetHealthStatusRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetHealthStatusRoute(), err)
 	}
 
 	defer func() {

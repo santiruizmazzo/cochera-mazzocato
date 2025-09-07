@@ -21,14 +21,14 @@ func TestGetTenantByIDThatDoesNotExist_EndToEnd(t *testing.T) {
 		"entry_month": "07-2008",
 	})
 
-	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	_, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
-	response, err := http.Get(testApi.GetTenantsRoute() + "/999")
+	response, err := http.Get(testAPI.GetTenantsRoute() + "/999")
 	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -56,9 +56,9 @@ func TestGetTenantByIDSuccessfully_EndToEnd(t *testing.T) {
 		"entry_month": "07-2008",
 	})
 
-	response, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
@@ -68,14 +68,14 @@ func TestGetTenantByIDSuccessfully_EndToEnd(t *testing.T) {
 	switch value := responseMap["id"].(type) {
 	case float64:
 		tenantID = int(value)
-		getTenantByIDRoute = testApi.GetTenantsRoute() + "/" + fmt.Sprint(tenantID)
+		getTenantByIDRoute = testAPI.GetTenantsRoute() + "/" + fmt.Sprint(tenantID)
 	default:
 		t.Fatal("Error reading response to creation of tenant")
 	}
 
 	response, err = http.Get(getTenantByIDRoute)
 	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {

@@ -15,7 +15,7 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testApi.ResetDB()
+	testAPI.ClearTenants()
 
 	firstExpectedTenant := map[string]any{
 		"id":          float64(1),
@@ -29,9 +29,9 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 	}
 	jsonData, _ := json.Marshal(firstExpectedTenant)
 
-	_, err := http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	_, err := http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	secondExpectedTenant := map[string]any{
@@ -46,14 +46,14 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 	}
 	jsonData, _ = json.Marshal(secondExpectedTenant)
 
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
-	response, err := http.Get(testApi.GetTenantsRoute())
+	response, err := http.Get(testAPI.GetTenantsRoute())
 	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -80,11 +80,11 @@ func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testApi.ResetDB()
+	testAPI.ClearTenants()
 
-	response, err := http.Get(testApi.GetTenantsRoute())
+	response, err := http.Get(testAPI.GetTenantsRoute())
 	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -105,33 +105,33 @@ func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testApi.ResetDB()
+	testAPI.ClearTenants()
 
 	nameToFilter := "Salvatore"
 	expectedTenant := domain.NewTenantBuilder().WithName(nameToFilter).Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
 	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(2).WithName(nameToFilter).WithEmail("b@b.com").Build()
 	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
-	response, err := http.Get(testApi.GetTenantsRoute() + "?name=" + nameToFilter)
+	response, err := http.Get(testAPI.GetTenantsRoute() + "?name=" + nameToFilter)
 	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -159,39 +159,39 @@ func TestGetTenantsFilteredByNameMatchPartially_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testApi.ResetDB()
+	testAPI.ClearTenants()
 
 	expectedTenant := domain.NewTenantBuilder().WithName("Martín").Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(1).WithEmail("a@a.com").Build()
 	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(2).WithName("Mario").WithEmail("b@b.com").Build()
 	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	expectedTenant = domain.NewTenantBuilder().WithDNI(3).WithName("Lamar").WithEmail("c@c.com").Build()
 	jsonTenant, _ = json.Marshal(expectedTenant)
-	_, err = http.Post(testApi.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
-	response, err := http.Get(testApi.GetTenantsRoute() + "?name=" + "Mar")
+	response, err := http.Get(testAPI.GetTenantsRoute() + "?name=" + "Mar")
 	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testApi.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -213,4 +213,36 @@ func TestGetTenantsFilteredByNameMatchPartially_EndToEnd(t *testing.T) {
 	utils.AssertResponseStringContains(tenantsList[2]["name"], "Mar", t)
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+}
+
+func TestGetTenantsFilteredByNameDoesNotMatch_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	testAPI.ClearTenants()
+
+	expectedTenant := domain.NewTenantBuilder().Build()
+	jsonTenant, _ := json.Marshal(expectedTenant)
+	_, err = http.Post(testAPI.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+	if err != nil {
+		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetTenantsRoute(), err)
+	}
+
+	response, err := http.Get(testAPI.GetTenantsRoute() + "?name=" + "Agustín")
+	if err != nil {
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetTenantsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "no matching tenants were found", t)
+
+	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
 }

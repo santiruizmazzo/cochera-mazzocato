@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-var testApi *testingapi.TestingAPI
+var testAPI *testingapi.TestingAPI
 var err error
 
 func TestMain(m *testing.M) {
@@ -16,14 +16,14 @@ func TestMain(m *testing.M) {
 		os.Exit(code)
 	}()
 
-	testApi, err = testingapi.NewTestingAPI()
+	testAPI, err = testingapi.NewTestingAPI()
 	if err != nil {
 		log.Println("Could not create testing API: ", err)
 		return
 	}
 
-	defer testApi.Stop()
-	testApi.Run()
+	defer testAPI.Stop()
+	testAPI.Run()
 
 	code = m.Run()
 }

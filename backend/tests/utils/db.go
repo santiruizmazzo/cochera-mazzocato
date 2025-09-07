@@ -36,3 +36,7 @@ func CleanupAndCloseTestDatabase(db *pgxpool.Pool) {
 	CleanupTestDatabase(db)
 	db.Close()
 }
+
+func ClearTenantsTable(db *pgxpool.Pool) {
+	_, _ = db.Exec(context.Background(), `TRUNCATE TABLE tenants RESTART IDENTITY CASCADE;`)
+}

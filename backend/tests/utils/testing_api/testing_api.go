@@ -47,6 +47,10 @@ func (api *TestingAPI) ResetDB() {
 	utils.CleanupTestDatabase(api.realAPI.DB())
 }
 
+func (api *TestingAPI) ClearTenants() {
+	utils.ClearTenantsTable(api.realAPI.DB())
+}
+
 func (api *TestingAPI) GetHealthStatusRoute() string {
 	return api.server.URL + "/api/health"
 }

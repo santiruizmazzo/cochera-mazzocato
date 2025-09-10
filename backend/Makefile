@@ -10,9 +10,7 @@ MIGRATE_VERSION := v4.18.1
 MIGRATE_URL := https://github.com/golang-migrate/migrate/releases/download/$(MIGRATE_VERSION)/migrate.linux-amd64.tar.gz
 
 .PHONY: test
-test: migrate-test-up
-	@echo "🌎 Running all tests..."
-	@go test ./tests/...
+test: migrate-test-up test-unit test-integration test-e2e
 
 .PHONY: test-unit
 test-unit:

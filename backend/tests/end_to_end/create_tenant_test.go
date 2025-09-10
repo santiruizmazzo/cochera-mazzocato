@@ -44,6 +44,7 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testAPI.ClearTenants()
 	existingTenant := domain.NewTenantBuilder().Build()
 
 	response, err := testAPI.CreateTenant(existingTenant)
@@ -322,6 +323,7 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	testAPI.ClearTenants()
 	existingTenant := domain.NewTenantBuilder().Build()
 
 	response, err := testAPI.CreateTenant(existingTenant)

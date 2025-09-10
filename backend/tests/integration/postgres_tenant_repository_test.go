@@ -2,7 +2,7 @@ package integration
 
 import (
 	"cochera/domain"
-	"cochera/infrastructure"
+	"cochera/infra"
 	"cochera/tests/utils"
 	"log"
 	"os"
@@ -36,7 +36,7 @@ func TestPostgresTenantRepository_Save_Successfully_Integration(t *testing.T) {
 		t.Skip()
 	}
 
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	localTenant := domain.NewTenantBuilder().WithID(1).Build()
 
@@ -56,7 +56,7 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithEmail("a@b.com").Build()
 
@@ -83,7 +83,7 @@ func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) 
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithDNI(22222222).Build()
 
@@ -104,7 +104,7 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateEmail_Integration(t *testi
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithDNI(1).Build()
 
@@ -131,7 +131,7 @@ func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithEmail("neo@cortex.com").Build()
 
@@ -152,7 +152,7 @@ func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) 
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	tenant, err := repo.GetTenantByID(666)
 	if err == nil {
@@ -170,7 +170,7 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant1 := domain.NewTenantBuilder().WithDNI(433).WithEmail("first@tenant.com").Build()
 	_, err := repo.Save(existingTenant1)
@@ -208,7 +208,7 @@ func TestPostgresTenantRepository_GetAllTenantsByName_Successfully_Integration(t
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	nameToFilter := "Toni"
 
@@ -250,7 +250,7 @@ func TestPostgresTenantRepository_GetAllTenantsByName_MatchPartially_Successfull
 	}
 
 	utils.CleanupTestDatabase(db)
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant1 := domain.NewTenantBuilder().WithName("Mario").Build()
 	_, err := repo.Save(existingTenant1)

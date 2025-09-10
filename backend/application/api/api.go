@@ -2,7 +2,7 @@ package api
 
 import (
 	"cochera/application/services"
-	"cochera/infrastructure"
+	"cochera/infra"
 	"context"
 	"fmt"
 	"log"
@@ -29,7 +29,7 @@ func NewAPI(port int, db *pgxpool.Pool) *API {
 }
 
 func setupTenantService(db *pgxpool.Pool) *services.TenantService {
-	repo := infrastructure.NewPostgresTenantRepository(db)
+	repo := infra.NewPostgresTenantRepository(db)
 	return services.NewTenantService(repo)
 }
 

@@ -26,3 +26,19 @@ func TestTenantFilterCreationFromQueryParams(t *testing.T) {
 	}
 
 }
+
+func TestTenantFilterIsEmpty(t *testing.T) {
+	queryParams := &url.Values{}
+	queryParams.Set("lastName", "")
+
+	filter, err := application.NewTenantFilterFromQueryParams(queryParams)
+
+	if err != nil {
+		t.Fatal("Tenant filter creation should've succeded: ", err)
+	}
+
+	if !filter.IsEmpty() {
+		t.Fatal("Tenant filter should be empty when zero values are passed for every attribute")
+	}
+
+}

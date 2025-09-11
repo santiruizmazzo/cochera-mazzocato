@@ -10,3 +10,7 @@ type TenantFilter struct {
 func NewTenantFilterFromQueryParams(queryParams *url.Values) (*TenantFilter, error) {
 	return &TenantFilter{Name: queryParams.Get("name"), LastName: queryParams.Get("lastName")}, nil
 }
+
+func (filter *TenantFilter) IsEmpty() bool {
+	return filter.Name == "" && filter.LastName == ""
+}

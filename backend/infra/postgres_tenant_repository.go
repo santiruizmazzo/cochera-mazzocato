@@ -78,6 +78,10 @@ func (repo *PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domai
 	return createListOfTenantsFromRows(rows)
 }
 
+func (repo *PostgresTenantRepository) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
+	panic("unimplemented")
+}
+
 func createListOfTenantsFromRows(rows pgx.Rows) ([]*domain.Tenant, error) {
 	tenants, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*domain.Tenant, error) {
 		return createTenantFromRow(row)

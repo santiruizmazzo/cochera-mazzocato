@@ -30,6 +30,16 @@ func (mockRepo *mockTenantRepository) GetAllTenantsByName(name string) ([]*domai
 	return list, nil
 }
 
+func (mockRepo *mockTenantRepository) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
+	var list []*domain.Tenant
+	for _, tenant := range mockRepo.tenants {
+		if tenant.LastName == lastName {
+			list = append(list, tenant)
+		}
+	}
+	return list, nil
+}
+
 func (mockRepo *mockTenantRepository) GetTenantByID(id int) (*domain.Tenant, error) {
 	return nil, domain.ErrTenantNotFound
 }
@@ -180,5 +190,34 @@ func TestTenantService_GetAllTenantsByName_Successfully(t *testing.T) {
 
 	if tenants[0].Name != nameToFilter || tenants[1].Name != nameToFilter {
 		t.Fatal("Failed to get all tenants with same name")
+	}
+}
+
+func TestTenantService_GetAllTenantsByLastName_Successfully(t *testing.T) {
+	lastNameToFilter := "Leone"
+
+	expectedTenant1 := domain.NewTenantBuilder().WithLastName(lastNameToFilter).Build()
+	expectedTenant2 := domain.NewTenantBuilder().WithLastName("Cipriani").Build()
+	expectedTenant3 := domain.NewTenantBuilder().WithLastName(lastNameToFilter).Build()
+	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{
+		1: expectedTenant1,
+		2: expectedTenant2,
+		3: expectedTenant3,
+	}}
+
+	service := services.NewTenantService(mockRepo)
+
+	tenants, err := service.GetAllTenantsByLastName(lastNameToFilter)
+
+	if err != nil {
+		t.Fatal("GetAllTenantsByLastName should not fail: ", err)
+	}
+
+	if len(tenants) != 2 {
+		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
+	}
+
+	if tenants[0].LastName != lastNameToFilter || tenants[1].LastName != lastNameToFilter {
+		t.Fatal("Failed to get all tenants with same last name")
 	}
 }

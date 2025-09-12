@@ -4,6 +4,7 @@ type TenantRepository interface {
 	GetTenantByID(id int) (*Tenant, error)
 	GetAllTenants() ([]*Tenant, error)
 	GetAllTenantsByName(name string) ([]*Tenant, error)
+	GetAllTenantsByLastName(lastName string) ([]*Tenant, error)
 	Save(tenant *Tenant) (*Tenant, error)
 	ExistsTenantWithDNI(dni uint32) (bool, error)
 	ExistsTenantWithEmail(email string) (bool, error)

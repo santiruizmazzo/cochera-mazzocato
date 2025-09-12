@@ -79,7 +79,16 @@ func (repo *PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domai
 }
 
 func (repo *PostgresTenantRepository) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
-	panic("unimplemented")
+	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE last_name ILIKE $1;`
+
+	wildcardString := "%" + lastName + "%"
+	rows, err := repo.db.Query(context.Background(), query, wildcardString)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return createListOfTenantsFromRows(rows)
 }
 
 func createListOfTenantsFromRows(rows pgx.Rows) ([]*domain.Tenant, error) {

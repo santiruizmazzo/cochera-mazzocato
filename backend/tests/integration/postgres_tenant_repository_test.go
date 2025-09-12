@@ -283,3 +283,43 @@ func TestPostgresTenantRepository_GetAllTenantsByName_MatchPartially_Successfull
 	utils.AssertResponseStringContains(tenants[0].Name, nameToFilter, t)
 	utils.AssertResponseStringContains(tenants[1].Name, nameToFilter, t)
 }
+
+func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	utils.CleanupTestDatabase(db)
+	repo := infra.NewPostgresTenantRepository(db)
+
+	existingTenant1 := domain.NewTenantBuilder().Build()
+	_, err := repo.Save(existingTenant1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	existingTenant2 := domain.NewTenantBuilder().WithDNI(2).WithEmail("second@tenant.com").Build()
+	_, err = repo.Save(existingTenant2)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	existingTenant3 := domain.NewTenantBuilder().WithLastName("Jaoming").WithDNI(3).WithEmail("third@tenant.com").Build()
+	_, err = repo.Save(existingTenant3)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	lastNameToFilter := "Lee"
+	tenants, err := repo.GetAllTenantsByLastName(lastNameToFilter)
+	if err != nil {
+		t.Fatal("GetAllTenantsByLastName shouldn't fail when there exists tenants with last name 'Lee': ", err)
+	}
+
+	if len(tenants) != 2 {
+		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
+	}
+
+	utils.AssertResponseStringContains(tenants[0].LastName, lastNameToFilter, t)
+	utils.AssertResponseStringContains(tenants[1].LastName, lastNameToFilter, t)
+}

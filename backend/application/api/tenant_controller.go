@@ -28,10 +28,14 @@ func (api *API) getTenants(w http.ResponseWriter, r *http.Request) {
 
 	queryParams := r.URL.Query()
 	name := queryParams.Get("name")
+	lastName := queryParams.Get("lastName")
 
 	var tenants []*domain.Tenant
 	var err error
-	if name != "" {
+
+	if lastName != "" {
+		tenants, err = api.tenantService.GetAllTenantsByLastName(lastName)
+	} else if name != "" {
 		tenants, err = api.tenantService.GetAllTenantsByName(name)
 	} else {
 		tenants, err = api.tenantService.GetAllTenants()

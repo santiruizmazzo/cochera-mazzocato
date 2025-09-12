@@ -24,6 +24,10 @@ func (service *TenantService) GetAllTenantsByName(name string) ([]*domain.Tenant
 	return service.repo.GetAllTenantsByName(name)
 }
 
+func (service *TenantService) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
+	panic("unimplemented")
+}
+
 func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, error) {
 	tenant, err := domain.NewTenantFromJSON(jsonTenant)
 	if err != nil {

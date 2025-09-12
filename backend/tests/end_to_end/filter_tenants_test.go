@@ -236,8 +236,6 @@ func TestGetTenantsFilteredByNameDoesNotMatch_EndToEnd(t *testing.T) {
 }
 
 func TestGetTenantsFilteredByLastNameMatchCompletely_EndToEnd(t *testing.T) {
-	t.Skip()
-
 	if testing.Short() {
 		t.Skip()
 	}

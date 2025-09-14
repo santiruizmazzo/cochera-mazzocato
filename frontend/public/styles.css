@@ -28,7 +28,6 @@ header {
   justify-content: space-between;
 }
 
-.caja-version {
-  background-color: rgb(53, 53, 53);
-  padding: 6px;
+main {
+  padding: 0 50px;
 }

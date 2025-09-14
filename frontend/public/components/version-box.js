@@ -12,15 +12,16 @@ template.innerHTML = `
 `;
 
 export class VersionBox extends HTMLElement {
-  version = "";
-
   constructor() {
     super();
     this.root = this.attachShadow({ mode: "closed" });
     this.root.append(template.content.cloneNode(true));
+    this.version = null;
   }
 
   connectedCallback() {
+    if (this.version) return;
+
     fetch(window.ENV.API_URL + "/api/health")
       .then((response) => response.json())
       .then((json) => {

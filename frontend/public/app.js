@@ -1,17 +1,1 @@
-async function obtenerVersion() {
-  try {
-    const response = await fetch(window.ENV.API_URL + "/api/health");
-    if (!response.ok) {
-      return "☹";
-    }
-    return await response.json().then((data) => {
-      return "v" + data["version"];
-    });
-  } catch (error) {
-    console.error("Hubo problema con el fetch:", error);
-    return "☹";
-  }
-}
-
-var cajaDeVersion = document.querySelector(".caja-version");
-cajaDeVersion.innerHTML = await obtenerVersion();
+import { VersionBox } from "./components/version-box.js";

@@ -4,11 +4,11 @@
     "": {
       "name": "cochera-frontend",
       "dependencies": {
-        "dotenv": "^17.2.1",
+        "dotenv": "17.2.1",
       },
       "devDependencies": {
-        "eslint": "^9.33.0",
-        "prettier": "^3.6.2",
+        "eslint": "9.33.0",
+        "prettier": "3.6.2",
       },
     },
   },

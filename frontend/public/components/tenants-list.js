@@ -8,6 +8,7 @@ template.innerHTML = `
       }
     </style>
 
+    <h2>Inquilinos registrados</h2>
     <div class='tenants-list'></div>
 `;
 
@@ -45,11 +46,11 @@ export class TenantsList extends HTMLElement {
       card.setAttribute("id", tenant.id);
       card.setAttribute("dni", tenant.dni);
       card.setAttribute("name", tenant.name);
-      card.setAttribute("lastName", tenant.last_name);
+      card.setAttribute("last-name", tenant.last_name);
+      card.setAttribute("entry-month", tenant.entry_month);
       card.setAttribute("email", tenant.email);
       card.setAttribute("address", tenant.address);
       card.setAttribute("phone", tenant.phone);
-      card.setAttribute("entryMonth", tenant.entry_month);
       list.appendChild(card);
     });
   }

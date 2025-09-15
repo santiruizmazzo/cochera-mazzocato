@@ -2,12 +2,16 @@ const template = document.createElement("template");
 template.innerHTML = `
     <style>
       .tenant-card {
-        background-color: rgba(184, 126, 126, 1);
+        background-color: rgba(234, 234, 234, 1);
         padding: 20px;
       }
 
       p {
         margin: 0;
+      }
+
+      h3 {
+        margin-top: 0;
       }
     </style>
 
@@ -26,11 +30,11 @@ export class TenantCard extends HTMLElement {
       "id",
       "dni",
       "name",
-      "lastName",
+      "last-name",
       "email",
       "address",
       "phone",
-      "entryMonth",
+      "entry-month",
     ];
   }
 
@@ -59,11 +63,11 @@ export class TenantCard extends HTMLElement {
   }
 
   get lastName() {
-    return this.getAttribute("lastName");
+    return this.getAttribute("last-name");
   }
 
   set lastName(value) {
-    this.setAttribute("lastName", value);
+    this.setAttribute("last-name", value);
   }
 
   get email() {
@@ -91,20 +95,57 @@ export class TenantCard extends HTMLElement {
   }
 
   get entryMonth() {
-    return this.getAttribute("entryMonth");
+    return this.getAttribute("entry-month");
   }
 
   set entryMonth(value) {
-    this.setAttribute("entryMonth", value);
+    this.setAttribute("entry-month", value);
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
+    const card = this.root.querySelector(".tenant-card");
+
     switch (attrName) {
+      case "id":
+        break;
+      case "dni":
+        if (newVal == "null") return;
+        const dniElement = document.createElement("p");
+        dniElement.innerHTML = `DNI: ${this.dni}`;
+        card.appendChild(dniElement);
+        break;
+      case "name":
+      case "last-name":
+        if (this.name && this.lastName) {
+          const fullNameElement = document.createElement("h3");
+          fullNameElement.innerHTML = `${this.name} ${this.lastName}`;
+          card.prepend(fullNameElement);
+        }
+        break;
+      case "entry-month":
+        const entryMonthElement = document.createElement("p");
+        entryMonthElement.innerHTML = `Mes de ingreso: ${this.entryMonth}`;
+        card.appendChild(entryMonthElement);
+        break;
+      case "email":
+        if (newVal == "null") return;
+        const emailElement = document.createElement("p");
+        emailElement.innerHTML = `Email: ${this.email}`;
+        card.appendChild(emailElement);
+        break;
+      case "phone":
+        if (newVal == "null") return;
+        const phoneElement = document.createElement("p");
+        phoneElement.innerHTML = `Teléfono: ${this.phone}`;
+        card.appendChild(phoneElement);
+        break;
+      case "address":
+        if (newVal == "null") return;
+        const addressElement = document.createElement("p");
+        addressElement.innerHTML = `Domicilio: ${this.address}`;
+        card.appendChild(addressElement);
+        break;
       default:
-        const card = this.root.querySelector(".tenant-card");
-        const tenantAttribute = document.createElement("p");
-        tenantAttribute.innerHTML = newVal;
-        card.appendChild(tenantAttribute);
     }
   }
 }

@@ -2,9 +2,8 @@ const template = document.createElement("template");
 template.innerHTML = `
     <style>
         .version-box {
-            background-color: rgb(53, 53, 53);
+            background-color: rgb(234, 234, 234, 1);
             padding: 6px;
-            color: #fff;
         }
     </style>
 

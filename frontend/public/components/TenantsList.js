@@ -1,5 +1,5 @@
 const template = document.createElement("template");
-template.innerHTML = `
+template.innerHTML = /*html*/ `
     <style>
       .tenants-list {
         display: grid;
@@ -15,8 +15,8 @@ template.innerHTML = `
 export class TenantsList extends HTMLElement {
   constructor() {
     super();
-    this.root = this.attachShadow({ mode: "closed" });
-    this.root.append(template.content.cloneNode(true));
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.append(template.content.cloneNode(true));
     this.tenants = [];
   }
 
@@ -39,7 +39,7 @@ export class TenantsList extends HTMLElement {
   }
 
   createList() {
-    const list = this.root.querySelector(".tenants-list");
+    const list = this.shadowRoot.querySelector(".tenants-list");
 
     this.tenants.forEach((tenant) => {
       const card = document.createElement("tenant-card");

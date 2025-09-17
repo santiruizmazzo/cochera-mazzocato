@@ -1,5 +1,5 @@
 const template = document.createElement("template");
-template.innerHTML = `
+template.innerHTML = /*html*/ `
     <style>
       .tenant-card {
         background-color: rgba(234, 234, 234, 1);
@@ -21,8 +21,8 @@ template.innerHTML = `
 export class TenantCard extends HTMLElement {
   constructor() {
     super();
-    this.root = this.attachShadow({ mode: "closed" });
-    this.root.append(template.content.cloneNode(true));
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.append(template.content.cloneNode(true));
   }
 
   static get observedAttributes() {
@@ -103,7 +103,7 @@ export class TenantCard extends HTMLElement {
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
-    const card = this.root.querySelector(".tenant-card");
+    const card = this.shadowRoot.querySelector(".tenant-card");
 
     switch (attrName) {
       case "id":

@@ -1,3 +1,3 @@
-import { VersionBox } from "./components/version-box.js";
-import { TenantsList } from "./components/tenants-list.js";
-import { TenantCard } from "./components/tenant-card.js";
+import { VersionBox } from "./components/VersionBox.js";
+import { TenantsList } from "./components/TenantsList.js";
+import { TenantCard } from "./components/TenantCard.js";

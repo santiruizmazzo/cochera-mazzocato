@@ -2,7 +2,7 @@ const template = document.createElement("template");
 template.innerHTML = /*html*/ `
     <style>
       .tenant-card {
-        background-color: rgba(234, 234, 234, 1);
+        background-color: var(--gray-color);
         padding: 20px;
       }
 

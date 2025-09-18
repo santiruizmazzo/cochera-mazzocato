@@ -1,21 +1,19 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
-    <style>
-        .version-box {
-            background-color: var(--gray-color);
-            padding: 6px;
-            position: relative;
-            height: 30px;
-            width: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+  <style>
+    .version-box {
+      background-color: var(--gray-color);
+      padding: 6px;
+      position: relative;
+      height: 30px;
+      width: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
 
-    <div class='version-box'>
-      <div class='loading-placeholder'></div>
-    </div>
+  <div class='version-box'></div>
 `;
 
 export class VersionBox extends HTMLElement {

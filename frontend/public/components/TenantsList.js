@@ -8,7 +8,6 @@ template.innerHTML = /*html*/ `
       }
     </style>
 
-    <h2>Inquilinos registrados</h2>
     <div class='tenants-list'></div>
 `;
 

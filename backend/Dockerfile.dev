@@ -6,7 +6,7 @@ ARG USER_UID=1000
 ARG USER_GID=1000
 
 # Instalar sudo y crear usuario/grupo (Alpine syntax)
-RUN apk add --no-cache curl sudo make bash git && \
+RUN apk add --no-cache curl sudo make bash git openssh-client && \
     addgroup -g $USER_GID $USERNAME && \
     adduser -u $USER_UID -G $USERNAME -D -s /bin/sh $USERNAME && \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME

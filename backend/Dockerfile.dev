@@ -1,40 +1,43 @@
-FROM golang:1.24.4-bookworm
+FROM golang:1.25.1-alpine3.22
 
 # Argumentos para el usuario no-root
 ARG USERNAME=devuser
 ARG USER_UID=1000
 ARG USER_GID=1000
 
-# Crear usuario y grupo
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && usermod -aG sudo $USERNAME
+# Instalar sudo y crear usuario/grupo (Alpine syntax)
+RUN apk add --no-cache curl sudo make bash git && \
+    addgroup -g $USER_GID $USERNAME && \
+    adduser -u $USER_UID -G $USERNAME -D -s /bin/sh $USERNAME && \
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME
 
-# Cambiar al usuario no-root
 USER $USERNAME
 
-# Crear directorio de trabajo dentro del home del usuario
+# Crear directorio de trabajo y variables de entorno
 RUN mkdir -p /home/$USERNAME/app
 WORKDIR /home/$USERNAME/app
-
-# Copiar todo el código al contenedor
-COPY --chown=$USERNAME:$USERNAME . .
-
-# Establecer variables de entorno para Go
 ENV GOPATH=/home/$USERNAME/go
 ENV PATH=$GOPATH/bin:$PATH
-
-# Crear directorios necesarios para Go tools
 RUN mkdir -p $GOPATH/bin
 
-# Instalar dependencias Go
-RUN go mod tidy
+ARG MIGRATE_VERSION=v4.18.1
+ARG GOLANGCI_LINT_VERSION=v2.4.0
+
+# Instalar migrate
+RUN curl -L https://github.com/golang-migrate/migrate/releases/download/$MIGRATE_VERSION/migrate.linux-amd64.tar.gz | \
+    tar xvz && \
+    chmod +x migrate && \
+    mv migrate $GOPATH/bin/migrate
 
 # Instalar golangci-lint
-RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | \
+    sh -s -- -b $GOPATH/bin $GOLANGCI_LINT_VERSION
 
-# Exponer puerto de la API
+COPY --chown=$USERNAME:$USERNAME go.mod go.sum ./
+RUN go mod tidy
+
+COPY --chown=$USERNAME:$USERNAME . .
+
 EXPOSE 5000
 
-# Mantener el contenedor vivo para devcontainer
 CMD ["tail", "-f", "/dev/null"]

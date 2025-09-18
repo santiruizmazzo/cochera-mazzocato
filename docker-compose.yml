@@ -33,6 +33,9 @@ services:
     depends_on:
       - dev_db
       - test_db
+    stdin_open: true
+    tty: true
+    command: make -C backend run
 
   dev_db:
     image: postgres:17.5

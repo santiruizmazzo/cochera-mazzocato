@@ -2,6 +2,7 @@
   "name": "Cochera App Dev",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "api",
+  "runServices": ["api", "dev_db", "test_db"],
   "workspaceFolder": "/home/devuser/app",
   "remoteUser": "devuser",
 

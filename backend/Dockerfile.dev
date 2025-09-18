@@ -14,6 +14,7 @@ RUN apk add --no-cache curl sudo make bash git openssh-client && \
 USER $USERNAME
 
 # Crear directorio de trabajo y variables de entorno
+ENV TERM=xterm-256color
 RUN mkdir -p /home/$USERNAME/app
 WORKDIR /home/$USERNAME/app
 ENV GOPATH=/home/$USERNAME/go

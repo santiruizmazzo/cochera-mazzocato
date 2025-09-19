@@ -16,7 +16,7 @@ jobs:
     name: Build, Lint & Test
     runs-on: ubuntu-latest
     env:
-      PUBLIC_API_URL: ${{ secrets.TEST_API_URL }}
+      VITE_API_URL: ${{ secrets.TEST_API_URL }}
     
     steps:
       - name: Checkout code

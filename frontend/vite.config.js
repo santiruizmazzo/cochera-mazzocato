@@ -1,14 +1,14 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: 'public',
+  root: "public",
   server: {
     host: true,
-    port: import.meta.env.VITE_PORT
+    port: import.meta.env.VITE_PORT,
   },
   build: {
-    outDir: '../build',
+    outDir: "../build",
     emptyOutDir: true,
-    minify: true
+    minify: true,
   },
 });

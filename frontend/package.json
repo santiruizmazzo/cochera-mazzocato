@@ -4,8 +4,8 @@
   "description": "Frontend de Cochera Mazzocato",
   "type": "module",
   "scripts": {
-    "dev": "bun run build && bun run server.js",
-    "build": "rm -rf ./build && bun build ./public/index.html --outdir ./build --env 'PUBLIC_*' --minify",
+    "dev": "vite",
+    "build": "vite build",
     "test": "bun test",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -15,10 +15,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "17.2.1"
   },
   "devDependencies": {
     "eslint": "9.33.0",
-    "prettier": "3.6.2"
+    "prettier": "3.6.2",
+    "vite": "7.1.6"
   }
 }

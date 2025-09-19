@@ -27,7 +27,7 @@ export class VersionBox extends HTMLElement {
   connectedCallback() {
     if (this.version) return;
 
-    fetch(window.ENV.API_URL + "/api/health")
+    fetch(process.env.PUBLIC_API_URL + "/api/health")
       .then((response) => response.json())
       .then((json) => {
         this.version = json["version"];

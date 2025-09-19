@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_API_URL: ${{ secrets.TEST_API_URL }}
+      VITE_PORT: 5173
     
     steps:
       - name: Checkout code

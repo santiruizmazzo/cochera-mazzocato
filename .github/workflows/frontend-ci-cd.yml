@@ -36,6 +36,16 @@ jobs:
       - name: Run Prettier check
         run: |
           bun run format:check
+      
+      - name: Build app
+        run: |
+          bun run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: build/
 
   test-deploy:
     name: Deploy to Test Environment
@@ -44,7 +54,7 @@ jobs:
     if: github.ref == 'refs/heads/test'
     
     env:
-      API_URL: ${{ secrets.TEST_API_URL }}
+      PUBLIC_API_URL: ${{ secrets.TEST_API_URL }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       TEST_NETLIFY_PROJECT_ID: ${{ secrets.TEST_NETLIFY_PROJECT_ID }}
 
@@ -57,11 +67,11 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build project
-        run: bun run gen-env
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: build/
 
       - name: Install Netlify CLI
         run: bun add -g netlify-cli
@@ -70,5 +80,5 @@ jobs:
         run: netlify sites:list --auth $NETLIFY_AUTH_TOKEN
 
       - name: Deploy to Test Environment
-        run: netlify deploy --dir=public --prod --site=$TEST_NETLIFY_PROJECT_ID --auth=$NETLIFY_AUTH_TOKEN
+        run: netlify deploy --dir=build --prod --site=$TEST_NETLIFY_PROJECT_ID --auth=$NETLIFY_AUTH_TOKEN
 

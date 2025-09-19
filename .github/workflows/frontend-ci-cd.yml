@@ -16,9 +16,6 @@ jobs:
     name: Build, Lint & Test
     runs-on: ubuntu-latest
 
-    env:
-      VITE_API_URL: ${{ secrets.TEST_API_URL }}
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,14 +36,12 @@ jobs:
       - name: Run Prettier check
         run: |
           bun run format:check
-      
-      - name: Debug VITE_API_URL
-        run: |
-          echo "VITE_API_URL is $VITE_API_URL"
 
       - name: Build app
         run: |
           bun run build
+        env:
+          VITE_API_URL: ${{ secrets.TEST_API_URL }}
       
       - name: Verify build output
         run: |

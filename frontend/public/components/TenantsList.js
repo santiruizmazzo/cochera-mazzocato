@@ -27,6 +27,7 @@ export class TenantsList extends HTMLElement {
   }
 
   async fetchTenants() {
+    console.log(import.meta.env.VITE_API_URL);
     return await fetch(import.meta.env.VITE_API_URL + "/api/tenants")
       .then((response) => response.json())
       .then((json) => {

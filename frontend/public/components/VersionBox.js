@@ -27,6 +27,7 @@ export class VersionBox extends HTMLElement {
   connectedCallback() {
     if (this.version) return;
 
+    console.log(import.meta.env.VITE_API_URL);
     fetch(import.meta.env.VITE_API_URL + "/api/health")
       .then((response) => response.json())
       .then((json) => {

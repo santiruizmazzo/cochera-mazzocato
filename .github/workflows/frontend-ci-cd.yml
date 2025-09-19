@@ -99,5 +99,5 @@ jobs:
         run: netlify sites:list --auth $NETLIFY_AUTH_TOKEN
 
       - name: Deploy to Test Environment
-        run: netlify deploy --dir=frontend/build --prod --site=$TEST_NETLIFY_PROJECT_ID --auth=$NETLIFY_AUTH_TOKEN
+        run: netlify deploy --no-build --dir=build --prod --site=$TEST_NETLIFY_PROJECT_ID --auth=$NETLIFY_AUTH_TOKEN
 

@@ -3,10 +3,10 @@ template.innerHTML = /*html*/ `
   <style>
     .version-box {
       background-color: var(--gray-color);
-      padding: 6px;
+      padding: 0.375rem;
       position: relative;
-      height: 30px;
-      width: 60px;
+      min-height: 1.875rem;
+      width: 3.75rem;
       display: flex;
       align-items: center;
       justify-content: center;

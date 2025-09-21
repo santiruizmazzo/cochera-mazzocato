@@ -2,8 +2,9 @@ const template = document.createElement("template");
 template.innerHTML = /*html*/ `
     <style>
       .tenant-card {
+        min-height: 8rem;
         background-color: var(--gray-color);
-        padding: 20px;
+        padding: 1.25rem;
       }
 
       p {
@@ -106,8 +107,6 @@ export class TenantCard extends HTMLElement {
     const card = this.shadowRoot.querySelector(".tenant-card");
 
     switch (attrName) {
-      case "id":
-        break;
       case "dni":
         if (newVal == "null") return;
         const dniElement = document.createElement("p");
@@ -121,29 +120,6 @@ export class TenantCard extends HTMLElement {
           fullNameElement.innerHTML = `${this.name} ${this.lastName}`;
           card.prepend(fullNameElement);
         }
-        break;
-      case "entry-month":
-        const entryMonthElement = document.createElement("p");
-        entryMonthElement.innerHTML = `Mes de ingreso: ${this.entryMonth}`;
-        card.appendChild(entryMonthElement);
-        break;
-      case "email":
-        if (newVal == "null") return;
-        const emailElement = document.createElement("p");
-        emailElement.innerHTML = `Email: ${this.email}`;
-        card.appendChild(emailElement);
-        break;
-      case "phone":
-        if (newVal == "null") return;
-        const phoneElement = document.createElement("p");
-        phoneElement.innerHTML = `Teléfono: ${this.phone}`;
-        card.appendChild(phoneElement);
-        break;
-      case "address":
-        if (newVal == "null") return;
-        const addressElement = document.createElement("p");
-        addressElement.innerHTML = `Domicilio: ${this.address}`;
-        card.appendChild(addressElement);
         break;
       default:
     }

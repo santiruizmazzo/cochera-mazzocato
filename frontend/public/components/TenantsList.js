@@ -3,8 +3,8 @@ template.innerHTML = /*html*/ `
     <style>
       .tenants-list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(15.625rem, 1fr));
+        gap: 0.625rem;
       }
     </style>
 

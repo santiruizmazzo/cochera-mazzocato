@@ -8,4 +8,8 @@ export default class {
   async getHtml() {
     return "";
   }
+
+  setUpJavascript() {
+    return;
+  }
 }

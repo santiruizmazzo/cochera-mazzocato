@@ -1,8 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 
 :root {
-  --gray-color: rgb(234, 234, 234);
-  --gray-dark-color: rgb(171, 171, 171);
+  --clr-strong: black;
+  --clr-bg-light: rgb(234, 234, 234);
+  --clr-bg-dark: rgb(171, 171, 171);
+
   --font-family: "IBM Plex Sans", sans-serif;
 }
 
@@ -74,17 +76,19 @@ svg {
 }
 
 header {
-  h1 {
-    font-size: 2rem;
-    font-weight: bold;
-  }
-
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
   justify-items: center;
-  border-bottom: 0.1875rem solid var(--gray-dark-color);
+  border-bottom: 0.1875rem solid var(--clr-bg-dark);
   min-height: 5rem;
+}
+
+.home-button {
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--clr-strong);
 }
 
 nav {
@@ -102,11 +106,11 @@ nav {
   a {
     padding: 0.3125rem;
     text-decoration: none;
-    color: black;
+    color: var(--clr-strong);
     font-weight: bold;
 
     &:hover {
-      background-color: var(--gray-color);
+      background-color: var(--clr-bg-light);
     }
   }
 }

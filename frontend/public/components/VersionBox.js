@@ -2,7 +2,7 @@ const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
     .version-box {
-      background-color: var(--gray-color);
+      background-color: var(--clr-bg-light);
       padding: 0.375rem;
       position: relative;
       min-height: 1.875rem;

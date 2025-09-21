@@ -3,7 +3,7 @@ template.innerHTML = /*html*/ `
     <style>
       .tenant-card {
         min-height: 8rem;
-        background-color: var(--gray-color);
+        background-color: var(--clr-bg-light);
         padding: 1.25rem;
       }
 

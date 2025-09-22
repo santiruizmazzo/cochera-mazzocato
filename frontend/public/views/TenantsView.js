@@ -24,7 +24,10 @@ export default class extends AbstractView {
           <input id="address" name="address" type="text">
           <label for="phone">Teléfono</label>
           <div class="phone-input">
-            <span>🇦🇷 +54 9</span>
+            <select name="dialing-code">
+              <option value="+54">🇦🇷 +54</option>
+              <option value="+598">🇺🇾 +598</option>
+            </select>
             <input id="phone" name="phone" type="tel">
           </div>
           <label>Mes de ingreso</label>
@@ -79,7 +82,7 @@ export default class extends AbstractView {
         dni: parseInt(formData.get("dni")),
         email: formData.get("email"),
         address: formData.get("address"),
-        phone: `+549${formData.get("phone")}`,
+        phone: `${formData.get("dialing-code")}${formData.get("phone")}`,
         entry_month: `${formData.get("month")}-${formData.get("year")}`,
       };
 

@@ -130,13 +130,12 @@ main {
   padding: 1.5rem;
   min-width: 25dvw;
   margin: auto;
-  border: 0;
-  box-shadow: 0 0 1em rgb(0 0 0 / 0.3);
+  border: none;
   overflow: hidden;
-}
 
-.modal::backdrop {
-  background: rgba(0, 0, 0, 0.509);
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.509);
+  }
 }
 
 .tenant-creation-form {

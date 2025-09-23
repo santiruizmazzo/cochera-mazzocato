@@ -9,6 +9,7 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <button class="open-button">Nuevo inquilino</button>
+      
       <dialog class="modal" closedby="any">
         <form class="tenant-creation-form">
           <h3>Crear nuevo inquilino</h3>
@@ -75,7 +76,9 @@ export default class extends AbstractView {
           <button type="submit">Crear</button>
         </form>
       </dialog>
+
       <h2 class="section-title">Inquilinos registrados</h2>
+      
       <tenants-list></tenants-list>
     `;
   }

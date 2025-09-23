@@ -1,42 +1,49 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
-    .version-box {
+    div {
+      --font-size: 0.85rem;
+      --padding-relation: 0.65;
+
       background-color: var(--clr-bg-light);
-      padding: 0.375rem;
+      padding: calc(var(--font-size) * var(--padding-relation));
       position: relative;
-      min-height: 1.875rem;
-      width: 3.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: var(--font-size);
     }
   </style>
 
-  <div class='version-box'></div>
+  <div></div>
 `;
 
 export default class VersionBox extends HTMLElement {
+  version = null;
+  HEALTH_ENDPOINT = "/api/health";
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(template.content.cloneNode(true));
-    this.version = null;
+  }
+
+  fullHealthEndpoint() {
+    return import.meta.env.VITE_API_URL + this.HEALTH_ENDPOINT;
   }
 
   connectedCallback() {
     if (this.version) return;
 
-    fetch(import.meta.env.VITE_API_URL + "/api/health")
+    fetch(this.fullHealthEndpoint())
       .then((response) => response.json())
       .then((json) => {
         this.version = json["version"];
-        this.shadowRoot.querySelector(".version-box").innerHTML =
-          `v${this.version}`;
+        this.shadowRoot.querySelector("div").innerHTML = `v${this.version}`;
       })
       .catch((error) => {
         console.error("Error fetching version:", error);
-        this.shadowRoot.querySelector(".version-box").innerHTML = "Error";
+        this.shadowRoot.querySelector("div").innerHTML = "Error";
       });
   }
 }

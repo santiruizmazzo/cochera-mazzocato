@@ -9,27 +9,50 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <button class="open-button">Nuevo inquilino</button>
-      <dialog class="modal">
+      <dialog class="modal" closedby="any">
         <form class="tenant-creation-form">
           <h3>Crear nuevo inquilino</h3>
+          
           <label for="name">Nombre/s</label>
-          <input id="name" name="name" type="text">
+          <input id="name" name="name" type="text" 
+                 required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,50}$"
+                 title="Solo letras y espacios, entre 2 y 50 caracteres"
+                 placeholder="Pablo">
+          
           <label for="last-name">Apellido/s</label>
-          <input id="last-name" name="lastName" type="text">
+          <input id="last-name" name="lastName" type="text" 
+                 required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,50}$"
+                 title="Solo letras y espacios, entre 2 y 50 caracteres"
+                 placeholder="Lamponne">
+          
           <label for="dni">DNI</label>
-          <input id="dni" name="dni" type="number">
+          <input id="dni" name="dni" type="text"
+                 required pattern="^[1-9][0-9]{0,9}$"
+                 title="Solo números entre 1 y 4294967295 (sin puntos ni espacios)"
+                 placeholder="20665961">
+          
           <label for="email">Email</label>
-          <input id="email" name="email" type="email">
+          <input id="email" name="email" type="email" 
+                 maxlength="100"
+                 pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                 title="Email válido con máximo 100 caracteres"
+                 placeholder="lamponne@simuladores.com">
+          
           <label for="address">Domicilio</label>
-          <input id="address" name="address" type="text">
+          <input id="address" name="address" type="text"
+                 minlength="5" maxlength="100"
+                 title="Debe tener entre 5 y 100 caracteres"
+                 placeholder="Estrada 820, Concepción del Uruguay">
+          
           <label for="phone">Teléfono</label>
           <div class="phone-input">
             <select name="dialing-code">
               <option value="+54">🇦🇷 +54</option>
               <option value="+598">🇺🇾 +598</option>
             </select>
-            <input id="phone" name="phone" type="tel">
+            <input id="phone" name="phone" type="tel" maxlength="15" placeholder="3442518388">
           </div>
+          
           <label>Mes de ingreso</label>
           <div class="entry-month-input">
             <select name="month" class="month-selector">
@@ -46,14 +69,9 @@ export default class extends AbstractView {
               <option value="11">Noviembre</option>
               <option value="12">Diciembre</option>
             </select>
-            <select name="year" class="year-selector">
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
-              <option value="2021">2021</option>
-            </select>
+            <select name="year" class="year-selector"></select>
           </div>
+          
           <button type="submit">Crear</button>
         </form>
       </dialog>
@@ -69,6 +87,31 @@ export default class extends AbstractView {
     openModal.addEventListener("click", () => {
       modal.showModal();
     });
+
+    // CURRENT MONTH OPTION SELECTED DYNAMICALLY
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const monthPadded = String(currentMonth).padStart(2, "0");
+    const optionToSelect = document.querySelector(
+      `.month-selector option[value="${monthPadded}"]`,
+    );
+    optionToSelect.setAttribute("selected", true);
+
+    // YEAR SELECTOR DYNAMIC CONSTRUCTION
+    const yearSelectorElement = document.querySelector(".year-selector");
+    const currentYear = today.getFullYear();
+    const yearsToFirstYear = currentYear - 2021;
+    const maxYearOptions = 10;
+    const totalYearOptions =
+      yearsToFirstYear > maxYearOptions ? maxYearOptions : yearsToFirstYear;
+
+    for (let i = 0; i < totalYearOptions; i++) {
+      const option = document.createElement("option");
+      const stringYear = `${currentYear - i}`;
+      option.innerHTML = stringYear;
+      option.setAttribute("value", stringYear);
+      yearSelectorElement.appendChild(option);
+    }
 
     const form = document.querySelector(".tenant-creation-form");
 

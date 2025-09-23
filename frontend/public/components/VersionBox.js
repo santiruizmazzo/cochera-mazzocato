@@ -28,19 +28,28 @@ export default class VersionBox extends HTMLElement {
     this.shadowRoot.append(template.content.cloneNode(true));
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     if (this.version) return;
 
-    fetch(this.HEALTH_ENDPOINT)
+    await this.fetchVersion();
+    this.render();
+  }
+
+  async fetchVersion() {
+    await fetch(this.HEALTH_ENDPOINT)
       .then((response) => response.json())
       .then((json) => {
         this.version = json["version"];
-        this.shadowRoot.querySelector("div").innerHTML = `v${this.version}`;
       })
       .catch((error) => {
         console.error("Error fetching version:", error);
-        this.shadowRoot.querySelector("div").innerHTML = "Error";
       });
+  }
+
+  render() {
+    this.shadowRoot.querySelector("div").innerHTML = this.version
+      ? `v${this.version}`
+      : "🚫";
   }
 }
 

@@ -19,7 +19,7 @@ template.innerHTML = /*html*/ `
   <div>
     <h3 id="name"></h3>
     <h3 id="last-name"></h3>
-    <span></span>
+    <span id="dni"></span>
   </div>
 `;
 
@@ -45,7 +45,7 @@ export default class TenantCard extends HTMLElement {
   render() {
     this.shadowRoot.querySelector("#name").innerHTML = this.name;
     this.shadowRoot.querySelector("#last-name").innerHTML = this.lastName;
-    this.shadowRoot.querySelector("span").innerHTML = `DNI ${this.dni}`;
+    this.shadowRoot.querySelector("#dni").innerHTML = `DNI ${this.dni}`;
   }
 }
 

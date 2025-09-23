@@ -123,53 +123,55 @@ export default class TenantForm extends HTMLElement {
   }
 
   render() {
-    // CURRENT MONTH OPTION SELECTED DYNAMICALLY
-    const today = new Date();
-    const currentMonth = today.getMonth() + 1;
-    const monthPadded = String(currentMonth).padStart(2, "0");
-    const optionToSelect = this.shadowRoot.querySelector(
-      `.month-selector option[value="${monthPadded}"]`,
+    this.selectCurrentMonthOption();
+
+    this.generateYearSelector();
+
+    this.setupFormSubmissionBehavior();
+  }
+
+  selectCurrentMonthOption() {
+    const currentMonth = new Date().getMonth() + 1;
+    const paddedMonth = String(currentMonth).padStart(2, "0");
+    const monthOption = this.shadowRoot.querySelector(
+      `.month-selector option[value="${paddedMonth}"]`,
     );
-    optionToSelect.setAttribute("selected", true);
+    monthOption.setAttribute("selected", true);
+  }
 
-    // YEAR SELECTOR DYNAMIC CONSTRUCTION
-    const yearSelectorElement = this.shadowRoot.querySelector(".year-selector");
-    const currentYear = today.getFullYear();
-    const yearsToFirstYear = currentYear - 2021;
-    const maxYearOptions = 10;
-    const totalYearOptions =
-      yearsToFirstYear > maxYearOptions ? maxYearOptions : yearsToFirstYear;
+  generateYearSelector() {
+    const currentYear = new Date().getFullYear();
+    const FIRST_YEAR_OF_OPERATION = 2022;
+    const MAX_OPTIONS = 10;
 
-    for (let i = 0; i < totalYearOptions; i++) {
-      const option = document.createElement("option");
+    const operativeYears = currentYear - FIRST_YEAR_OF_OPERATION + 1;
+    const totalOptions = Math.min(operativeYears, MAX_OPTIONS);
+
+    const yearSelector = this.shadowRoot.querySelector(".year-selector");
+
+    for (let i = 0; i < totalOptions; i++) {
       const stringYear = `${currentYear - i}`;
-      option.innerHTML = stringYear;
-      option.setAttribute("value", stringYear);
-      yearSelectorElement.appendChild(option);
-    }
 
+      const yearOption = document.createElement("option");
+      yearOption.innerHTML = stringYear;
+      yearOption.setAttribute("value", stringYear);
+      yearSelector.appendChild(yearOption);
+    }
+  }
+
+  setupFormSubmissionBehavior() {
     const form = this.shadowRoot.querySelector("form");
+    const TENANTS_URL = import.meta.env.VITE_API_URL + "/api/tenants";
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const formData = new FormData(form);
-      const newTenantData = {
-        name: formData.get("name"),
-        last_name: formData.get("lastName"),
-        dni: parseInt(formData.get("dni")),
-        email: formData.get("email"),
-        address: formData.get("address"),
-        phone: `${formData.get("dialing-code")}${formData.get("phone")}`,
-        entry_month: `${formData.get("month")}-${formData.get("year")}`,
-      };
+      const jsonTenant = this.createJsonTenant(form);
 
-      fetch(import.meta.env.VITE_API_URL + "/api/tenants", {
+      fetch(TENANTS_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newTenantData),
+        headers: { "Content-Type": "application/json" },
+        body: jsonTenant,
       })
         .then((response) => response.json())
         .then((result) => {
@@ -179,6 +181,21 @@ export default class TenantForm extends HTMLElement {
           console.error("Error:", error);
         });
     });
+  }
+
+  createJsonTenant(form) {
+    const tenantForm = new FormData(form);
+    const tenant = {
+      name: tenantForm.get("name"),
+      last_name: tenantForm.get("lastName"),
+      dni: parseInt(tenantForm.get("dni")),
+      email: tenantForm.get("email"),
+      address: tenantForm.get("address"),
+      phone: `${tenantForm.get("dialing-code")}${tenantForm.get("phone")}`,
+      entry_month: `${tenantForm.get("month")}-${tenantForm.get("year")}`,
+    };
+
+    return JSON.stringify(tenant);
   }
 }
 

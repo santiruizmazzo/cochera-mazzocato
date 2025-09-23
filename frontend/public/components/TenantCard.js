@@ -1,22 +1,26 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
-    <style>
-      .tenant-card {
-        min-height: 8rem;
-        background-color: var(--clr-bg-light);
-        padding: 1.25rem;
-      }
+  <style>
+    div {
+      min-height: 8rem;
+      background-color: var(--clr-bg-light);
+      padding: 1.25rem;
+    }
 
-      p {
-        margin: 0;
-      }
+    h3, span {
+      margin: 0;
+    }
 
-      h3 {
-        margin-top: 0;
-      }
-    </style>
+    #name {
+      color: var(--clr-bg-dark);
+    }
+  </style>
 
-    <div class='tenant-card'></div>
+  <div>
+    <h3 id="name"></h3>
+    <h3 id="last-name"></h3>
+    <span></span>
+  </div>
 `;
 
 export default class TenantCard extends HTMLElement {
@@ -26,103 +30,22 @@ export default class TenantCard extends HTMLElement {
     this.shadowRoot.append(template.content.cloneNode(true));
   }
 
-  static get observedAttributes() {
-    return [
-      "id",
-      "dni",
-      "name",
-      "last-name",
-      "email",
-      "address",
-      "phone",
-      "entry-month",
-    ];
+  static fromJson(jsonTenant) {
+    const card = new TenantCard();
+    card.dni = jsonTenant["dni"];
+    card.name = jsonTenant["name"];
+    card.lastName = jsonTenant["last_name"];
+    return card;
   }
 
-  get id() {
-    return this.getAttribute("id");
+  connectedCallback() {
+    this.render();
   }
 
-  set id(value) {
-    this.setAttribute("id", value);
-  }
-
-  get dni() {
-    return this.getAttribute("dni");
-  }
-
-  set dni(value) {
-    this.setAttribute("dni", value);
-  }
-
-  get name() {
-    return this.getAttribute("name");
-  }
-
-  set name(value) {
-    this.setAttribute("name", value);
-  }
-
-  get lastName() {
-    return this.getAttribute("last-name");
-  }
-
-  set lastName(value) {
-    this.setAttribute("last-name", value);
-  }
-
-  get email() {
-    return this.getAttribute("email");
-  }
-
-  set email(value) {
-    this.setAttribute("email", value);
-  }
-
-  get address() {
-    return this.getAttribute("address");
-  }
-
-  set address(value) {
-    this.setAttribute("address", value);
-  }
-
-  get phone() {
-    return this.getAttribute("phone");
-  }
-
-  set phone(value) {
-    this.setAttribute("phone", value);
-  }
-
-  get entryMonth() {
-    return this.getAttribute("entry-month");
-  }
-
-  set entryMonth(value) {
-    this.setAttribute("entry-month", value);
-  }
-
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    const card = this.shadowRoot.querySelector(".tenant-card");
-
-    switch (attrName) {
-      case "dni":
-        if (newVal == "null") return;
-        const dniElement = document.createElement("p");
-        dniElement.innerHTML = `DNI: ${this.dni}`;
-        card.appendChild(dniElement);
-        break;
-      case "name":
-      case "last-name":
-        if (this.name && this.lastName) {
-          const fullNameElement = document.createElement("h3");
-          fullNameElement.innerHTML = `${this.name} ${this.lastName}`;
-          card.prepend(fullNameElement);
-        }
-        break;
-      default:
-    }
+  render() {
+    this.shadowRoot.querySelector("#name").innerHTML = this.name;
+    this.shadowRoot.querySelector("#last-name").innerHTML = this.lastName;
+    this.shadowRoot.querySelector("span").innerHTML = `DNI ${this.dni}`;
   }
 }
 

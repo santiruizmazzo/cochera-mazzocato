@@ -20,7 +20,7 @@ template.innerHTML = /*html*/ `
 
 export default class VersionBox extends HTMLElement {
   version = null;
-  HEALTH_ENDPOINT = "/api/health";
+  HEALTH_ENDPOINT = import.meta.env.VITE_API_URL + "/api/health";
 
   constructor() {
     super();
@@ -28,14 +28,10 @@ export default class VersionBox extends HTMLElement {
     this.shadowRoot.append(template.content.cloneNode(true));
   }
 
-  fullHealthEndpoint() {
-    return import.meta.env.VITE_API_URL + this.HEALTH_ENDPOINT;
-  }
-
   connectedCallback() {
     if (this.version) return;
 
-    fetch(this.fullHealthEndpoint())
+    fetch(this.HEALTH_ENDPOINT)
       .then((response) => response.json())
       .then((json) => {
         this.version = json["version"];

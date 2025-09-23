@@ -1,5 +1,5 @@
 import VersionBox from "./components/VersionBox.js";
-import TenantsList from "./components/TenantsList.js";
+import TenantsCollection from "./components/TenantsCollection.js";
 import TenantCard from "./components/TenantCard.js";
 import Router from "./routing/Router.js";
 

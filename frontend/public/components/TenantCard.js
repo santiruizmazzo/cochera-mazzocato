@@ -19,7 +19,7 @@ template.innerHTML = /*html*/ `
     <div class='tenant-card'></div>
 `;
 
-export class TenantCard extends HTMLElement {
+export default class TenantCard extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });

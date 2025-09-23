@@ -16,7 +16,7 @@ template.innerHTML = /*html*/ `
   <div class='version-box'></div>
 `;
 
-export class VersionBox extends HTMLElement {
+export default class VersionBox extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });

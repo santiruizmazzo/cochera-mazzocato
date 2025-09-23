@@ -71,6 +71,8 @@ svg {
   }
 }
 
+/* GLOBAL STYLES */
+
 * {
   font-family: var(--font-family);
 }

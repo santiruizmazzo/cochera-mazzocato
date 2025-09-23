@@ -11,7 +11,7 @@ template.innerHTML = /*html*/ `
     <div class='tenants-list'></div>
 `;
 
-export class TenantsList extends HTMLElement {
+export default class TenantsList extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });

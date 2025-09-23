@@ -20,7 +20,6 @@ template.innerHTML = /*html*/ `
 
 export default class VersionBox extends HTMLElement {
   version = null;
-  HEALTH_ENDPOINT = import.meta.env.VITE_API_URL + "/api/health";
 
   constructor() {
     super();
@@ -36,7 +35,9 @@ export default class VersionBox extends HTMLElement {
   }
 
   async fetchVersion() {
-    await fetch(this.HEALTH_ENDPOINT)
+    const HEALTH_URL = import.meta.env.VITE_API_URL + "/api/health";
+
+    await fetch(HEALTH_URL)
       .then((response) => response.json())
       .then((json) => {
         this.version = json["version"];
@@ -47,9 +48,8 @@ export default class VersionBox extends HTMLElement {
   }
 
   render() {
-    this.shadowRoot.querySelector("div").innerHTML = this.version
-      ? `v${this.version}`
-      : "🚫";
+    const textToShow = this.version ? `v${this.version}` : "🚫";
+    this.shadowRoot.querySelector("div").innerHTML = textToShow;
   }
 }
 

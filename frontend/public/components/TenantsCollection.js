@@ -2,20 +2,19 @@ import TenantCard from "./TenantCard.js";
 
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
-    <style>
-      div {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
-        gap: 0.625rem;
-      }
-    </style>
+  <style>
+    div {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+      gap: 0.625rem;
+    }
+  </style>
 
-    <div></div>
+  <div></div>
 `;
 
 export default class TenantsCollection extends HTMLElement {
   tenants = [];
-  TENANTS_ENDPOINT = import.meta.env.VITE_API_URL + "/api/tenants";
 
   constructor() {
     super();
@@ -31,7 +30,9 @@ export default class TenantsCollection extends HTMLElement {
   }
 
   async fetchTenants() {
-    await fetch(this.TENANTS_ENDPOINT)
+    const TENANTS_URL = import.meta.env.VITE_API_URL + "/api/tenants";
+
+    await fetch(TENANTS_URL)
       .then((response) => response.json())
       .then((json) => {
         this.tenants = json["data"];

@@ -12,9 +12,13 @@ export default class extends AbstractView {
         <tenant-form></tenant-form>
       </dialog>
 
-      <button class="open-modal">Nuevo inquilino</button>
-
-      <h2 class="section-title">Inquilinos registrados</h2>
+      <header class="tenants-header">
+        <h2 class="section-title">Inquilinos registrados</h2>
+        <button class="open-modal">
+          <span class="material-symbols-outlined">person_add</span>
+          <p>Nuevo inquilino</p>
+        </button>
+      </header>
       
       <tenants-list></tenants-list>
     `;

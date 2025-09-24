@@ -9,28 +9,47 @@ template.innerHTML = /*html*/ `
       h3 {
         text-align: center;
         grid-column: 1 / 3;
+        margin: 0;
       }
 
       button {
         grid-column: 1 / 3;
+        font-weight: bold;
+        font-size: 1rem;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      * {
+        font-family: var(--font-family);
+      }
+    }
+
+    label {
+      span {
+        color: red;
       }
     }
 
     .phone-input {
       display: flex;
+      gap: 0.5rem;
 
       input {
-        margin-left: 0.5rem;
-        flex-grow: 1;
+        flex-grow: 4;
       }
-
+      
       select {
         text-align: center;
+        flex-grow: 1;
       }
     }
 
     .entry-month-input {
       display: flex;
+      gap: 0.5rem;
     }
 
     .month-selector {
@@ -41,27 +60,32 @@ template.innerHTML = /*html*/ `
     .year-selector {
       flex-grow: 1;
     }
-
   </style>
 
   <form>
-    <h3>Crear nuevo inquilino</h3>
+    <h3>Registrar nuevo inquilino</h3>
 
-    <label for="name">Nombre/s</label>
+    <label for="name">Nombre/s <span>*</span></label>
     <input id="name" name="name" type="text" 
-            required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,50}$"
-            title="Solo letras y espacios, entre 2 y 50 caracteres"
+            required
+            minlength="2" maxlength="50"
+            pattern="^[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]*(\\s[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]*)*$"
+            title="Cada nombre empieza con mayúsculas, entre 2 y 50 caracteres"
             placeholder="Pablo">
 
-    <label for="last-name">Apellido/s</label>
-    <input id="last-name" name="lastName" type="text" 
-            required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,50}$"
-            title="Solo letras y espacios, entre 2 y 50 caracteres"
+    <label for="last-name">Apellido/s <span>*</span></label>
+    <input id="last-name" name="lastName" type="text"
+            required
+            minlength="2" maxlength="50"
+            pattern="^[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]*(\\s[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]*)*$"
+            title="Cada apellido empieza con mayúsculas, entre 2 y 50 caracteres"
             placeholder="Lamponne">
 
-    <label for="dni">DNI</label>
+    <label for="dni">DNI <span>*</span></label>
     <input id="dni" name="dni" type="text"
-            required pattern="^[1-9][0-9]{0,9}$"
+            required
+            minlength="1" maxlength="10"
+            pattern="^[1-9][0-9]{0,9}$"
             title="Solo números entre 1 y 4294967295 (sin puntos ni espacios)"
             placeholder="20665961">
 
@@ -84,10 +108,13 @@ template.innerHTML = /*html*/ `
         <option value="+54">🇦🇷 +54</option>
         <option value="+598">🇺🇾 +598</option>
       </select>
-      <input id="phone" name="phone" type="tel" maxlength="15" placeholder="3442518388">
+      <input id="phone" name="phone" type="tel"
+              minlength="10"
+              maxlength="15"
+              placeholder="3442518388">
     </div>
 
-    <label>Mes de ingreso</label>
+    <label>Mes de ingreso <span>*</span></label>
     <div class="entry-month-input">
       <select name="month" class="month-selector">
         <option value="01">Enero</option>
@@ -107,7 +134,7 @@ template.innerHTML = /*html*/ `
       <select name="year" class="year-selector"></select>
     </div>
 
-    <button type="submit">Crear</button>
+    <button type="submit">Confirmar</button>
   </form>
 `;
 
@@ -166,6 +193,8 @@ export default class TenantForm extends HTMLElement {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      this.shadowRoot.querySelector("button").innerHTML = "Cargando...";
+
       const jsonTenant = this.createJsonTenant(form);
 
       fetch(TENANTS_URL, {
@@ -176,6 +205,7 @@ export default class TenantForm extends HTMLElement {
         .then((response) => response.json())
         .then((result) => {
           console.log("Success:", result);
+          this.parentElement.close();
         })
         .catch((error) => {
           console.error("Error:", error);

@@ -2,9 +2,9 @@ const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
     div {
-      min-height: 8rem;
+      min-height: 7rem;
       background-color: var(--clr-bg-light);
-      padding: 1.25rem;
+      padding: 1rem;
     }
 
     h3, span {

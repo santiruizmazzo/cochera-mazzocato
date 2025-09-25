@@ -2,6 +2,7 @@ import VersionBox from "./components/VersionBox.js";
 import TenantsCollection from "./components/TenantsCollection.js";
 import TenantCard from "./components/TenantCard.js";
 import TenantForm from "./components/TenantForm.js";
+import ActivatableButton from "./components/ActivatableButton.js";
 import iconsSprite from "./assets/icons.svg?raw";
 import Router from "./routing/Router.js";
 

@@ -9,16 +9,6 @@ template.innerHTML = /*html*/ `
       display: grid;
       grid-template-columns: 1fr 3fr;
       gap: 0.85rem;
-
-      button {
-        grid-column: 1 / 3;
-        font-weight: bold;
-        font-size: 1rem;
-
-        &:hover {
-          cursor: pointer;
-        }
-      }
     }
 
     label {
@@ -55,13 +45,8 @@ template.innerHTML = /*html*/ `
       flex-grow: 1;
     }
 
-    .error-box {
-      display: none;
-      grid-column: 1 / 3;
-      padding: 0.3rem;
-      border: 0.125rem solid red;
-      background-color: rgba(255, 195, 195, 1);
-      color: red;
+    activatable-button, error-box {
+      grid-column: 1 / -1;
     }
   </style>
 
@@ -135,8 +120,8 @@ template.innerHTML = /*html*/ `
       <select name="year" class="year-selector"></select>
     </div>
 
-    <button type="submit">Confirmar</button>
-    <div class="error-box"></div>
+    <activatable-button type="submit">Confirmar</activatable-button>
+    <error-box></error-box>
   </form>
 `;
 
@@ -153,9 +138,7 @@ export default class TenantForm extends HTMLElement {
 
   render() {
     this.selectCurrentMonthOption();
-
     this.generateYearSelector();
-
     this.setupFormSubmissionBehavior();
   }
 
@@ -190,15 +173,18 @@ export default class TenantForm extends HTMLElement {
 
   setupFormSubmissionBehavior() {
     const form = this.shadowRoot.querySelector("form");
+    const button = this.shadowRoot.querySelector("activatable-button");
+    const errorBox = this.shadowRoot.querySelector("error-box");
     const TENANTS_URL = import.meta.env.VITE_API_URL + "/api/tenants";
 
-    form.addEventListener("submit", async (event) => {
+    button.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const button = this.shadowRoot.querySelector("button");
-      button.disabled = true;
-      button.style.cursor = "default";
-      button.innerHTML = "Cargando...";
+      if (!form.reportValidity()) {
+        return;
+      }
+
+      button.deactivate();
 
       const jsonTenant = this.createJsonTenant(form);
 
@@ -228,23 +214,12 @@ export default class TenantForm extends HTMLElement {
           this.dispatchEvent(tenantCreated);
 
           form.reset();
-
-          const button = this.shadowRoot.querySelector("button");
-          button.disabled = false;
-          button.style.cursor = "pointer";
-          button.innerHTML = "Confirmar";
-
-          this.shadowRoot.querySelector(".error-box").style.display = "none";
+          button.activate();
+          errorBox.hide();
         })
         .catch((error) => {
-          const button = this.shadowRoot.querySelector("button");
-          button.disabled = false;
-          button.style.cursor = "pointer";
-          button.innerHTML = "Confirmar";
-
-          const errorBox = this.shadowRoot.querySelector(".error-box");
-          errorBox.innerHTML = error.message;
-          errorBox.style.display = "block";
+          button.activate();
+          errorBox.show(error.message);
         });
     });
   }
@@ -268,6 +243,12 @@ export default class TenantForm extends HTMLElement {
     };
 
     return JSON.stringify(tenant);
+  }
+
+  clear() {
+    this.shadowRoot.querySelector("form").reset();
+    this.shadowRoot.querySelector("activatable-button").activate();
+    this.shadowRoot.querySelector("error-box").hide();
   }
 }
 

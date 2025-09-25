@@ -32,9 +32,13 @@ export default class extends AbstractView {
     const modal = document.querySelector("#tenant-creation-modal");
     const openModal = document.querySelector(".open-modal");
     const closeModal = document.querySelector(".close-modal");
+    const form = document.querySelector("tenant-form");
 
     openModal.addEventListener("click", () => modal.showModal());
-    closeModal.addEventListener("click", () => modal.close());
+    closeModal.addEventListener("click", () => {
+      modal.close();
+      form.clear();
+    });
     modal.addEventListener("tenants:update", () => modal.close());
   }
 }

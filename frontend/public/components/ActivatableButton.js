@@ -9,6 +9,7 @@ template.innerHTML = /*html*/ `
       min-width: 100%;
       font-weight: bold;
       font-size: 1rem;
+      font-family: var(--font-family);
 
       &:hover {
         cursor: pointer;

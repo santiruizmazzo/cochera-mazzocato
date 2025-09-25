@@ -1,6 +1,10 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
+    * {
+      font-family: var(--font-family);
+    }
+
     form {
       display: grid;
       grid-template-columns: 1fr 3fr;
@@ -14,10 +18,6 @@ template.innerHTML = /*html*/ `
         &:hover {
           cursor: pointer;
         }
-      }
-
-      * {
-        font-family: var(--font-family);
       }
     }
 
@@ -53,6 +53,15 @@ template.innerHTML = /*html*/ `
 
     .year-selector {
       flex-grow: 1;
+    }
+
+    .error-box {
+      display: none;
+      grid-column: 1 / 3;
+      padding: 0.3rem;
+      border: 0.125rem solid red;
+      background-color: rgba(255, 195, 195, 1);
+      color: red;
     }
   </style>
 
@@ -127,6 +136,7 @@ template.innerHTML = /*html*/ `
     </div>
 
     <button type="submit">Confirmar</button>
+    <div class="error-box"></div>
   </form>
 `;
 
@@ -185,7 +195,10 @@ export default class TenantForm extends HTMLElement {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      this.shadowRoot.querySelector("button").innerHTML = "Cargando...";
+      const button = this.shadowRoot.querySelector("button");
+      button.disabled = true;
+      button.style.cursor = "default";
+      button.innerHTML = "Cargando...";
 
       const jsonTenant = this.createJsonTenant(form);
 
@@ -194,19 +207,44 @@ export default class TenantForm extends HTMLElement {
         headers: { "Content-Type": "application/json" },
         body: jsonTenant,
       })
-        .then((response) => response.json())
-        .then((result) => {
+        .then(async (response) => {
+          const responseBody = await response.json();
+
+          if (!response.ok) {
+            const errorMessage =
+              responseBody.detail ||
+              `${response.status} (${response.statusText})`;
+            throw new Error(errorMessage);
+          }
+
+          return responseBody;
+        })
+        .then((responseBody) => {
           const tenantCreated = new CustomEvent("tenants:update", {
-            detail: result,
+            detail: responseBody,
             bubbles: true,
             composed: true,
           });
           this.dispatchEvent(tenantCreated);
+
           form.reset();
-          this.shadowRoot.querySelector("button").innerHTML = "Confirmar";
+
+          const button = this.shadowRoot.querySelector("button");
+          button.disabled = false;
+          button.style.cursor = "pointer";
+          button.innerHTML = "Confirmar";
+
+          this.shadowRoot.querySelector(".error-box").style.display = "none";
         })
         .catch((error) => {
-          console.error("Error:", error);
+          const button = this.shadowRoot.querySelector("button");
+          button.disabled = false;
+          button.style.cursor = "pointer";
+          button.innerHTML = "Confirmar";
+
+          const errorBox = this.shadowRoot.querySelector(".error-box");
+          errorBox.innerHTML = error.message;
+          errorBox.style.display = "block";
         });
     });
   }

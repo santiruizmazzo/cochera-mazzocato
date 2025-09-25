@@ -11,4 +11,8 @@ export default defineConfig({
     emptyOutDir: true,
     minify: true,
   },
+  preview: {
+    host: true,
+    port: process.env.VITE_PORT || 5173,
+  },
 });

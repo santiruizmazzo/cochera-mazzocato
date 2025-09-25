@@ -8,7 +8,7 @@ export default class extends AbstractView {
 
   getHtml() {
     return /*html*/ `
-      <dialog class="modal" closedby="any">
+      <dialog id="tenant-creation-modal" class="modal" closedby="any">
         <h3>Registrar inquilino</h3>
         <button class="close-modal">
           <svg><use href="#close"/></svg>
@@ -24,21 +24,17 @@ export default class extends AbstractView {
         </button>
       </header>
       
-      <tenants-list></tenants-list>
+      <tenants-collection></tenants-collection>
     `;
   }
 
   setUpJavascript() {
-    const modal = document.querySelector(".modal");
+    const modal = document.querySelector("#tenant-creation-modal");
     const openModal = document.querySelector(".open-modal");
     const closeModal = document.querySelector(".close-modal");
 
-    openModal.addEventListener("click", () => {
-      modal.showModal();
-    });
-
-    closeModal.addEventListener("click", () => {
-      modal.close();
-    });
+    openModal.addEventListener("click", () => modal.showModal());
+    closeModal.addEventListener("click", () => modal.close());
+    modal.addEventListener("tenants:update", () => modal.close());
   }
 }

@@ -196,8 +196,11 @@ export default class TenantForm extends HTMLElement {
       })
         .then((response) => response.json())
         .then((result) => {
-          console.log("Success:", result);
-          this.parentElement.close();
+          const tenantsEvent = new CustomEvent("tenants:update", {
+            bubbles: true,
+            composed: true,
+          });
+          this.dispatchEvent(tenantsEvent);
         })
         .catch((error) => {
           console.error("Error:", error);

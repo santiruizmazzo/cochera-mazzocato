@@ -5,7 +5,7 @@ template.innerHTML = /*html*/ `
   <style>
     div {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
       gap: 0.625rem;
     }
   </style>
@@ -22,8 +22,17 @@ export default class TenantsCollection extends HTMLElement {
     this.shadowRoot.append(template.content.cloneNode(true));
   }
 
+  async handleEvent(event) {
+    if (event.type === "tenants:update") {
+      await this.fetchTenants();
+      this.render();
+    }
+  }
+
   async connectedCallback() {
     if (this.tenants.length != 0) return;
+
+    document.addEventListener("tenants:update", this);
 
     await this.fetchTenants();
     this.render();
@@ -44,6 +53,7 @@ export default class TenantsCollection extends HTMLElement {
 
   render() {
     const container = this.shadowRoot.querySelector("div");
+    container.innerHTML = "";
 
     this.tenants.forEach((tenant) => {
       const card = TenantCard.fromJson(tenant);
@@ -52,4 +62,4 @@ export default class TenantsCollection extends HTMLElement {
   }
 }
 
-customElements.define("tenants-list", TenantsCollection);
+customElements.define("tenants-collection", TenantsCollection);

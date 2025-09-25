@@ -196,11 +196,14 @@ export default class TenantForm extends HTMLElement {
       })
         .then((response) => response.json())
         .then((result) => {
-          const tenantsEvent = new CustomEvent("tenants:update", {
+          const tenantCreated = new CustomEvent("tenants:update", {
+            detail: result,
             bubbles: true,
             composed: true,
           });
-          this.dispatchEvent(tenantsEvent);
+          this.dispatchEvent(tenantCreated);
+          form.reset();
+          this.shadowRoot.querySelector("button").innerHTML = "Confirmar";
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -210,13 +213,19 @@ export default class TenantForm extends HTMLElement {
 
   createJsonTenant(form) {
     const tenantForm = new FormData(form);
+
+    const localPhone = tenantForm.get("phone");
+    const fullPhone = localPhone
+      ? `${tenantForm.get("dialing-code")}${localPhone}`
+      : null;
+
     const tenant = {
       name: tenantForm.get("name"),
       last_name: tenantForm.get("lastName"),
       dni: parseInt(tenantForm.get("dni")),
-      email: tenantForm.get("email"),
-      address: tenantForm.get("address"),
-      phone: `${tenantForm.get("dialing-code")}${tenantForm.get("phone")}`,
+      email: tenantForm.get("email") ? tenantForm.get("email") : null,
+      address: tenantForm.get("address") ? tenantForm.get("address") : null,
+      phone: fullPhone,
       entry_month: `${tenantForm.get("month")}-${tenantForm.get("year")}`,
     };
 

@@ -24,8 +24,9 @@ export default class TenantsCollection extends HTMLElement {
 
   async handleEvent(event) {
     if (event.type === "tenants:update") {
-      await this.fetchTenants();
-      this.render();
+      const container = this.shadowRoot.querySelector("div");
+      const card = TenantCard.fromJson(event.detail);
+      container.appendChild(card);
     }
   }
 

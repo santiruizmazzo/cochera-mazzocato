@@ -2,6 +2,7 @@ import VersionBox from "./components/VersionBox.js";
 import TenantsCollection from "./components/TenantsCollection.js";
 import TenantCard from "./components/TenantCard.js";
 import TenantForm from "./components/TenantForm.js";
+import iconsSprite from "./assets/icons.svg?raw";
 import Router from "./routing/Router.js";
 
 const router = new Router();
@@ -9,6 +10,11 @@ const router = new Router();
 window.addEventListener("popstate", router.route);
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    `<div style="display: none;">${iconsSprite}</div>`,
+  );
+
   document.body.addEventListener("click", (event) => {
     if (event.target.matches("[data-link]")) {
       event.preventDefault();

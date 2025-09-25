@@ -6,12 +6,6 @@ template.innerHTML = /*html*/ `
       grid-template-columns: 1fr 3fr;
       gap: 0.85rem;
 
-      h3 {
-        text-align: center;
-        grid-column: 1 / 3;
-        margin: 0;
-      }
-
       button {
         grid-column: 1 / 3;
         font-weight: bold;
@@ -63,8 +57,6 @@ template.innerHTML = /*html*/ `
   </style>
 
   <form>
-    <h3>Registrar nuevo inquilino</h3>
-
     <label for="name">Nombre/s <span>*</span></label>
     <input id="name" name="name" type="text" 
             required

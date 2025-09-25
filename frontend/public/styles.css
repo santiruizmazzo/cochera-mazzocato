@@ -123,15 +123,48 @@ main {
 }
 
 .modal {
-  padding: 1.5rem;
+  padding: 1.3rem;
   min-width: 25dvw;
   margin: auto;
   border: none;
   overflow: hidden;
 
+  h3 {
+    text-align: center;
+    grid-column: 2 / 3;
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+
   &::backdrop {
     background: rgba(0, 0, 0, 0.509);
   }
+}
+
+.modal[open] {
+  display: grid;
+  grid-template-columns: 1fr 6fr 1fr;
+  gap: 0.85rem;
+}
+
+.close-modal {
+  grid-column: 3 / 4;
+  max-width: fit-content;
+  justify-self: end;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+tenant-form {
+  grid-column: 1 / 4;
 }
 
 .section-title {
@@ -154,10 +187,20 @@ main {
     font-weight: 600;
     background-color: var(--clr-bg-light);
 
+    svg {
+      fill: var(--clr-strong);
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
     &:hover {
       cursor: pointer;
       background-color: var(--clr-strong);
       color: white;
+
+      svg {
+        fill: white;
+      }
     }
   }
 }

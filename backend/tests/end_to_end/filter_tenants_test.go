@@ -91,7 +91,7 @@ func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "no matching tenants were found", t)
+	utils.AssertResponseContains(responseMap, "detail", "No se encontraron inquilinos que coincidan", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
 }
@@ -230,7 +230,7 @@ func TestGetTenantsFilteredByNameDoesNotMatch_EndToEnd(t *testing.T) {
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "no matching tenants were found", t)
+	utils.AssertResponseContains(responseMap, "detail", "No se encontraron inquilinos que coincidan", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
 }

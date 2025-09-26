@@ -45,9 +45,9 @@ func StringToUint(s string, maxBits int) (uint64, error) {
 }
 
 var (
-	ErrInvalidMonthOfYearString = errors.New(`month of year must come as a "MM-YYYY" string`)
-	ErrMonthNotParseable        = errors.New("imposible to parse this month")
-	ErrYearNotParseable         = errors.New("imposible to parse this year")
+	ErrInvalidMonthOfYearString = errors.New(`Un mes de año debe ser un string con formato: "MM-YYYY"`)
+	ErrMonthNotParseable        = errors.New("Imposible procesar este mes")
+	ErrYearNotParseable         = errors.New("Imposible procesar este año")
 )
 
 func NewMonthOfYearFromString(rawMonthOfYear any) (MonthOfYear, error) {

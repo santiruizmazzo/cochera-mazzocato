@@ -222,3 +222,14 @@ footer {
     text-decoration: underline dashed;
   }
 }
+
+.spinner {
+  width: 5rem;
+  height: 5rem;
+  fill: var(--clr-bg-dark);
+  transition: transform 0.5s;
+
+  &:hover {
+    transform: rotate(360deg);
+  }
+}

@@ -224,12 +224,18 @@ footer {
 }
 
 .spinner {
-  width: 5rem;
-  height: 5rem;
-  fill: var(--clr-bg-dark);
-  transition: transform 0.5s;
+  --full-spin-time: 0.7s;
+  --side-size: 3rem;
 
-  &:hover {
+  box-sizing: border-box;
+  width: var(--side-size);
+  height: var(--side-size);
+  fill: var(--clr-bg-dark);
+  animation: spin var(--full-spin-time) linear infinite;
+}
+
+@keyframes spin {
+  to {
     transform: rotate(360deg);
   }
 }

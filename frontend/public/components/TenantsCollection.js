@@ -3,14 +3,22 @@ import TenantCard from "./TenantCard.js";
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
-    div {
+    .empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loaded {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
       gap: 0.625rem;
     }
   </style>
 
-  <div></div>
+  <div class="empty">
+    <slot></slot>
+  </div>
 `;
 
 export default class TenantsCollection extends HTMLElement {
@@ -55,6 +63,7 @@ export default class TenantsCollection extends HTMLElement {
   render() {
     const container = this.shadowRoot.querySelector("div");
     container.innerHTML = "";
+    container.className = "loaded";
 
     this.tenants.forEach((tenant) => {
       const card = TenantCard.fromJson(tenant);

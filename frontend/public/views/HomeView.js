@@ -8,7 +8,7 @@ export default class extends AbstractView {
 
   async getHtml() {
     return /*html*/ `
-      <svg class="spinner"><use href="#spinner"/></svg>
+      <h2>INICIO DE LA APP</h2>
     `;
   }
 }

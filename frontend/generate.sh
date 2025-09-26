@@ -10,6 +10,6 @@ fi
 
 OUTPUT=public/assets/icons.svg
 
-echo '<svg xmlns="http://www.w3.org/2000/svg">' >>$OUTPUT
+echo '<svg xmlns="http://www.w3.org/2000/svg">' >$OUTPUT
 sed s/svg/symbol/g $INPUT/*.svg >>$OUTPUT
 echo '</svg>' >>$OUTPUT

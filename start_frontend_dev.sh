@@ -1,2 +1,2 @@
-docker compose up -d frontend
+docker compose up -d
 docker compose exec frontend bash

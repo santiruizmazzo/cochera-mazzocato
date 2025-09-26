@@ -34,7 +34,7 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El DNI es obligatorio", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI es obligatorio", t)
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 }
@@ -69,7 +69,7 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusConflict, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El DNI ya existe", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI ya existe", t)
 }
 
 func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
@@ -101,7 +101,7 @@ func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El DNI debe ser un entero positivo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un entero positivo", t)
 }
 
 func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
@@ -133,7 +133,7 @@ func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El DNI debe ser un entero positivo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un entero positivo", t)
 }
 
 func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
@@ -159,7 +159,7 @@ func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El DNI debe ser un entero positivo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un entero positivo", t)
 }
 
 func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
@@ -185,7 +185,7 @@ func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El teléfono debe comenzar con un símbolo de +", t)
+	utils.AssertResponseContains(responseMap, "detail", "el teléfono debe comenzar con un símbolo de +", t)
 }
 
 func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
@@ -211,7 +211,7 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El teléfono solo puede tener números", t)
+	utils.AssertResponseContains(responseMap, "detail", "el teléfono solo puede tener números", t)
 }
 
 func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
@@ -237,7 +237,7 @@ func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El teléfono debe tener 15 dígitos como máximo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el teléfono debe tener 15 dígitos como máximo", t)
 }
 
 func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
@@ -263,7 +263,7 @@ func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El teléfono no puede estar lleno de ceros", t)
+	utils.AssertResponseContains(responseMap, "detail", "el teléfono no puede estar lleno de ceros", t)
 }
 
 func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
@@ -289,7 +289,7 @@ func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El email debe seguir el formato estándar", t)
+	utils.AssertResponseContains(responseMap, "detail", "el email debe seguir el formato estándar", t)
 }
 
 func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
@@ -315,7 +315,7 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El email debe tener 100 caracteres como máximo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el email debe tener 100 caracteres como máximo", t)
 }
 
 func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
@@ -347,7 +347,7 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusConflict, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El email ya está en uso", t)
+	utils.AssertResponseContains(responseMap, "detail", "el email ya está en uso", t)
 }
 
 func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
@@ -379,7 +379,7 @@ func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El mes de ingreso debe seguir este formato: MM-YYYY", t)
+	utils.AssertResponseContains(responseMap, "detail", "el mes de ingreso debe seguir este formato: MM-YYYY", t)
 }
 
 func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
@@ -405,7 +405,7 @@ func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El nombre debe tener 50 caracteres como máximo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el nombre debe tener 50 caracteres como máximo", t)
 }
 
 func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
@@ -431,7 +431,7 @@ func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El apellido debe tener 50 caracteres como máximo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el apellido debe tener 50 caracteres como máximo", t)
 }
 
 func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
@@ -457,5 +457,5 @@ func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "El domicilio debe tener 100 caracteres como máximo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el domicilio debe tener 100 caracteres como máximo", t)
 }

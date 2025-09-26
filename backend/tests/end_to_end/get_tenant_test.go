@@ -37,7 +37,7 @@ func TestGetTenantByIDThatDoesNotExist_EndToEnd(t *testing.T) {
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "Inquilino no encontrado", t)
+	utils.AssertResponseContains(responseMap, "detail", "inquilino no encontrado", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
 }

@@ -77,6 +77,11 @@ svg {
   font-family: var(--font-family);
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 .nav-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -118,8 +123,8 @@ nav {
 }
 
 main {
-  margin: auto;
-  max-width: 70%;
+  padding: 2rem 20dvw;
+  flex: 1;
 }
 
 .modal {
@@ -174,7 +179,7 @@ tenant-form {
 .tenants-header {
   display: flex;
   justify-content: space-between;
-  padding: 2rem 0;
+  padding: 0 0 2rem 0;
 
   button {
     display: flex;
@@ -202,5 +207,18 @@ tenant-form {
         fill: white;
       }
     }
+  }
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 5rem;
+  background-color: var(--clr-strong);
+  color: white;
+
+  span {
+    text-decoration: underline dashed;
   }
 }

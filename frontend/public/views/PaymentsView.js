@@ -7,7 +7,9 @@ export default class extends AbstractView {
 
   async getHtml() {
     return /*html*/ `
-      <h2>AQUI ESTARIAN LOS PAGOS RECIBIDOS</h2>
+      <section class="payments-view">
+        <h2>Acá se encontrarán todos los pagos de cuotas recibidos... (próximamente)</h2>
+      </section>
     `;
   }
 }

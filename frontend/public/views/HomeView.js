@@ -7,7 +7,9 @@ export default class extends AbstractView {
 
   async getHtml() {
     return /*html*/ `
-      <h2>INICIO DE LA APP</h2>
+      <section class="home-view">
+        <h2>¡Bienvenido a la app de gestión de la <span>Cochera Mazzocato</span>!</h2>
+      </section>
     `;
   }
 }

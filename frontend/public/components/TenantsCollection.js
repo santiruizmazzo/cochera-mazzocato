@@ -3,7 +3,12 @@ import TenantCard from "./TenantCard.js";
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
+    :host {
+      flex-grow: 1;
+    }
+
     .empty {
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;

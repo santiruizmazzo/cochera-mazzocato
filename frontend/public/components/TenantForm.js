@@ -32,41 +32,21 @@ template.innerHTML = /*html*/ `
       border: 0.15rem solid var(--clr-contrast);
     }
 
-    label {
-      span {
-        color: red;
-      }
+    span {
+      color: red;
+      font-weight: bold;
     }
 
-    .phone-input {
-      display: flex;
-      gap: 0.5rem;
-
-      input {
-        flex-grow: 4;
-      }
-      
-      select {
-        text-align: center;
-        flex-grow: 1;
-      }
-    }
-
-    .entry-month-input {
+    .phone-input, .entry-month-input {
       display: flex;
       gap: 0.5rem;
     }
 
-    .month-selector {
-      font-family: var(--font-family);
+    .phone-input input, .month-selector, .year-selector {
       flex-grow: 1;
     }
 
-    .year-selector {
-      flex-grow: 1;
-    }
-
-    activatable-button, error-box {
+    div:last-child {
       grid-column: 1 / -1;
     }
   </style>
@@ -115,6 +95,7 @@ template.innerHTML = /*html*/ `
         <option value="+54">🇦🇷 +54</option>
         <option value="+598">🇺🇾 +598</option>
       </select>
+
       <input id="phone" name="phone" type="tel"
               minlength="10"
               maxlength="15"
@@ -141,8 +122,10 @@ template.innerHTML = /*html*/ `
       <select name="year" class="year-selector"></select>
     </div>
 
-    <activatable-button type="submit">Confirmar</activatable-button>
-    <error-box></error-box>
+    <div>
+      <activatable-button type="submit">Confirmar</activatable-button>
+      <error-box></error-box>
+    </div>
   </form>
 `;
 

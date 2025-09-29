@@ -11,8 +11,7 @@ template.innerHTML = /*html*/ `
       gap: 0.85rem;
     }
 
-    input, select, ::picker(select) {
-      appearance: base-select;
+    input, select {
       border: none;
       background-color: var(--clr-main-darker);
       color: var(--clr-contrast);
@@ -23,6 +22,10 @@ template.innerHTML = /*html*/ `
       &:focus {
         outline: 0.15rem solid var(--clr-contrast);
       }
+    }
+
+    select, ::picker(select) {
+      appearance: base-select;
     }
 
     ::picker(select) {

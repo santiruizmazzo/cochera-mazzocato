@@ -3,17 +3,45 @@ template.innerHTML = /*html*/ `
   <style>
     * {
       box-sizing: border-box;
+      font-family: var(--font-family);
+      font-size: inherit;
     }
 
     button {
+      --separation: 0.6rem;
+      --border-size: 0.2rem;
+      --font-weight: 600;
+      --stroke-color: var(--clr-contrast);
+      --fill-color: var(--clr-main);
+
       min-width: 100%;
-      font-weight: bold;
-      font-size: 1rem;
-      font-family: var(--font-family);
+      max-height: fit-content;
+      padding: var(--separation);
+      font-weight: var(--font-weight);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: var(--border-size) solid var(--stroke-color);
+      background-color: var(--stroke-color);
+      color: var(--fill-color);
 
       &:hover {
         cursor: pointer;
       }
+
+      svg {
+        fill: var(--fill-color);
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+
+    button[disabled] {
+      background-color: var(--clr-main-darkest);
+      color: var(--clr-contrast);
+      border: none;
     }
   </style>
 
@@ -48,14 +76,12 @@ export default class ActivatableButton extends HTMLElement {
   }
 
   handleEvent(event) {
-    if (event.type === "click" && this.type === "submit") {
-      const newEvent = new Event("submit", {
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      });
-      this.dispatchEvent(newEvent);
-    }
+    const newEvent = new Event(this.type, {
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    });
+    this.dispatchEvent(newEvent);
   }
 
   connectedCallback() {

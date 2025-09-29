@@ -11,6 +11,24 @@ template.innerHTML = /*html*/ `
       gap: 0.85rem;
     }
 
+    input, select, ::picker(select) {
+      appearance: base-select;
+      border: none;
+      background-color: var(--clr-main-darker);
+      color: var(--clr-contrast);
+      padding: 0.5rem;
+      border-radius: 0;
+      font-size: 0.9rem;
+
+      &:focus {
+        outline: 0.15rem solid var(--clr-contrast);
+      }
+    }
+
+    ::picker(select) {
+      border: 0.15rem solid var(--clr-contrast);
+    }
+
     label {
       span {
         color: red;

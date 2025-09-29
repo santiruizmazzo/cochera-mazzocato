@@ -3,7 +3,7 @@ template.innerHTML = /*html*/ `
   <style>
     div {
       min-height: 7rem;
-      background-color: var(--clr-bg-light);
+      background-color: var(--clr-main-darker);
       padding: 1rem;
     }
 
@@ -12,7 +12,7 @@ template.innerHTML = /*html*/ `
     }
 
     #name {
-      color: var(--clr-bg-dark);
+      color: var(--clr-main-darkest);
     }
   </style>
 

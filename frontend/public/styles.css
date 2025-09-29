@@ -1,9 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 
 :root {
-  --clr-strong: black;
-  --clr-bg-light: rgb(234, 234, 234);
-  --clr-bg-dark: rgb(171, 171, 171);
+  --clr-main: rgb(255, 237, 206);
+  --clr-main-darker: rgb(
+    from var(--clr-main) calc(r - 21) calc(g - 21) calc(b - 21)
+  );
+  --clr-main-darkest: rgb(
+    from var(--clr-main) calc(r - 84) calc(g - 84) calc(b - 84)
+  );
+  --clr-contrast: rgb(0 0 0);
 
   --font-family: "IBM Plex Sans", sans-serif;
 }
@@ -80,6 +85,7 @@ svg {
 body {
   display: flex;
   flex-direction: column;
+  background-color: var(--clr-main);
 }
 
 .nav-bar {
@@ -87,7 +93,7 @@ body {
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
   justify-items: center;
-  border-bottom: 0.1875rem solid var(--clr-bg-dark);
+  border-bottom: 0.1875rem solid var(--clr-main-darkest);
   min-height: 5rem;
 }
 
@@ -95,7 +101,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
   text-decoration: none;
-  color: var(--clr-strong);
+  color: var(--clr-contrast);
 }
 
 nav {
@@ -113,11 +119,11 @@ nav {
   a {
     padding: 0.3125rem;
     text-decoration: none;
-    color: var(--clr-strong);
+    color: var(--clr-contrast);
     font-weight: bold;
 
     &:hover {
-      background-color: var(--clr-bg-light);
+      background-color: var(--clr-main-darker);
     }
   }
 }
@@ -135,6 +141,7 @@ main {
   margin: auto;
   border: none;
   overflow: hidden;
+  background-color: var(--clr-main);
 
   h3 {
     text-align: center;
@@ -180,35 +187,58 @@ tenant-form {
 
 .tenants-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 0 0 2rem 0;
+}
 
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0 0.6rem;
-    border: none;
-    color: var(--clr-strong);
-    font-weight: 600;
-    background-color: var(--clr-bg-light);
+.new-action-btn {
+  --separation: 0.6rem;
+  --border-size: 0.2rem;
+  --font-weight: 600;
+  --stroke-color: var(--clr-contrast);
+  --fill-color: var(--clr-main);
+
+  gap: var(--separation);
+  max-height: fit-content;
+  padding: var(--separation);
+  font-weight: var(--font-weight);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: var(--border-size) solid var(--stroke-color);
+  background-color: var(--fill-color);
+  color: var(--stroke-color);
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--stroke-color);
+    color: var(--fill-color);
 
     svg {
-      fill: var(--clr-strong);
-      width: 1.5rem;
-      height: 1.5rem;
+      fill: var(--fill-color);
     }
+  }
 
-    &:hover {
-      cursor: pointer;
-      background-color: var(--clr-strong);
-      color: white;
+  svg {
+    fill: var(--stroke-color);
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
 
-      svg {
-        fill: white;
-      }
-    }
+.close-action-btn {
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    background-color: var(--clr-main-darker);
+  }
+
+  svg {
+    fill: var(--clr-contrast);
   }
 }
 
@@ -217,8 +247,8 @@ footer {
   align-items: center;
   justify-content: center;
   min-height: 5rem;
-  background-color: var(--clr-strong);
-  color: white;
+  background-color: var(--clr-contrast);
+  color: var(--clr-main);
 
   span {
     text-decoration: underline dashed;
@@ -232,7 +262,7 @@ footer {
   box-sizing: border-box;
   width: var(--side-size);
   height: var(--side-size);
-  fill: var(--clr-bg-dark);
+  fill: var(--clr-main-darkest);
   animation: spin var(--full-spin-time) linear infinite;
 }
 

@@ -9,7 +9,7 @@ export default class extends AbstractView {
     return /*html*/ `
       <dialog id="tenant-creation-modal" class="modal" closedby="any">
         <h3>Registrar inquilino</h3>
-        <button class="close-modal">
+        <button class=" close-action-btn close-modal">
           <svg><use href="#close"/></svg>
         </button>
         <tenant-form></tenant-form>
@@ -17,7 +17,7 @@ export default class extends AbstractView {
 
       <header class="tenants-header">
         <h2 class="section-title">Inquilinos registrados</h2>
-        <button class="open-modal">
+        <button class="new-action-btn open-modal">
           <svg><use href="#person_add"/></svg>
           <p>Nuevo inquilino</p>
         </button>

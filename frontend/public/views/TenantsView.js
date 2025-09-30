@@ -7,27 +7,29 @@ export default class extends AbstractView {
 
   getHtml() {
     return /*html*/ `
-      <dialog id="new-tenant-modal" closedby="any">
-        <header>
-          <h3>Registrar inquilino</h3>
-          <button class="close-action-btn close-modal-btn">
-            <svg><use href="#close"/></svg>
+      <section class="tenants-view">
+        <dialog id="new-tenant-modal" closedby="any">
+          <header>
+            <h3>Registrar inquilino</h3>
+            <button class="close-action-btn close-modal-btn">
+              <svg><use href="#close"/></svg>
+            </button>
+          </header>
+          <tenant-form></tenant-form>
+        </dialog>
+
+        <header class="section-header">
+          <h2>Inquilinos registrados</h2>
+          <button class="new-action-btn open-modal-btn">
+            <svg><use href="#person_add"/></svg>
+            Nuevo inquilino
           </button>
         </header>
-        <tenant-form></tenant-form>
-      </dialog>
-
-      <header class="section-header">
-        <h2>Inquilinos registrados</h2>
-        <button class="new-action-btn open-modal-btn">
-          <svg><use href="#person_add"/></svg>
-          Nuevo inquilino
-        </button>
-      </header>
-      
-      <tenants-collection>
-        <svg class="spinner"><use href="#spinner"/></svg>
-      </tenants-collection>
+        
+        <tenants-collection>
+          <svg class="spinner"><use href="#spinner"/></svg>
+        </tenants-collection>
+      </section>
     `;
   }
 

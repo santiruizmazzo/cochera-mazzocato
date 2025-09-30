@@ -8,18 +8,20 @@ export default class extends AbstractView {
   getHtml() {
     return /*html*/ `
       <dialog id="new-tenant-modal" closedby="any">
-        <h3>Registrar inquilino</h3>
-        <button class=" close-action-btn close-modal">
-          <svg><use href="#close"/></svg>
-        </button>
+        <header>
+          <h3>Registrar inquilino</h3>
+          <button class="close-action-btn close-modal-btn">
+            <svg><use href="#close"/></svg>
+          </button>
+        </header>
         <tenant-form></tenant-form>
       </dialog>
 
-      <header class="tenants-header">
-        <h2 class="section-title">Inquilinos registrados</h2>
-        <button class="new-action-btn open-modal">
+      <header class="section-header">
+        <h2>Inquilinos registrados</h2>
+        <button class="new-action-btn open-modal-btn">
           <svg><use href="#person_add"/></svg>
-          <p>Nuevo inquilino</p>
+          Nuevo inquilino
         </button>
       </header>
       
@@ -31,8 +33,8 @@ export default class extends AbstractView {
 
   setUpJavascript() {
     const modal = document.querySelector("#new-tenant-modal");
-    const openModal = document.querySelector(".open-modal");
-    const closeModal = document.querySelector(".close-modal");
+    const openModal = document.querySelector(".open-modal-btn");
+    const closeModal = document.querySelector(".close-modal-btn");
     const form = document.querySelector("tenant-form");
 
     openModal.addEventListener("click", () => modal.showModal());

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 
 :root {
-  --clr-main: rgb(255, 237, 206);
+  --clr-main: rgb(255, 255, 255);
   --clr-main-darker: rgb(
     from var(--clr-main) calc(r - 21) calc(g - 21) calc(b - 21)
   );
@@ -89,59 +89,69 @@ body {
 }
 
 .nav-bar {
+  --border-width: 0.1875rem;
+
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  align-items: center;
-  justify-items: center;
-  border-bottom: 0.1875rem solid var(--clr-main-darkest);
-  min-height: 5rem;
+  place-items: center;
+  border-bottom: var(--border-width) solid var(--clr-main-darkest);
+  padding: 0.8rem 0;
+
+  ul {
+    display: flex;
+    gap: 0.75rem;
+    list-style: none;
+  }
+
+  a {
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--clr-contrast);
+  }
 }
 
 .home-button {
   font-size: 2rem;
-  font-weight: bold;
-  text-decoration: none;
-  color: var(--clr-contrast);
 }
 
-nav {
-  ul {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 0.75rem;
-  }
+.nav-link {
+  padding: 0.3125rem;
 
-  li {
-    display: inline-block;
-  }
-
-  a {
-    padding: 0.3125rem;
-    text-decoration: none;
-    color: var(--clr-contrast);
-    font-weight: bold;
-
-    &:hover {
-      background-color: var(--clr-main-darker);
-    }
+  &:hover {
+    background-color: var(--clr-main-darker);
   }
 }
 
 main {
-  padding: 2rem 20dvw;
-  flex: 1;
+  --vertical-spacing: 2rem;
+
   display: flex;
   flex-direction: column;
+  align-self: center;
+  flex-grow: 1;
+  padding: var(--vertical-spacing) 0;
+  gap: var(--vertical-spacing);
+  width: 70%;
 }
 
-.modal {
+dialog[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
   padding: 1.3rem;
   min-width: 25dvw;
   margin: auto;
   border: none;
-  overflow: hidden;
   background-color: var(--clr-main);
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.509);
+  }
+}
+
+dialog[open] > header {
+  display: grid;
+  grid-template-columns: 1fr 6fr 1fr;
 
   h3 {
     text-align: center;
@@ -151,45 +161,38 @@ main {
     font-size: 1.3rem;
   }
 
-  &::backdrop {
-    background: rgba(0, 0, 0, 0.509);
+  button {
+    grid-column: 3 / 4;
+    justify-self: end;
   }
 }
 
-.modal[open] {
-  display: grid;
-  grid-template-columns: 1fr 6fr 1fr;
-  gap: 0.85rem;
-}
+.close-action-btn {
+  --icon-side-length: 1.5rem;
 
-.close-modal {
-  grid-column: 3 / 4;
-  max-width: fit-content;
-  justify-self: end;
-
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+  border: none;
+  background-color: transparent;
 
   &:hover {
     cursor: pointer;
+    background-color: var(--clr-main-darker);
+  }
+
+  svg {
+    fill: var(--clr-contrast);
+    width: var(--icon-side-length);
+    height: var(--icon-side-length);
   }
 }
 
-tenant-form {
-  grid-column: 1 / 4;
-}
-
-.section-title {
-  font-size: 1.75rem;
-}
-
-.tenants-header {
+.section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 2rem 0;
+
+  h2 {
+    font-size: 1.75rem;
+  }
 }
 
 .new-action-btn {
@@ -198,19 +201,19 @@ tenant-form {
   --font-weight: 600;
   --stroke-color: var(--clr-contrast);
   --fill-color: var(--clr-main);
-
-  gap: var(--separation);
-  max-height: fit-content;
-  padding: var(--separation);
-  font-weight: var(--font-weight);
+  --icon-side-length: 1.5rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--separation);
 
-  border: var(--border-size) solid var(--stroke-color);
   background-color: var(--fill-color);
+  border: var(--border-size) solid var(--stroke-color);
   color: var(--stroke-color);
+  max-height: fit-content;
+  padding: var(--separation);
+  font-weight: var(--font-weight);
 
   &:hover {
     cursor: pointer;
@@ -224,21 +227,8 @@ tenant-form {
 
   svg {
     fill: var(--stroke-color);
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-}
-
-.close-action-btn {
-  border: none;
-  background-color: transparent;
-
-  &:hover {
-    background-color: var(--clr-main-darker);
-  }
-
-  svg {
-    fill: var(--clr-contrast);
+    width: var(--icon-side-length);
+    height: var(--icon-side-length);
   }
 }
 
@@ -246,24 +236,19 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 5rem;
+  padding: 1.5rem 0;
   background-color: var(--clr-contrast);
   color: var(--clr-main);
-
-  span {
-    text-decoration: underline dashed;
-  }
 }
 
 .spinner {
-  --full-spin-time: 0.7s;
-  --side-size: 3rem;
+  --spin-time: 0.7s;
+  --side-length: 3rem;
 
-  box-sizing: border-box;
-  width: var(--side-size);
-  height: var(--side-size);
+  width: var(--side-length);
+  height: var(--side-length);
   fill: var(--clr-main-darkest);
-  animation: spin var(--full-spin-time) linear infinite;
+  animation: spin var(--spin-time) linear infinite;
 }
 
 @keyframes spin {

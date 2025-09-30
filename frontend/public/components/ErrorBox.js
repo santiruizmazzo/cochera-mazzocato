@@ -23,7 +23,9 @@ export default class ErrorBox extends HTMLElement {
   show(message) {
     const box = this.shadowRoot.querySelector("div");
     box.style.display = "block";
-    box.innerHTML = message;
+    const capitalizedMessage =
+      message.charAt(0).toUpperCase() + message.slice(1);
+    box.innerHTML = capitalizedMessage;
   }
 
   hide() {

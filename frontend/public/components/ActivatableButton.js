@@ -4,44 +4,34 @@ template.innerHTML = /*html*/ `
     * {
       box-sizing: border-box;
       font-family: var(--font-family);
-      font-size: inherit;
+      font-size: 1rem;
     }
 
     button {
-      --separation: 0.6rem;
-      --border-size: 0.2rem;
-      --font-weight: 600;
       --stroke-color: var(--clr-contrast);
       --fill-color: var(--clr-main);
 
-      min-width: 100%;
-      max-height: fit-content;
-      padding: var(--separation);
-      font-weight: var(--font-weight);
+      width: 100%;
+      height: fit-content;
+      padding: 0.6rem;
+      font-weight: 600;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
-      border: var(--border-size) solid var(--stroke-color);
+      border: none;
       background-color: var(--stroke-color);
       color: var(--fill-color);
 
       &:hover {
         cursor: pointer;
       }
-
-      svg {
-        fill: var(--fill-color);
-        width: 1.5rem;
-        height: 1.5rem;
-      }
     }
 
     button[disabled] {
       background-color: var(--clr-main-darkest);
-      color: var(--clr-contrast);
-      border: none;
+      color: var(--stroke-color);
     }
   </style>
 

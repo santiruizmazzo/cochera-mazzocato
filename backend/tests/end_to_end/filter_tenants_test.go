@@ -15,7 +15,7 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 
-	firstExpectedTenant := map[string]any{
+	firstCreatedTenant := map[string]any{
 		"id":          float64(1),
 		"dni":         float64(123),
 		"name":        "Hsin",
@@ -25,13 +25,19 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 		"email":       nil,
 		"phone":       nil,
 	}
+	firstExpectedTenant := map[string]any{
+		"id":          float64(1),
+		"name":        "Hsin",
+		"last_name":   "Jaoming",
+		"entry_month": "07-2008",
+	}
 
-	response, err := testAPI.CreateTenant(firstExpectedTenant)
+	response, err := testAPI.CreateTenant(firstCreatedTenant)
 	if err != nil {
 		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
-	secondExpectedTenant := map[string]any{
+	secondCreatedTenant := map[string]any{
 		"id":          float64(2),
 		"dni":         float64(321),
 		"name":        "Chan",
@@ -41,8 +47,14 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 		"email":       nil,
 		"phone":       nil,
 	}
+	secondExpectedTenant := map[string]any{
+		"id":          float64(2),
+		"name":        "Chan",
+		"last_name":   "Jaoming",
+		"entry_month": "07-2008",
+	}
 
-	response, err = testAPI.CreateTenant(secondExpectedTenant)
+	response, err = testAPI.CreateTenant(secondCreatedTenant)
 	if err != nil {
 		t.Fatalf("Failed creating tenant: %v", err)
 	}

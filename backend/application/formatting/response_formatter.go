@@ -1,6 +1,7 @@
 package formatting
 
 import (
+	"cochera/application/dtos"
 	"cochera/domain"
 	"encoding/json"
 	"errors"
@@ -99,7 +100,12 @@ func (formatter *ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingErro
 }
 
 func (formatter *ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*domain.Tenant) error {
-	response := map[string]any{"data": tenants}
+	responseData := make([]*dtos.TenantListDTO, len(tenants))
+	for i, tenant := range tenants {
+		responseData[i] = dtos.NewTenantListDTO(tenant)
+	}
+
+	response := map[string]any{"data": responseData}
 	formatter.w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(formatter.w).Encode(response)
 }

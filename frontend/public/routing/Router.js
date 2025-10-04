@@ -30,11 +30,12 @@ export default class Router {
 
     if (!match) {
       match = {
-        route: routes[0],
+        route: this.routes[0],
         isMatch: true,
       };
     }
 
+    console.log(match);
     const view = new match.route.view();
 
     document.querySelector("main").innerHTML = await view.getHtml();

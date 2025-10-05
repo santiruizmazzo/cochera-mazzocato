@@ -273,3 +273,10 @@ footer {
   height: 100%;
   gap: var(--vertical-spacing);
 }
+
+.tenant-detail-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

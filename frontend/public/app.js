@@ -8,7 +8,7 @@ import Router from "./routing/Router.js";
 
 const router = new Router();
 
-window.addEventListener("popstate", router.route);
+window.addEventListener("popstate", () => router.route());
 
 document.addEventListener("DOMContentLoaded", () => {
   document.body.insertAdjacentHTML(
@@ -21,6 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       router.navigateTo(event.target.href);
     }
+  });
+
+  document.body.addEventListener("navigate", (event) => {
+    router.navigateTo(event.detail.href);
   });
 
   router.route();

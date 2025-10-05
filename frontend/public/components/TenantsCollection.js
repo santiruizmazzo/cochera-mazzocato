@@ -1,4 +1,4 @@
-import TenantCard from "./TenantCard.js";
+import TenantMiniCard from "./TenantMiniCard.js";
 
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
@@ -38,7 +38,7 @@ export default class TenantsCollection extends HTMLElement {
   async handleEvent(event) {
     if (event.type === "tenants:update") {
       const container = this.shadowRoot.querySelector("div");
-      const card = TenantCard.fromJson(event.detail);
+      const card = TenantMiniCard.fromJson(event.detail);
       container.appendChild(card);
     }
   }
@@ -71,7 +71,7 @@ export default class TenantsCollection extends HTMLElement {
     container.className = "loaded";
 
     this.tenants.forEach((tenant) => {
-      const card = TenantCard.fromJson(tenant);
+      const card = TenantMiniCard.fromJson(tenant);
       container.appendChild(card);
     });
   }

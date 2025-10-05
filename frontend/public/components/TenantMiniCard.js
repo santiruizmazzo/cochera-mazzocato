@@ -36,7 +36,7 @@ template.innerHTML = /*html*/ `
   </a>
 `;
 
-export default class TenantCard extends HTMLElement {
+export default class TenantMiniCard extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -44,7 +44,7 @@ export default class TenantCard extends HTMLElement {
   }
 
   static fromJson(jsonTenant) {
-    const card = new TenantCard();
+    const card = new TenantMiniCard();
     card.id = jsonTenant["id"];
     card.name = jsonTenant["name"];
     card.lastName = jsonTenant["last_name"];
@@ -73,4 +73,4 @@ export default class TenantCard extends HTMLElement {
   }
 }
 
-customElements.define("tenant-card", TenantCard);
+customElements.define("tenant-mini-card", TenantMiniCard);

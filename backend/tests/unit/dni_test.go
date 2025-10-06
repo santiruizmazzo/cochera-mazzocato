@@ -86,3 +86,16 @@ func TestCreateValidDNIFromJSON(t *testing.T) {
 		t.Fatalf("DNI decodificado de entero desde json no coincide")
 	}
 }
+
+func TestFailToCreateDNIFromJSON(t *testing.T) {
+	dni := domain.DNI{}
+	err := dni.UnmarshalJSON([]byte(`{"name":"Roberto"}`))
+
+	if err == nil {
+		t.Fatalf("DNI debe devolver error cuando se decodifica valor no numérico desde json")
+	}
+
+	if dni.Value != 0 {
+		t.Fatalf("El valor del DNI no decodificado correctamente debe ser cero")
+	}
+}

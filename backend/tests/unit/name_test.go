@@ -21,3 +21,11 @@ func TestFailToCreateNameFromNonStringType(t *testing.T) {
 		t.Fatalf("Name debe devolver error cuando no es un string")
 	}
 }
+
+func TestFailToCreateNameTooLarge(t *testing.T) {
+	_, err := domain.NewName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+	if err == nil || !errors.Is(err, domain.ErrNameTooLong) {
+		t.Fatalf("Name debe devolver error cuando es un string demasiado largo")
+	}
+}

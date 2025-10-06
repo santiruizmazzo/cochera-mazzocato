@@ -9,7 +9,6 @@ var (
 	ErrRequiredName                = errors.New("el nombre es obligatorio")
 	ErrNameMustBeString            = errors.New("el nombre debe ser un string")
 	ErrInvalidName                 = errors.New("el nombre debe ser un string")
-	ErrNameTooLong                 = errors.New("el nombre debe tener 50 caracteres como máximo")
 	ErrInvalidLastName             = errors.New("el apellido debe ser un string")
 	ErrRequiredLastName            = errors.New("el apellido es obligatorio")
 	ErrLastNameMustBeString        = errors.New("el apellido debe ser un string")

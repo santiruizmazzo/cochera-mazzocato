@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/domain"
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -97,5 +98,20 @@ func TestFailToCreateDNIFromJSON(t *testing.T) {
 
 	if dni.Value != 0 {
 		t.Fatalf("El valor del DNI no decodificado correctamente debe ser cero")
+	}
+}
+
+func TestSuccessfullyEncodeDNIIntoJSON(t *testing.T) {
+	dni, _ := domain.NewDNI(666)
+	expectedJson := []byte("666")
+
+	json, err := dni.MarshalJSON()
+
+	if err != nil {
+		t.Fatalf("No puede fallar la codificación del DNI")
+	}
+
+	if !reflect.DeepEqual(json, expectedJson) {
+		t.Fatalf("DNI codificado como json no coincide con esperado")
 	}
 }

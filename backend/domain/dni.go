@@ -50,3 +50,7 @@ func (dni *DNI) UnmarshalJSON(data []byte) error {
 	*dni = validDni
 	return nil
 }
+
+func (dni DNI) MarshalJSON() ([]byte, error) {
+	return json.Marshal(dni.Value)
+}

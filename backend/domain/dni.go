@@ -16,6 +16,9 @@ func NewDNI(rawNumber any) (DNI, error) {
 
 	switch value := rawNumber.(type) {
 	case float64:
+		if value > math.MaxUint32 {
+			return DNI{}, ErrDNINotInValidRange
+		}
 		validValue = uint32(value)
 	case int:
 		if value > math.MaxUint32 {

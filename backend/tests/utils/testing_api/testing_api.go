@@ -57,6 +57,10 @@ func (api *TestingAPI) GetTenantsRoute() string {
 	return api.server.URL + "/api/tenants"
 }
 
+func (api *TestingAPI) GetSlotsRoute() string {
+	return api.server.URL + "/api/slots"
+}
+
 func (api *TestingAPI) CreateTenant(tenant any) (*http.Response, error) {
 	jsonTenant, _ := json.Marshal(tenant)
 	return http.Post(api.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))

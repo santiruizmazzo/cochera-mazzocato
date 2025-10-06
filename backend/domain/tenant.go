@@ -112,7 +112,7 @@ func buildValidTenant(tenantMap map[string]any) (*Tenant, error) {
 	return NewTenant(dni, name, lastName, address, phone, email, entryMonth)
 }
 
-func (tenant *Tenant) MarshalJSON() ([]byte, error) {
+func (tenant Tenant) MarshalJSON() ([]byte, error) {
 	result := map[string]any{
 		"id":          tenant.ID,
 		"dni":         tenant.DNI,

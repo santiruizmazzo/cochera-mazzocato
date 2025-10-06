@@ -72,7 +72,7 @@ func NewMonthOfYearFromString(rawMonthOfYear any) (MonthOfYear, error) {
 	return MonthOfYear{Month: month, Year: year}, nil
 }
 
-func (monthOfYear *MonthOfYear) MarshalJSON() ([]byte, error) {
+func (monthOfYear MonthOfYear) MarshalJSON() ([]byte, error) {
 	return json.Marshal(monthOfYear.String())
 }
 

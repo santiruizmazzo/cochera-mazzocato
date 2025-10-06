@@ -2,6 +2,7 @@ package unit
 
 import (
 	"cochera/domain"
+	"errors"
 	"testing"
 )
 
@@ -22,5 +23,13 @@ func TestCreateValidDNIFromFloatNumber(t *testing.T) {
 
 	if dni.Value != 12345678 {
 		t.Fatalf("El valor del DNI debería igual a la parte entera del float")
+	}
+}
+
+func TestFailToCreateDNIFromZero(t *testing.T) {
+	_, err := domain.NewDNI(0)
+
+	if err == nil || !errors.Is(err, domain.ErrDNIMustBeNumber) {
+		t.Fatalf("DNI debe devolver error cuando es menor a 1")
 	}
 }

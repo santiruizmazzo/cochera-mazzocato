@@ -4,13 +4,21 @@ type DNI struct {
 	Value uint32
 }
 
-func NewDNI(number any) (DNI, error) {
-	switch value := number.(type) {
+func NewDNI(rawNumber any) (DNI, error) {
+	var validValue uint32
+
+	switch value := rawNumber.(type) {
 	case float64:
-		return DNI{Value: uint32(value)}, nil
+		validValue = uint32(value)
 	case int:
-		return DNI{Value: uint32(value)}, nil
+		validValue = uint32(value)
 	default:
 		return DNI{}, nil
 	}
+
+	if validValue < 1 {
+		return DNI{}, ErrDNIMustBeNumber
+	}
+
+	return DNI{Value: validValue}, nil
 }

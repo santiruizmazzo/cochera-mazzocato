@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"errors"
 	"math"
 )
@@ -33,4 +34,19 @@ func NewDNI(rawNumber any) (DNI, error) {
 	}
 
 	return DNI{Value: validValue}, nil
+}
+
+func (dni *DNI) UnmarshalJSON(data []byte) error {
+	var rawValue any
+	if err := json.Unmarshal(data, &rawValue); err != nil {
+		return err
+	}
+
+	validDni, err := NewDNI(rawValue)
+	if err != nil {
+		return err
+	}
+
+	*dni = validDni
+	return nil
 }

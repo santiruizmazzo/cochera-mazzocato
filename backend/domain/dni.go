@@ -9,7 +9,10 @@ type DNI struct {
 	Value uint32
 }
 
-var ErrDNINotInValidRange = errors.New("el DNI debe ser un entero positivo")
+var (
+	ErrDNINotInValidRange = errors.New("el DNI debe ser un entero positivo")
+	ErrDNIMustBeANumber   = errors.New("el DNI debe ser un número")
+)
 
 func NewDNI(rawNumber any) (DNI, error) {
 	var validValue uint32
@@ -26,7 +29,7 @@ func NewDNI(rawNumber any) (DNI, error) {
 		}
 		validValue = uint32(value)
 	default:
-		return DNI{}, nil
+		return DNI{}, ErrDNIMustBeANumber
 	}
 
 	return DNI{Value: validValue}, nil

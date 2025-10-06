@@ -22,7 +22,7 @@ func TestCreateValidDNIFromFloatNumber(t *testing.T) {
 	}
 
 	if dni.Value != 12345678 {
-		t.Fatalf("El valor del DNI debería igual a la parte entera del float")
+		t.Fatalf("El valor del DNI debería ser igual a la parte entera del float")
 	}
 }
 

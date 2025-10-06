@@ -21,7 +21,7 @@ func NewDNI(rawNumber any) (DNI, error) {
 		}
 		validValue = uint32(value)
 	case int:
-		if value > math.MaxUint32 {
+		if value < 1 || value > math.MaxUint32 {
 			return DNI{}, ErrDNINotInValidRange
 		}
 		validValue = uint32(value)

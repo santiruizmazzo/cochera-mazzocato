@@ -49,3 +49,11 @@ func TestFailToCreateDNIFromOverflowFloatValue(t *testing.T) {
 		t.Fatalf("DNI debe devolver error cuando es mayor a 4294967295")
 	}
 }
+
+func TestFailToCreateDNIFromNegativeValue(t *testing.T) {
+	_, err := domain.NewDNI(-99)
+
+	if err == nil || !errors.Is(err, domain.ErrDNINotInValidRange) {
+		t.Fatalf("DNI debe devolver error cuando es menor a 1")
+	}
+}

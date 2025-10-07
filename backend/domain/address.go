@@ -41,3 +41,7 @@ func (address *Address) UnmarshalJSON(data []byte) error {
 	*address = validAddress
 	return nil
 }
+
+func (address Address) MarshalJSON() ([]byte, error) {
+	return json.Marshal(address.Value)
+}

@@ -2,6 +2,7 @@ package unit
 
 import (
 	"cochera/domain"
+	"reflect"
 	"testing"
 )
 
@@ -60,5 +61,20 @@ func TestFailToCreateAddressFromJSON(t *testing.T) {
 
 	if address.Value != "" {
 		t.Fatalf("El valor del Address no decodificado correctamente debe ser vacío")
+	}
+}
+
+func TestSuccessfullyEncodeAddressIntoJSON(t *testing.T) {
+	address, _ := domain.NewAddress("Av. Paseo Colón 850")
+	expectedJson := []byte(`"Av. Paseo Colón 850"`)
+
+	json, err := address.MarshalJSON()
+
+	if err != nil {
+		t.Fatalf("No puede fallar la codificación del Address")
+	}
+
+	if !reflect.DeepEqual(json, expectedJson) {
+		t.Fatalf("Address codificado como json no coincide con esperado")
 	}
 }

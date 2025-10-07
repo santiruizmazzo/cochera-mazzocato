@@ -29,3 +29,16 @@ func TestFailToCreateNameTooLarge(t *testing.T) {
 		t.Fatalf("Name debe devolver error cuando es un string demasiado largo")
 	}
 }
+
+func TestCreateValidNameFromJSON(t *testing.T) {
+	name := domain.Name{}
+	err := name.UnmarshalJSON([]byte(`"Satoru"`))
+
+	if err != nil {
+		t.Fatalf("Name no debe devolver error cuando se decodifica un string válido desde json")
+	}
+
+	if name.Value != "Satoru" {
+		t.Fatalf("Name decodificado de string desde json no coincide")
+	}
+}

@@ -1,6 +1,9 @@
 package domain
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 type Name struct {
 	Value string
@@ -20,4 +23,19 @@ func NewName(rawValue any) (Name, error) {
 		return Name{Value: value}, nil
 	}
 	return Name{}, ErrNameMustBeAString
+}
+
+func (name *Name) UnmarshalJSON(data []byte) error {
+	var rawValue any
+	if err := json.Unmarshal(data, &rawValue); err != nil {
+		return err
+	}
+
+	validName, err := NewName(rawValue)
+	if err != nil {
+		return err
+	}
+
+	*name = validName
+	return nil
 }

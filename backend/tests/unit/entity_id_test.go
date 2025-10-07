@@ -21,7 +21,15 @@ func TestCreateValidEntityID(t *testing.T) {
 func TestFailToCreateEntityIDFromNonNumericType(t *testing.T) {
 	_, err := domain.NewEntityID("You shall not pass!")
 
-	if err == nil || !errors.Is(err, domain.ErrIDMustBeANumber) {
-		t.Fatal("Entity ID debe devolver error cuando no es un número")
+	if err == nil || !errors.Is(err, domain.ErrIDMustBeAnInteger) {
+		t.Fatal("Entity ID debe devolver error cuando no es un número entero")
+	}
+}
+
+func TestFailToCreateEntityIDFromTooSmallValue(t *testing.T) {
+	_, err := domain.NewEntityID(0)
+
+	if err == nil || !errors.Is(err, domain.ErrIDTooSmall) {
+		t.Fatal("Entity ID debe devolver error cuando es menor a 1")
 	}
 }

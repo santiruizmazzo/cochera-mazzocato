@@ -69,3 +69,11 @@ func TestFailToCreatePhoneThatContainsLetters(t *testing.T) {
 		t.Fatalf("Phone debe devolver error cuando contiene caracteres")
 	}
 }
+
+func TestFailToCreatePhoneThatIsNotAString(t *testing.T) {
+	_, err := domain.NewPhone(482984292)
+
+	if err == nil || !errors.Is(err, domain.ErrPhoneMustBeString) {
+		t.Fatalf("Phone debe devolver error cuando no es un string")
+	}
+}

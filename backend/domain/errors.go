@@ -17,7 +17,6 @@ var (
 	ErrRequiredAddress         = errors.New("el domicilio es obligatorio")
 	ErrInvalidPhone            = errors.New("el teléfono debe ser un string")
 	ErrRequiredPhone           = errors.New("el teléfono es obligatorio")
-	ErrPhoneMustBeString       = errors.New("el teléfono debe ser un string")
 	ErrInvalidEmail            = errors.New("el email debe ser un string")
 	ErrDuplicateEmail          = errors.New("el email ya está en uso")
 	ErrRequiredEmail           = errors.New("el email es obligatorio")

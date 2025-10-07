@@ -16,11 +16,19 @@ var (
 	ErrPhoneTooLong                = errors.New("el teléfono debe tener 15 dígitos como máximo")
 	ErrPhoneFullOfZeroes           = errors.New("el teléfono no puede estar lleno de ceros")
 	ErrPhoneMustContainNumbersOnly = errors.New("el teléfono solo puede tener números")
+	ErrPhoneMustBeString           = errors.New("el teléfono debe ser un string")
 )
 
-func NewPhone(rawValue string) (Phone, error) {
+func NewPhone(rawValue any) (Phone, error) {
 	var phone Phone
-	runes := []rune(rawValue)
+	var runes []rune
+
+	switch value := rawValue.(type) {
+	case string:
+		runes = []rune(value)
+	default:
+		return Phone{}, ErrPhoneMustBeString
+	}
 
 	if string(runes[0:1]) != "+" {
 		return Phone{}, ErrPhoneMustStartWithPlusSign
@@ -30,7 +38,7 @@ func NewPhone(rawValue string) (Phone, error) {
 		return Phone{}, ErrPhoneTooLong
 	}
 
-	substring := strings.TrimPrefix(rawValue, "+")
+	substring := strings.TrimPrefix(string(runes), "+")
 	integerPhone, err := strconv.Atoi(substring)
 
 	if err != nil {

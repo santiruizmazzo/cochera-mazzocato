@@ -49,3 +49,7 @@ func (id *EntityID) UnmarshalJSON(data []byte) error {
 	*id = validId
 	return nil
 }
+
+func (id EntityID) MarshalJSON() ([]byte, error) {
+	return json.Marshal(uint32(id))
+}

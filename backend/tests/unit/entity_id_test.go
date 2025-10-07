@@ -4,6 +4,7 @@ import (
 	"cochera/domain"
 	"errors"
 	"math"
+	"reflect"
 	"testing"
 )
 
@@ -62,5 +63,20 @@ func TestFailToCreateEntityIDFromJSON(t *testing.T) {
 
 	if err == nil || !errors.Is(err, domain.ErrIDMustBeAnInteger) {
 		t.Fatal("Entity ID debe devolver error cuando no se decodifica un número válido desde json")
+	}
+}
+
+func TestSuccessfullyEncodeEntityIDIntoJSON(t *testing.T) {
+	id, _ := domain.NewEntityID(6)
+	expectedJson := []byte("6")
+
+	json, err := id.MarshalJSON()
+
+	if err != nil {
+		t.Fatal("No puede fallar la codificación del Entity ID")
+	}
+
+	if !reflect.DeepEqual(json, expectedJson) {
+		t.Fatal("Entity ID codificado como json no coincide con esperado")
 	}
 }

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"errors"
 	"math"
 )
@@ -14,16 +15,37 @@ var (
 )
 
 func NewEntityID(rawValue any) (EntityID, error) {
+	var integerValue int
+
 	switch value := rawValue.(type) {
 	case int:
-		if value < 1 {
-			return EntityID(0), ErrIDTooSmall
-		}
-		if value > math.MaxUint32 {
-			return EntityID(0), ErrIDTooBig
-		}
-		return EntityID(value), nil
+		integerValue = value
+	case float64:
+		integerValue = int(value)
 	default:
 		return EntityID(0), ErrIDMustBeAnInteger
 	}
+
+	if integerValue < 1 {
+		return EntityID(0), ErrIDTooSmall
+	}
+	if integerValue > math.MaxUint32 {
+		return EntityID(0), ErrIDTooBig
+	}
+	return EntityID(integerValue), nil
+}
+
+func (id *EntityID) UnmarshalJSON(data []byte) error {
+	var rawValue any
+	if err := json.Unmarshal(data, &rawValue); err != nil {
+		return err
+	}
+
+	validId, err := NewEntityID(rawValue)
+	if err != nil {
+		return err
+	}
+
+	*id = validId
+	return nil
 }

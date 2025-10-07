@@ -42,3 +42,16 @@ func TestFailToCreateEntityIDFromTooBigValue(t *testing.T) {
 		t.Fatal("Entity ID debe devolver error cuando mayor al limite del tipo de dato")
 	}
 }
+
+func TestCreateValidEntityIDFromJSON(t *testing.T) {
+	id := domain.EntityID(0)
+	err := id.UnmarshalJSON([]byte("1024"))
+
+	if err != nil {
+		t.Fatal("Entity ID no debe devolver error cuando se decodifica un número válido desde json", err)
+	}
+
+	if id != 1024 {
+		t.Fatal("Entity ID decodificado desde json no coincide")
+	}
+}

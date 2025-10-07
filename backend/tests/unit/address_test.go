@@ -49,3 +49,16 @@ func TestCreateValidAddressFromJSON(t *testing.T) {
 		t.Fatalf("Address decodificado de string desde json no coincide")
 	}
 }
+
+func TestFailToCreateAddressFromJSON(t *testing.T) {
+	address := domain.Address{}
+	err := address.UnmarshalJSON([]byte("130501"))
+
+	if err == nil {
+		t.Fatalf("Address debe devolver error cuando se decodifica valor no string desde json")
+	}
+
+	if address.Value != "" {
+		t.Fatalf("El valor del Address no decodificado correctamente debe ser vacío")
+	}
+}

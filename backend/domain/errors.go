@@ -19,7 +19,6 @@ var (
 	ErrRequiredPhone               = errors.New("el teléfono es obligatorio")
 	ErrPhoneMustBeString           = errors.New("el teléfono debe ser un string")
 	ErrPhoneMustContainNumbersOnly = errors.New("el teléfono solo puede tener números")
-	ErrPhoneFullOfZeroes           = errors.New("el teléfono no puede estar lleno de ceros")
 	ErrInvalidEmail                = errors.New("el email debe ser un string")
 	ErrDuplicateEmail              = errors.New("el email ya está en uso")
 	ErrRequiredEmail               = errors.New("el email es obligatorio")

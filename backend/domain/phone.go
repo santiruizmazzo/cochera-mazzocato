@@ -1,6 +1,10 @@
 package domain
 
-import "errors"
+import (
+	"errors"
+	"strconv"
+	"strings"
+)
 
 type Phone struct {
 	CountryCode string
@@ -10,6 +14,7 @@ type Phone struct {
 var (
 	ErrPhoneMustStartWithPlusSign = errors.New("el teléfono debe comenzar con un símbolo de +")
 	ErrPhoneTooLong               = errors.New("el teléfono debe tener 15 dígitos como máximo")
+	ErrPhoneFullOfZeroes          = errors.New("el teléfono no puede estar lleno de ceros")
 )
 
 func NewPhone(rawValue string) (Phone, error) {
@@ -22,6 +27,13 @@ func NewPhone(rawValue string) (Phone, error) {
 
 	if len(runes) > 15 {
 		return Phone{}, ErrPhoneTooLong
+	}
+
+	substring := strings.TrimPrefix(rawValue, "+")
+	integerPhone, _ := strconv.Atoi(substring)
+
+	if integerPhone == 0 {
+		return Phone{}, ErrPhoneFullOfZeroes
 	}
 
 	if len(runes[1:]) == 12 && string(runes[1:3]) == "54" {

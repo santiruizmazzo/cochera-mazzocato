@@ -53,3 +53,11 @@ func TestFailToCreatePhoneTooLong(t *testing.T) {
 		t.Fatalf("Phone debe devolver error cuando es demasiado largo")
 	}
 }
+
+func TestFailToCreatePhoneFullOfZeroes(t *testing.T) {
+	_, err := domain.NewPhone("+0000000000")
+
+	if err == nil || !errors.Is(err, domain.ErrPhoneFullOfZeroes) {
+		t.Fatalf("Phone debe devolver error cuando está lleno de ceros")
+	}
+}

@@ -5,9 +5,7 @@ import (
 	"errors"
 )
 
-type Name struct {
-	Value string
-}
+type Name string
 
 var (
 	ErrNameMustBeAString = errors.New("el nombre/apellido debe ser un string")
@@ -18,11 +16,11 @@ func NewName(rawValue any) (Name, error) {
 	switch value := rawValue.(type) {
 	case string:
 		if len(value) > 50 {
-			return Name{}, ErrNameTooLong
+			return Name(""), ErrNameTooLong
 		}
-		return Name{Value: value}, nil
+		return Name(value), nil
 	}
-	return Name{}, ErrNameMustBeAString
+	return Name(""), ErrNameMustBeAString
 }
 
 func (name *Name) UnmarshalJSON(data []byte) error {
@@ -41,5 +39,5 @@ func (name *Name) UnmarshalJSON(data []byte) error {
 }
 
 func (name Name) MarshalJSON() ([]byte, error) {
-	return json.Marshal(name.Value)
+	return json.Marshal(string(name))
 }

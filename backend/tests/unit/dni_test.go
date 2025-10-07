@@ -22,7 +22,7 @@ func TestCreateValidDNIFromFloatNumber(t *testing.T) {
 		t.Fatalf("DNI no debe devolver error cuando es un número válido")
 	}
 
-	if dni.Value != 12345678 {
+	if dni != 12345678 {
 		t.Fatalf("El valor del DNI debería ser igual a la parte entera del float")
 	}
 }
@@ -76,27 +76,27 @@ func TestFailToCreateDNIFromNonNumericValue(t *testing.T) {
 }
 
 func TestCreateValidDNIFromJSON(t *testing.T) {
-	dni := domain.DNI{}
+	dni := domain.DNI(0)
 	err := dni.UnmarshalJSON([]byte("43295798"))
 
 	if err != nil {
 		t.Fatalf("DNI no debe devolver error cuando se decodifica un número válido desde json")
 	}
 
-	if dni.Value != 43295798 {
+	if dni != 43295798 {
 		t.Fatalf("DNI decodificado de entero desde json no coincide")
 	}
 }
 
 func TestFailToCreateDNIFromJSON(t *testing.T) {
-	dni := domain.DNI{}
+	dni := domain.DNI(0)
 	err := dni.UnmarshalJSON([]byte(`{"name":"Roberto"}`))
 
 	if err == nil {
 		t.Fatalf("DNI debe devolver error cuando se decodifica valor no numérico desde json")
 	}
 
-	if dni.Value != 0 {
+	if dni != 0 {
 		t.Fatalf("El valor del DNI no decodificado correctamente debe ser cero")
 	}
 }

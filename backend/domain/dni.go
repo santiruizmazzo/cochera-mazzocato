@@ -6,34 +6,30 @@ import (
 	"math"
 )
 
-type DNI struct {
-	Value uint32
-}
+type DNI uint32
 
 var (
 	ErrDNINotInValidRange = errors.New("el DNI debe ser un entero positivo")
 	ErrDNIMustBeANumber   = errors.New("el DNI debe ser un número")
 )
 
-func NewDNI(rawNumber any) (DNI, error) {
-	var validValue uint32
+func NewDNI(rawValue any) (DNI, error) {
+	var integerValue int
 
-	switch value := rawNumber.(type) {
-	case float64:
-		if value < 1 || value > math.MaxUint32 {
-			return DNI{}, ErrDNINotInValidRange
-		}
-		validValue = uint32(value)
+	switch value := rawValue.(type) {
 	case int:
-		if value < 1 || value > math.MaxUint32 {
-			return DNI{}, ErrDNINotInValidRange
-		}
-		validValue = uint32(value)
+		integerValue = value
+	case float64:
+		integerValue = int(value)
 	default:
-		return DNI{}, ErrDNIMustBeANumber
+		return DNI(0), ErrDNIMustBeANumber
 	}
 
-	return DNI{Value: validValue}, nil
+	if integerValue < 1 || integerValue > math.MaxUint32 {
+		return DNI(0), ErrDNINotInValidRange
+	}
+
+	return DNI(integerValue), nil
 }
 
 func (dni *DNI) UnmarshalJSON(data []byte) error {
@@ -52,5 +48,5 @@ func (dni *DNI) UnmarshalJSON(data []byte) error {
 }
 
 func (dni DNI) MarshalJSON() ([]byte, error) {
-	return json.Marshal(dni.Value)
+	return json.Marshal(uint32(dni))
 }

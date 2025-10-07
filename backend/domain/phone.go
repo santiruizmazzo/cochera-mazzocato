@@ -10,13 +10,26 @@ type Phone struct {
 var ErrPhoneMustStartWithPlusSign = errors.New("el teléfono debe comenzar con un símbolo de +")
 
 func NewPhone(rawValue string) (Phone, error) {
+	var phone Phone
 	runes := []rune(rawValue)
+
 	if string(runes[0:1]) != "+" {
 		return Phone{}, ErrPhoneMustStartWithPlusSign
 	}
 
-	return Phone{
-		CountryCode: string(runes[1:3]),
-		LineNumber:  string(runes[3:]),
-	}, nil
+	if len(runes[1:]) == 12 && string(runes[1:3]) == "54" {
+		phone = Phone{
+			CountryCode: "54",
+			LineNumber:  string(runes[3:]),
+		}
+	}
+
+	if len(runes[1:]) == 11 && string(runes[1:4]) == "598" {
+		phone = Phone{
+			CountryCode: "598",
+			LineNumber:  string(runes[4:]),
+		}
+	}
+
+	return phone, nil
 }

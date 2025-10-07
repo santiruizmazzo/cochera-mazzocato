@@ -29,8 +29,7 @@ func TestFailToCreatePhoneWithMissingCountryCode(t *testing.T) {
 	}
 }
 
-func TestCreateValidPhoneFromDifferentCountry(t *testing.T) {
-	t.Skip()
+func TestCreateValidPhoneFromUruguayCodedNumber(t *testing.T) {
 	phone, err := domain.NewPhone("+59812341234")
 
 	if err != nil {

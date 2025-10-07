@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/domain"
 	"errors"
+	"math"
 	"testing"
 )
 
@@ -31,5 +32,13 @@ func TestFailToCreateEntityIDFromTooSmallValue(t *testing.T) {
 
 	if err == nil || !errors.Is(err, domain.ErrIDTooSmall) {
 		t.Fatal("Entity ID debe devolver error cuando es menor a 1")
+	}
+}
+
+func TestFailToCreateEntityIDFromTooBigValue(t *testing.T) {
+	_, err := domain.NewEntityID(math.MaxUint32 + 10)
+
+	if err == nil || !errors.Is(err, domain.ErrIDTooBig) {
+		t.Fatal("Entity ID debe devolver error cuando mayor al limite del tipo de dato")
 	}
 }

@@ -1,7 +1,16 @@
 package domain
 
+import "errors"
+
 type EntityID uint32
 
-func NewEntityID(rawValue int) (EntityID, error) {
-	return EntityID(rawValue), nil
+var ErrIDMustBeANumber = errors.New("el ID debe ser un número")
+
+func NewEntityID(rawValue any) (EntityID, error) {
+	switch value := rawValue.(type) {
+	case int:
+		return EntityID(value), nil
+	default:
+		return EntityID(0), ErrIDMustBeANumber
+	}
 }

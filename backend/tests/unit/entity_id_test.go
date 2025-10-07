@@ -2,6 +2,7 @@ package unit
 
 import (
 	"cochera/domain"
+	"errors"
 	"testing"
 )
 
@@ -14,5 +15,13 @@ func TestCreateValidEntityID(t *testing.T) {
 
 	if id != 745 {
 		t.Fatal("Entity ID instanciado no coincide con esperado")
+	}
+}
+
+func TestFailToCreateEntityIDFromNonNumericType(t *testing.T) {
+	_, err := domain.NewEntityID("You shall not pass!")
+
+	if err == nil || !errors.Is(err, domain.ErrIDMustBeANumber) {
+		t.Fatal("Entity ID debe devolver error cuando no es un número")
 	}
 }

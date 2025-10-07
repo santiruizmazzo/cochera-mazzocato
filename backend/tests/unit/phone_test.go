@@ -89,3 +89,16 @@ func TestCreateEmptyPhoneFromNilValue(t *testing.T) {
 		t.Fatal("El código de país un número deben estar vacíos cuando Phone se crea desde nil")
 	}
 }
+
+func TestCreateValidPhoneFromJSON(t *testing.T) {
+	phone := domain.Phone{}
+	err := phone.UnmarshalJSON([]byte(`"+59844298511"`))
+
+	if err != nil {
+		t.Fatalf("Phone no debe devolver error cuando se decodifica un string válido desde json")
+	}
+
+	if phone.CountryCode != "598" || phone.LineNumber != "44298511" {
+		t.Fatalf("Phone decodificado de string desde json no coincide")
+	}
+}

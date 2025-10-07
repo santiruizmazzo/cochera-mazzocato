@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"errors"
 	"strconv"
 	"strings"
@@ -66,4 +67,19 @@ func NewPhone(rawValue any) (Phone, error) {
 	}
 
 	return phone, nil
+}
+
+func (phone *Phone) UnmarshalJSON(data []byte) error {
+	var rawValue any
+	if err := json.Unmarshal(data, &rawValue); err != nil {
+		return err
+	}
+
+	validPhone, err := NewPhone(rawValue)
+	if err != nil {
+		return err
+	}
+
+	*phone = validPhone
+	return nil
 }

@@ -41,3 +41,11 @@ func TestCreateValidEmptyEmailAddressFromNilValue(t *testing.T) {
 		t.Fatal("El valor del email debe ser vacío cuando es creado a partir de un nil")
 	}
 }
+
+func TestFailToCreateEmailAddressFromNonStringType(t *testing.T) {
+	_, err := domain.NewEmailAddress(map[string]int{"JL": 2579})
+
+	if err == nil || !errors.Is(err, domain.ErrEmailMustBeString) {
+		t.Fatal("Email debe devolver error cuando no es de tipo string")
+	}
+}

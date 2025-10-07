@@ -12,6 +12,7 @@ type EmailAddress struct {
 var (
 	ErrInvalidEmailFormat = errors.New("el email debe seguir el formato estándar")
 	ErrEmailTooLong       = errors.New("el email debe tener 100 caracteres como máximo")
+	ErrEmailMustBeString  = errors.New("el email debe ser un string")
 )
 
 func NewEmailAddress(rawValue any) (EmailAddress, error) {
@@ -23,6 +24,8 @@ func NewEmailAddress(rawValue any) (EmailAddress, error) {
 		validEmailAddress, err = mail.ParseAddress(value)
 	case nil:
 		return EmailAddress{Value: ""}, nil
+	default:
+		return EmailAddress{}, ErrEmailMustBeString
 	}
 
 	if err != nil {

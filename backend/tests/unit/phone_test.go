@@ -61,3 +61,11 @@ func TestFailToCreatePhoneFullOfZeroes(t *testing.T) {
 		t.Fatalf("Phone debe devolver error cuando está lleno de ceros")
 	}
 }
+
+func TestFailToCreatePhoneThatContainsLetters(t *testing.T) {
+	_, err := domain.NewPhone("+57HolaComoEsta")
+
+	if err == nil || !errors.Is(err, domain.ErrPhoneMustContainNumbersOnly) {
+		t.Fatalf("Phone debe devolver error cuando contiene caracteres")
+	}
+}

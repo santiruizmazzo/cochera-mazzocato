@@ -12,9 +12,10 @@ type Phone struct {
 }
 
 var (
-	ErrPhoneMustStartWithPlusSign = errors.New("el teléfono debe comenzar con un símbolo de +")
-	ErrPhoneTooLong               = errors.New("el teléfono debe tener 15 dígitos como máximo")
-	ErrPhoneFullOfZeroes          = errors.New("el teléfono no puede estar lleno de ceros")
+	ErrPhoneMustStartWithPlusSign  = errors.New("el teléfono debe comenzar con un símbolo de +")
+	ErrPhoneTooLong                = errors.New("el teléfono debe tener 15 dígitos como máximo")
+	ErrPhoneFullOfZeroes           = errors.New("el teléfono no puede estar lleno de ceros")
+	ErrPhoneMustContainNumbersOnly = errors.New("el teléfono solo puede tener números")
 )
 
 func NewPhone(rawValue string) (Phone, error) {
@@ -30,7 +31,11 @@ func NewPhone(rawValue string) (Phone, error) {
 	}
 
 	substring := strings.TrimPrefix(rawValue, "+")
-	integerPhone, _ := strconv.Atoi(substring)
+	integerPhone, err := strconv.Atoi(substring)
+
+	if err != nil {
+		return Phone{}, ErrPhoneMustContainNumbersOnly
+	}
 
 	if integerPhone == 0 {
 		return Phone{}, ErrPhoneFullOfZeroes

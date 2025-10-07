@@ -18,7 +18,6 @@ var (
 	ErrInvalidPhone                = errors.New("el teléfono debe ser un string")
 	ErrRequiredPhone               = errors.New("el teléfono es obligatorio")
 	ErrPhoneMustBeString           = errors.New("el teléfono debe ser un string")
-	ErrPhoneMustStartWithPlusSign  = errors.New("el teléfono debe comenzar con un símbolo de +")
 	ErrPhoneMustContainNumbersOnly = errors.New("el teléfono solo puede tener números")
 	ErrPhoneTooLong                = errors.New("el teléfono debe tener 15 dígitos como máximo")
 	ErrPhoneFullOfZeroes           = errors.New("el teléfono no puede estar lleno de ceros")

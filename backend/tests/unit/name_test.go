@@ -42,3 +42,16 @@ func TestCreateValidNameFromJSON(t *testing.T) {
 		t.Fatalf("Name decodificado de string desde json no coincide")
 	}
 }
+
+func TestFailToCreateNameFromJSON(t *testing.T) {
+	name := domain.Name{}
+	err := name.UnmarshalJSON([]byte(`{"id":2}`))
+
+	if err == nil {
+		t.Fatalf("Name debe devolver error cuando se decodifica valor no string desde json")
+	}
+
+	if name.Value != "" {
+		t.Fatalf("El valor del Name no decodificado correctamente debe ser vacío")
+	}
+}

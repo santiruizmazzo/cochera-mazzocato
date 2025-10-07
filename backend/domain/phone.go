@@ -3,6 +3,7 @@ package domain
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -82,4 +83,9 @@ func (phone *Phone) UnmarshalJSON(data []byte) error {
 
 	*phone = validPhone
 	return nil
+}
+
+func (phone Phone) MarshalJSON() ([]byte, error) {
+	stringFormat := fmt.Sprintf("+%s%s", phone.CountryCode, phone.LineNumber)
+	return json.Marshal(stringFormat)
 }

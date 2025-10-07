@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/domain"
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -113,5 +114,20 @@ func TestFailToCreatePhoneFromJSON(t *testing.T) {
 
 	if phone.CountryCode != "" || phone.LineNumber != "" {
 		t.Fatal("El valor del Phone no decodificado correctamente debe ser vacío")
+	}
+}
+
+func TestSuccessfullyEncodePhoneIntoJSON(t *testing.T) {
+	phone, _ := domain.NewPhone("+543442407276")
+	expectedJson := []byte(`"+543442407276"`)
+
+	json, err := phone.MarshalJSON()
+
+	if err != nil {
+		t.Fatal("No puede fallar la codificación del Phone")
+	}
+
+	if !reflect.DeepEqual(json, expectedJson) {
+		t.Fatal("Phone codificado como json no coincide con esperado")
 	}
 }

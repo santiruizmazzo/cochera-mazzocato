@@ -12,3 +12,11 @@ func TestCreateValidAddress(t *testing.T) {
 		t.Fatalf("Address no debe devolver error cuando es un string válido")
 	}
 }
+
+func TestCreateValidAddressFromNilValue(t *testing.T) {
+	_, err := domain.NewAddress(nil)
+
+	if err != nil {
+		t.Fatalf("Address no debe devolver error cuando es un string válido")
+	}
+}

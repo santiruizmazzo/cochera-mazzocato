@@ -95,10 +95,23 @@ func TestCreateValidPhoneFromJSON(t *testing.T) {
 	err := phone.UnmarshalJSON([]byte(`"+59844298511"`))
 
 	if err != nil {
-		t.Fatalf("Phone no debe devolver error cuando se decodifica un string válido desde json")
+		t.Fatal("Phone no debe devolver error cuando se decodifica un string válido desde json")
 	}
 
 	if phone.CountryCode != "598" || phone.LineNumber != "44298511" {
-		t.Fatalf("Phone decodificado de string desde json no coincide")
+		t.Fatal("Phone decodificado de string desde json no coincide")
+	}
+}
+
+func TestFailToCreatePhoneFromJSON(t *testing.T) {
+	phone := domain.Phone{}
+	err := phone.UnmarshalJSON([]byte(`{"entry_month":"09-2025"}`))
+
+	if err == nil || !errors.Is(err, domain.ErrPhoneMustBeString) {
+		t.Fatal("Phone debe devolver error cuando se decodifica un tipo no string desde json")
+	}
+
+	if phone.CountryCode != "" || phone.LineNumber != "" {
+		t.Fatal("El valor del Phone no decodificado correctamente debe ser vacío")
 	}
 }

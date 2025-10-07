@@ -48,10 +48,19 @@ func TestCreateValidEntityIDFromJSON(t *testing.T) {
 	err := id.UnmarshalJSON([]byte("1024"))
 
 	if err != nil {
-		t.Fatal("Entity ID no debe devolver error cuando se decodifica un número válido desde json", err)
+		t.Fatal("Entity ID no debe devolver error cuando se decodifica un número válido desde json")
 	}
 
 	if id != 1024 {
 		t.Fatal("Entity ID decodificado desde json no coincide")
+	}
+}
+
+func TestFailToCreateEntityIDFromJSON(t *testing.T) {
+	id := domain.EntityID(0)
+	err := id.UnmarshalJSON([]byte(`"maiame"`))
+
+	if err == nil || !errors.Is(err, domain.ErrIDMustBeAnInteger) {
+		t.Fatal("Entity ID debe devolver error cuando no se decodifica un número válido desde json")
 	}
 }

@@ -15,7 +15,6 @@ var (
 	ErrLastNameTooLong             = errors.New("el apellido debe tener 50 caracteres como máximo")
 	ErrInvalidAddress              = errors.New("el domicilio debe ser un string")
 	ErrRequiredAddress             = errors.New("el domicilio es obligatorio")
-	ErrAddressMustBeString         = errors.New("el domicilio debe ser un string")
 	ErrAddressTooLong              = errors.New("el domicilio debe tener 100 caracteres como máximo")
 	ErrInvalidPhone                = errors.New("el teléfono debe ser un string")
 	ErrRequiredPhone               = errors.New("el teléfono es obligatorio")

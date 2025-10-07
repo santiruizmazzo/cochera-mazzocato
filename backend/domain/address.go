@@ -5,9 +5,7 @@ import (
 	"errors"
 )
 
-type Address struct {
-	Value string
-}
+type Address string
 
 var (
 	ErrAddressMustBeString = errors.New("el domicilio debe ser un string")
@@ -18,13 +16,13 @@ func NewAddress(rawValue any) (Address, error) {
 	switch value := rawValue.(type) {
 	case string:
 		if len(value) > 100 {
-			return Address{}, ErrAddressTooLong
+			return Address(""), ErrAddressTooLong
 		}
-		return Address{Value: value}, nil
+		return Address(value), nil
 	case nil:
-		return Address{}, nil
+		return Address(""), nil
 	}
-	return Address{}, ErrAddressMustBeString
+	return Address(""), ErrAddressMustBeString
 }
 
 func (address *Address) UnmarshalJSON(data []byte) error {
@@ -43,5 +41,5 @@ func (address *Address) UnmarshalJSON(data []byte) error {
 }
 
 func (address Address) MarshalJSON() ([]byte, error) {
-	return json.Marshal(address.Value)
+	return json.Marshal(string(address))
 }

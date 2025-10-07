@@ -39,27 +39,27 @@ func TestFailToCreateAddressFromStringTooLong(t *testing.T) {
 }
 
 func TestCreateValidAddressFromJSON(t *testing.T) {
-	address := domain.Address{}
+	address := domain.Address("")
 	err := address.UnmarshalJSON([]byte(`"742 Evergreen Terrace, Springfield"`))
 
 	if err != nil {
 		t.Fatalf("Address no debe devolver error cuando se decodifica un string válido desde json")
 	}
 
-	if address.Value != "742 Evergreen Terrace, Springfield" {
+	if address != "742 Evergreen Terrace, Springfield" {
 		t.Fatalf("Address decodificado de string desde json no coincide")
 	}
 }
 
 func TestFailToCreateAddressFromJSON(t *testing.T) {
-	address := domain.Address{}
+	address := domain.Address("")
 	err := address.UnmarshalJSON([]byte("130501"))
 
 	if err == nil {
 		t.Fatalf("Address debe devolver error cuando se decodifica valor no string desde json")
 	}
 
-	if address.Value != "" {
+	if address != "" {
 		t.Fatalf("El valor del Address no decodificado correctamente debe ser vacío")
 	}
 }

@@ -1,6 +1,9 @@
 package domain
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 type Address struct {
 	Value string
@@ -22,4 +25,19 @@ func NewAddress(rawValue any) (Address, error) {
 		return Address{}, nil
 	}
 	return Address{}, ErrAddressMustBeString
+}
+
+func (address *Address) UnmarshalJSON(data []byte) error {
+	var rawValue any
+	if err := json.Unmarshal(data, &rawValue); err != nil {
+		return err
+	}
+
+	validAddress, err := NewAddress(rawValue)
+	if err != nil {
+		return err
+	}
+
+	*address = validAddress
+	return nil
 }

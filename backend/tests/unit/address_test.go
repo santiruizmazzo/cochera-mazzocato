@@ -36,3 +36,16 @@ func TestFailToCreateAddressFromStringTooLong(t *testing.T) {
 		t.Fatalf("Address debe devolver error cuando es un string demasiado largo")
 	}
 }
+
+func TestCreateValidAddressFromJSON(t *testing.T) {
+	address := domain.Address{}
+	err := address.UnmarshalJSON([]byte(`"742 Evergreen Terrace, Springfield"`))
+
+	if err != nil {
+		t.Fatalf("Address no debe devolver error cuando se decodifica un string válido desde json")
+	}
+
+	if address.Value != "742 Evergreen Terrace, Springfield" {
+		t.Fatalf("Address decodificado de string desde json no coincide")
+	}
+}

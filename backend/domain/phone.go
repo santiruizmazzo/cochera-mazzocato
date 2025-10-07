@@ -7,7 +7,10 @@ type Phone struct {
 	LineNumber  string
 }
 
-var ErrPhoneMustStartWithPlusSign = errors.New("el teléfono debe comenzar con un símbolo de +")
+var (
+	ErrPhoneMustStartWithPlusSign = errors.New("el teléfono debe comenzar con un símbolo de +")
+	ErrPhoneTooLong               = errors.New("el teléfono debe tener 15 dígitos como máximo")
+)
 
 func NewPhone(rawValue string) (Phone, error) {
 	var phone Phone
@@ -15,6 +18,10 @@ func NewPhone(rawValue string) (Phone, error) {
 
 	if string(runes[0:1]) != "+" {
 		return Phone{}, ErrPhoneMustStartWithPlusSign
+	}
+
+	if len(runes) > 15 {
+		return Phone{}, ErrPhoneTooLong
 	}
 
 	if len(runes[1:]) == 12 && string(runes[1:3]) == "54" {

@@ -29,3 +29,15 @@ func TestFailToCreateEmailAddressFromStringTooLong(t *testing.T) {
 		t.Fatal("Email debe devolver error cuando es un string demasiado largo")
 	}
 }
+
+func TestCreateValidEmptyEmailAddressFromNilValue(t *testing.T) {
+	emailAddress, err := domain.NewEmailAddress(nil)
+
+	if err != nil {
+		t.Fatal("Email no debe devolver error cuando es un nil")
+	}
+
+	if emailAddress.Value != "" {
+		t.Fatal("El valor del email debe ser vacío cuando es creado a partir de un nil")
+	}
+}

@@ -14,15 +14,24 @@ var (
 	ErrEmailTooLong       = errors.New("el email debe tener 100 caracteres como máximo")
 )
 
-func NewEmailAddress(rawValue string) (EmailAddress, error) {
-	value, err := mail.ParseAddress(rawValue)
+func NewEmailAddress(rawValue any) (EmailAddress, error) {
+	var validEmailAddress *mail.Address
+	var err error
+
+	switch value := rawValue.(type) {
+	case string:
+		validEmailAddress, err = mail.ParseAddress(value)
+	case nil:
+		return EmailAddress{Value: ""}, nil
+	}
+
 	if err != nil {
 		return EmailAddress{}, ErrInvalidEmailFormat
 	}
 
-	if len(value.String()) > 100 {
+	if len(validEmailAddress.String()) > 100 {
 		return EmailAddress{}, ErrEmailTooLong
 	}
 
-	return EmailAddress{Value: value.String()}, nil
+	return EmailAddress{Value: validEmailAddress.String()}, nil
 }

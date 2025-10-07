@@ -6,9 +6,7 @@ import (
 	"net/mail"
 )
 
-type EmailAddress struct {
-	Value string
-}
+type EmailAddress string
 
 var (
 	ErrInvalidEmailFormat = errors.New("el email debe seguir el formato estándar")
@@ -24,20 +22,20 @@ func NewEmailAddress(rawValue any) (EmailAddress, error) {
 	case string:
 		validEmailAddress, err = mail.ParseAddress(value)
 	case nil:
-		return EmailAddress{Value: ""}, nil
+		return EmailAddress(""), nil
 	default:
-		return EmailAddress{}, ErrEmailMustBeString
+		return EmailAddress(""), ErrEmailMustBeString
 	}
 
 	if err != nil {
-		return EmailAddress{}, ErrInvalidEmailFormat
+		return EmailAddress(""), ErrInvalidEmailFormat
 	}
 
 	if len(validEmailAddress.Address) > 100 {
-		return EmailAddress{}, ErrEmailTooLong
+		return EmailAddress(""), ErrEmailTooLong
 	}
 
-	return EmailAddress{Value: validEmailAddress.Address}, nil
+	return EmailAddress(validEmailAddress.Address), nil
 }
 
 func (emailAddress *EmailAddress) UnmarshalJSON(data []byte) error {
@@ -56,5 +54,5 @@ func (emailAddress *EmailAddress) UnmarshalJSON(data []byte) error {
 }
 
 func (emailAddress EmailAddress) MarshalJSON() ([]byte, error) {
-	return json.Marshal(emailAddress.Value)
+	return json.Marshal(string(emailAddress))
 }

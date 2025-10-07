@@ -38,7 +38,7 @@ func TestCreateValidEmptyEmailAddressFromNilValue(t *testing.T) {
 		t.Fatal("Email no debe devolver error cuando es un nil")
 	}
 
-	if emailAddress.Value != "" {
+	if emailAddress != "" {
 		t.Fatal("El valor del email debe ser vacío cuando es creado a partir de un nil")
 	}
 }
@@ -52,27 +52,27 @@ func TestFailToCreateEmailAddressFromNonStringType(t *testing.T) {
 }
 
 func TestCreateValidEmailAddressFromJSON(t *testing.T) {
-	emailAddress := domain.EmailAddress{}
+	emailAddress := domain.EmailAddress("")
 	err := emailAddress.UnmarshalJSON([]byte(`"huanglee@triads.org"`))
 
 	if err != nil {
 		t.Fatal("Email no debe devolver error cuando se decodifica un string válido desde json")
 	}
 
-	if emailAddress.Value != "huanglee@triads.org" {
+	if emailAddress != "huanglee@triads.org" {
 		t.Fatal("Email decodificado de string desde json no coincide")
 	}
 }
 
 func TestFailToCreateEmailAddressFromJSON(t *testing.T) {
-	emailAddress := domain.EmailAddress{}
+	emailAddress := domain.EmailAddress("")
 	err := emailAddress.UnmarshalJSON([]byte("777"))
 
 	if err == nil || !errors.Is(err, domain.ErrEmailMustBeString) {
 		t.Fatal("Email debe devolver error cuando se decodifica valor no string desde json")
 	}
 
-	if emailAddress.Value != "" {
+	if emailAddress != "" {
 		t.Fatal("El valor del Email no decodificado correctamente debe ser vacío")
 	}
 }

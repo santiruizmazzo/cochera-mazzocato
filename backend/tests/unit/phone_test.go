@@ -10,7 +10,7 @@ func TestCreateValidPhone(t *testing.T) {
 	phone, err := domain.NewPhone("+543442407277")
 
 	if err != nil {
-		t.Fatalf("Phone no debe devolver error cuando es un string válido")
+		t.Fatal("Phone no debe devolver error cuando es un string válido")
 	}
 
 	if phone.CountryCode != "54" {
@@ -18,7 +18,7 @@ func TestCreateValidPhone(t *testing.T) {
 	}
 
 	if phone.LineNumber != "3442407277" {
-		t.Fatalf("El número de línea del teléfono no coincide con el esperado")
+		t.Fatal("El número de línea del teléfono no coincide con el esperado")
 	}
 }
 
@@ -26,7 +26,7 @@ func TestFailToCreatePhoneWithMissingCountryCode(t *testing.T) {
 	_, err := domain.NewPhone("543442407277")
 
 	if err == nil || !errors.Is(err, domain.ErrPhoneMustStartWithPlusSign) {
-		t.Fatalf("Phone debe devolver error cuando no tiene + al inicio")
+		t.Fatal("Phone debe devolver error cuando no tiene + al inicio")
 	}
 }
 
@@ -34,7 +34,7 @@ func TestCreateValidPhoneFromUruguayCodedNumber(t *testing.T) {
 	phone, err := domain.NewPhone("+59812341234")
 
 	if err != nil {
-		t.Fatalf("Phone no debe devolver error cuando es un string válido")
+		t.Fatal("Phone no debe devolver error cuando es un string válido")
 	}
 
 	if phone.CountryCode != "598" {
@@ -42,7 +42,7 @@ func TestCreateValidPhoneFromUruguayCodedNumber(t *testing.T) {
 	}
 
 	if phone.LineNumber != "12341234" {
-		t.Fatalf("El número de línea del teléfono no coincide con el esperado")
+		t.Fatal("El número de línea del teléfono no coincide con el esperado")
 	}
 }
 
@@ -50,7 +50,7 @@ func TestFailToCreatePhoneTooLong(t *testing.T) {
 	_, err := domain.NewPhone("+5981234123412341234")
 
 	if err == nil || !errors.Is(err, domain.ErrPhoneTooLong) {
-		t.Fatalf("Phone debe devolver error cuando es demasiado largo")
+		t.Fatal("Phone debe devolver error cuando es demasiado largo")
 	}
 }
 
@@ -58,7 +58,7 @@ func TestFailToCreatePhoneFullOfZeroes(t *testing.T) {
 	_, err := domain.NewPhone("+0000000000")
 
 	if err == nil || !errors.Is(err, domain.ErrPhoneFullOfZeroes) {
-		t.Fatalf("Phone debe devolver error cuando está lleno de ceros")
+		t.Fatal("Phone debe devolver error cuando está lleno de ceros")
 	}
 }
 
@@ -66,7 +66,7 @@ func TestFailToCreatePhoneThatContainsLetters(t *testing.T) {
 	_, err := domain.NewPhone("+57HolaComoEsta")
 
 	if err == nil || !errors.Is(err, domain.ErrPhoneMustContainNumbersOnly) {
-		t.Fatalf("Phone debe devolver error cuando contiene caracteres")
+		t.Fatal("Phone debe devolver error cuando contiene caracteres")
 	}
 }
 
@@ -74,6 +74,18 @@ func TestFailToCreatePhoneThatIsNotAString(t *testing.T) {
 	_, err := domain.NewPhone(482984292)
 
 	if err == nil || !errors.Is(err, domain.ErrPhoneMustBeString) {
-		t.Fatalf("Phone debe devolver error cuando no es un string")
+		t.Fatal("Phone debe devolver error cuando no es un string")
+	}
+}
+
+func TestCreateEmptyPhoneFromNilValue(t *testing.T) {
+	phone, err := domain.NewPhone(nil)
+
+	if err != nil {
+		t.Fatal("Phone no debe devolver error cuando se le pasa un nil")
+	}
+
+	if phone.CountryCode != "" || phone.LineNumber != "" {
+		t.Fatal("El código de país un número deben estar vacíos cuando Phone se crea desde nil")
 	}
 }

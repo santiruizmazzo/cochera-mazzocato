@@ -26,6 +26,8 @@ func NewPhone(rawValue any) (Phone, error) {
 	switch value := rawValue.(type) {
 	case string:
 		runes = []rune(value)
+	case nil:
+		return Phone{CountryCode: "", LineNumber: ""}, nil
 	default:
 		return Phone{}, ErrPhoneMustBeString
 	}

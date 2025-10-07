@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/domain"
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -73,5 +74,20 @@ func TestFailToCreateEmailAddressFromJSON(t *testing.T) {
 
 	if emailAddress.Value != "" {
 		t.Fatal("El valor del Email no decodificado correctamente debe ser vacío")
+	}
+}
+
+func TestSuccessfullyEncodeEmailAddressIntoJSON(t *testing.T) {
+	emailAddress, _ := domain.NewEmailAddress("illo@juan.com")
+	expectedJson := []byte(`"illo@juan.com"`)
+
+	json, err := emailAddress.MarshalJSON()
+
+	if err != nil {
+		t.Fatal("No puede fallar la codificación del Email")
+	}
+
+	if !reflect.DeepEqual(json, expectedJson) {
+		t.Fatal("Email codificado como json no coincide con esperado")
 	}
 }

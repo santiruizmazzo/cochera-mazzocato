@@ -54,3 +54,7 @@ func (emailAddress *EmailAddress) UnmarshalJSON(data []byte) error {
 	*emailAddress = validEmailAddress
 	return nil
 }
+
+func (emailAddress EmailAddress) MarshalJSON() ([]byte, error) {
+	return json.Marshal(emailAddress.Value)
+}

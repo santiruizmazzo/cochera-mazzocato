@@ -28,3 +28,11 @@ func TestFailToCreateAddressFromNonStringType(t *testing.T) {
 		t.Fatalf("Address debe devolver error cuando no es un string")
 	}
 }
+
+func TestFailToCreateAddressFromStringTooLong(t *testing.T) {
+	_, err := domain.NewAddress("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+
+	if err == nil {
+		t.Fatalf("Address debe devolver error cuando es un string demasiado largo")
+	}
+}

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"errors"
 	"net/mail"
 )
@@ -32,9 +33,24 @@ func NewEmailAddress(rawValue any) (EmailAddress, error) {
 		return EmailAddress{}, ErrInvalidEmailFormat
 	}
 
-	if len(validEmailAddress.String()) > 100 {
+	if len(validEmailAddress.Address) > 100 {
 		return EmailAddress{}, ErrEmailTooLong
 	}
 
-	return EmailAddress{Value: validEmailAddress.String()}, nil
+	return EmailAddress{Value: validEmailAddress.Address}, nil
+}
+
+func (emailAddress *EmailAddress) UnmarshalJSON(data []byte) error {
+	var rawValue any
+	if err := json.Unmarshal(data, &rawValue); err != nil {
+		return err
+	}
+
+	validEmailAddress, err := NewEmailAddress(rawValue)
+	if err != nil {
+		return err
+	}
+
+	*emailAddress = validEmailAddress
+	return nil
 }

@@ -49,3 +49,16 @@ func TestFailToCreateEmailAddressFromNonStringType(t *testing.T) {
 		t.Fatal("Email debe devolver error cuando no es de tipo string")
 	}
 }
+
+func TestCreateValidEmailAddressFromJSON(t *testing.T) {
+	emailAddress := domain.EmailAddress{}
+	err := emailAddress.UnmarshalJSON([]byte(`"huanglee@triads.org"`))
+
+	if err != nil {
+		t.Fatal("Email no debe devolver error cuando se decodifica un string válido desde json")
+	}
+
+	if emailAddress.Value != "huanglee@triads.org" {
+		t.Fatal("Email decodificado de string desde json no coincide")
+	}
+}

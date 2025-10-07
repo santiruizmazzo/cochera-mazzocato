@@ -21,7 +21,6 @@ var (
 	ErrDuplicateEmail          = errors.New("el email ya está en uso")
 	ErrRequiredEmail           = errors.New("el email es obligatorio")
 	ErrEmailMustBeString       = errors.New("el email debe ser un string")
-	ErrEmailTooLong            = errors.New("el email debe tener 100 caracteres como máximo")
 	ErrRequiredEntryMonth      = errors.New("el mes de ingreso es obligatorio")
 	ErrEntryMonthMustBeString  = errors.New("el mes de ingreso debe ser un string")
 	ErrEntryMonthInvalidFormat = errors.New("el mes de ingreso debe seguir este formato: MM-YYYY")

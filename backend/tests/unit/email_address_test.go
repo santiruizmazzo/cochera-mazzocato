@@ -21,3 +21,11 @@ func TestFailToCreateEmailAddressFromInvalidString(t *testing.T) {
 		t.Fatal("Email debe devolver error cuando no es un string válido")
 	}
 }
+
+func TestFailToCreateEmailAddressFromStringTooLong(t *testing.T) {
+	_, err := domain.NewEmailAddress("carl@johnson.commmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+
+	if err == nil || !errors.Is(err, domain.ErrEmailTooLong) {
+		t.Fatal("Email debe devolver error cuando es un string demasiado largo")
+	}
+}

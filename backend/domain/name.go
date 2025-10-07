@@ -39,3 +39,7 @@ func (name *Name) UnmarshalJSON(data []byte) error {
 	*name = validName
 	return nil
 }
+
+func (name Name) MarshalJSON() ([]byte, error) {
+	return json.Marshal(name.Value)
+}

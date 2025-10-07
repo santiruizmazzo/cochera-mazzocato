@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/domain"
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -53,5 +54,20 @@ func TestFailToCreateNameFromJSON(t *testing.T) {
 
 	if name.Value != "" {
 		t.Fatalf("El valor del Name no decodificado correctamente debe ser vacío")
+	}
+}
+
+func TestSuccessfullyEncodeNameIntoJSON(t *testing.T) {
+	name, _ := domain.NewName("Big Smoke")
+	expectedJson := []byte(`"Big Smoke"`)
+
+	json, err := name.MarshalJSON()
+
+	if err != nil {
+		t.Fatalf("No puede fallar la codificación del Name")
+	}
+
+	if !reflect.DeepEqual(json, expectedJson) {
+		t.Fatalf("Name codificado como json no coincide con esperado")
 	}
 }

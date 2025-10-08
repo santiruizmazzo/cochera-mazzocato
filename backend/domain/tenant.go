@@ -17,47 +17,47 @@ func (tenant *Tenant) SetID(id int) {
 	tenant.ID = EntityID(id)
 }
 
-func (tenant *Tenant) GetDNI() uint32 {
+func (tenant Tenant) GetDNI() uint32 {
 	return uint32(tenant.DNI)
 }
 
-func (tenant *Tenant) HasDNI(dni uint32) bool {
+func (tenant Tenant) HasDNI(dni uint32) bool {
 	return uint32(tenant.DNI) == dni
 }
 
-func (tenant *Tenant) GetName() string {
+func (tenant Tenant) GetName() string {
 	return string(tenant.Name)
 }
 
-func (tenant *Tenant) HasName(name string) bool {
+func (tenant Tenant) HasName(name string) bool {
 	return string(tenant.Name) == name
 }
 
-func (tenant *Tenant) GetLastName() string {
+func (tenant Tenant) GetLastName() string {
 	return string(tenant.LastName)
 }
 
-func (tenant *Tenant) HasLastName(lastName string) bool {
+func (tenant Tenant) HasLastName(lastName string) bool {
 	return string(tenant.LastName) == lastName
 }
 
-func (tenant *Tenant) GetAddress() string {
+func (tenant Tenant) GetAddress() string {
 	return string(tenant.Address)
 }
 
-func (tenant *Tenant) GetPhone() string {
+func (tenant Tenant) GetPhone() string {
 	return tenant.Phone.String()
 }
 
-func (tenant *Tenant) GetEmail() string {
+func (tenant Tenant) GetEmail() string {
 	return string(tenant.Email)
 }
 
-func (tenant *Tenant) HasEmail(email string) bool {
+func (tenant Tenant) HasEmail(email string) bool {
 	return string(tenant.Email) == email
 }
 
-func (tenant *Tenant) GetEntryMonth() string {
+func (tenant Tenant) GetEntryMonth() string {
 	return tenant.EntryMonth.String()
 }
 
@@ -65,43 +65,35 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 	var tenant Tenant
 	var err error
 
-	tenant.ID, err = NewEntityID(id)
-	if err != nil {
+	if tenant.ID, err = NewEntityID(id); err != nil {
 		return nil, err
 	}
 
-	tenant.DNI, err = NewDNI(dni)
-	if err != nil {
+	if tenant.DNI, err = NewDNI(dni); err != nil {
 		return nil, err
 	}
 
-	tenant.Name, err = NewName(name)
-	if err != nil {
+	if tenant.Name, err = NewName(name); err != nil {
 		return nil, err
 	}
 
-	tenant.LastName, err = NewName(lastName)
-	if err != nil {
+	if tenant.LastName, err = NewName(lastName); err != nil {
 		return nil, err
 	}
 
-	tenant.Address, err = NewAddress(address)
-	if err != nil {
+	if tenant.Address, err = NewAddress(address); err != nil {
 		return nil, err
 	}
 
-	tenant.Phone, err = NewPhone(phone)
-	if err != nil {
+	if tenant.Phone, err = NewPhone(phone); err != nil {
 		return nil, err
 	}
 
-	tenant.Email, err = NewEmailAddress(email)
-	if err != nil {
+	if tenant.Email, err = NewEmailAddress(email); err != nil {
 		return nil, err
 	}
 
-	tenant.EntryMonth, err = NewMonthOfYear(entryMonth)
-	if err != nil {
+	if tenant.EntryMonth, err = NewMonthOfYear(entryMonth); err != nil {
 		return nil, err
 	}
 
@@ -115,22 +107,17 @@ var (
 	ErrRequiredEntryMonth = errors.New("el mes de ingreso es obligatorio")
 )
 
-func (tenant *Tenant) Validate() error {
-	if tenant.DNI == 0 {
+func (tenant Tenant) Validate() error {
+	switch true {
+	case tenant.DNI == 0:
 		return ErrRequiredDNI
-	}
-
-	if tenant.Name == "" {
+	case tenant.Name == "":
 		return ErrRequiredName
-	}
-
-	if tenant.LastName == "" {
+	case tenant.LastName == "":
 		return ErrRequiredLastName
-	}
-
-	if tenant.EntryMonth.Month == 0 && tenant.EntryMonth.Year == 0 {
+	case tenant.EntryMonth.Month == 0 && tenant.EntryMonth.Year == 0:
 		return ErrRequiredEntryMonth
+	default:
+		return nil
 	}
-
-	return nil
 }

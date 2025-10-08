@@ -34,10 +34,10 @@ func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
 		return MonthOfYear{}, ErrMonthOfYearMustBeString
 	}
 
-	return createMonthOfYearFromString(stringValue)
+	return createValidMonthOfYear(stringValue)
 }
 
-func createMonthOfYearFromString(stringValue string) (MonthOfYear, error) {
+func createValidMonthOfYear(stringValue string) (MonthOfYear, error) {
 	parts := strings.Split(stringValue, SEPARATION_CHARACTER)
 	if len(parts) != 2 {
 		return MonthOfYear{}, ErrMonthOfYearInvalidFormat

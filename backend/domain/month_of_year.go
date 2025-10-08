@@ -13,10 +13,15 @@ type MonthOfYear struct {
 	Year  uint16
 }
 
+const SEPARATION_CHARACTER string = "-"
+const MONTH_MIN_VALUE uint64 = 1
+const MONTH_MAX_VALUE uint64 = 12
+
 var (
 	ErrMonthOfYearInvalidFormat = errors.New(`un mes de año debe seguir el formato: "MM-YYYY"`)
 	ErrMonthOfYearMustBeString  = errors.New(`un mes de año debe ser un string con formato: "MM-YYYY"`)
 	ErrMonthNotParseable        = errors.New("imposible procesar este mes")
+	ErrMonthOfYearInvalidMonth  = errors.New("el mes debe estar entre 1 y 12")
 	ErrYearNotParseable         = errors.New("imposible procesar este año")
 )
 
@@ -28,7 +33,7 @@ func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
 		return MonthOfYear{}, ErrMonthOfYearMustBeString
 	}
 
-	parts := strings.Split(stringValue, "-")
+	parts := strings.Split(stringValue, SEPARATION_CHARACTER)
 	if len(parts) != 2 {
 		return MonthOfYear{}, ErrMonthOfYearInvalidFormat
 	}
@@ -47,6 +52,10 @@ func ParseMonth(s string) (uint8, error) {
 	newInt, err := strconv.ParseUint(s, 10, 8)
 	if err != nil {
 		err = ErrMonthNotParseable
+	}
+
+	if newInt < MONTH_MIN_VALUE || newInt > MONTH_MAX_VALUE {
+		return 0, ErrMonthOfYearInvalidMonth
 	}
 
 	return uint8(newInt), err

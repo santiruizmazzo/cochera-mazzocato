@@ -29,3 +29,11 @@ func TestFailToCreateMonthOfYearFromInvalidFormatString(t *testing.T) {
 		t.Fatal("Debería fallar la creación cuando el string no sigue el formato esperado")
 	}
 }
+
+func TestFailToCreateMonthOfYearWithInvalidMonth(t *testing.T) {
+	_, err := domain.NewMonthOfYear("20-2001")
+
+	if err == nil || !errors.Is(err, domain.ErrMonthOfYearInvalidMonth) {
+		t.Fatal("Debería fallar la creación cuando el mes no va del 1 al 12")
+	}
+}

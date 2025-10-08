@@ -18,7 +18,7 @@ func TestCreateValidName(t *testing.T) {
 func TestFailToCreateNameFromNonStringType(t *testing.T) {
 	_, err := domain.NewName(222)
 
-	if err == nil || !errors.Is(err, domain.ErrNameMustBeAString) {
+	if err == nil || !errors.Is(err, domain.ErrNameMustBeString) {
 		t.Fatalf("Name debe devolver error cuando no es un string")
 	}
 }

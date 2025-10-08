@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/domain"
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -77,5 +78,20 @@ func TestFailToCreateMonthOfYearFromJSON(t *testing.T) {
 
 	if monthOfYear.Month != 0 && monthOfYear.Year != 0 {
 		t.Fatal("El valor del MonthOfYear no decodificado correctamente debe ser vacío")
+	}
+}
+
+func TestSuccessfullyEncodeMonthOfYearIntoJSON(t *testing.T) {
+	monthOfYear, _ := domain.NewMonthOfYear("04-1999")
+	expectedJson := []byte(`"04-1999"`)
+
+	json, err := monthOfYear.MarshalJSON()
+
+	if err != nil {
+		t.Fatal("No puede fallar la codificación del MonthOfYear")
+	}
+
+	if !reflect.DeepEqual(json, expectedJson) {
+		t.Fatal("MonthOfYear codificado como json no coincide con esperado")
 	}
 }

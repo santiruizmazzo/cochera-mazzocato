@@ -13,67 +13,52 @@ type MonthOfYear struct {
 	Year  uint16
 }
 
-func NewMonthOfYear(month uint8, year uint16) MonthOfYear {
-	return MonthOfYear{Month: month, Year: year}
+var (
+	ErrMonthOfYearMustBeString = errors.New(`un mes de año debe ser un string con formato: "MM-YYYY"`)
+	ErrMonthNotParseable       = errors.New("imposible procesar este mes")
+	ErrYearNotParseable        = errors.New("imposible procesar este año")
+)
+
+func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
+	var stringValue string
+	var ok bool
+
+	if stringValue, ok = rawValue.(string); !ok {
+		return MonthOfYear{}, ErrMonthOfYearMustBeString
+	}
+
+	parts := strings.Split(stringValue, "-")
+
+	month, err := ParseMonth(parts[0])
+	if err != nil {
+		return MonthOfYear{}, err
+	}
+
+	year, err := ParseYear(parts[1])
+
+	return MonthOfYear{Month: month, Year: year}, err
+}
+
+func ParseMonth(s string) (uint8, error) {
+	newInt, err := strconv.ParseUint(s, 10, 8)
+	if err != nil {
+		err = ErrMonthNotParseable
+	}
+
+	return uint8(newInt), err
+}
+
+func ParseYear(s string) (uint16, error) {
+	newInt, err := strconv.ParseUint(s, 10, 16)
+	if err != nil {
+		err = ErrYearNotParseable
+	}
+
+	return uint16(newInt), err
 }
 
 func (monthOfYear MonthOfYear) String() string {
 	return fmt.Sprintf("%02d-%04d", monthOfYear.Month, monthOfYear.Year)
-}
-
-func StringToUint8(s string) (uint8, error) {
-	newInt, err := StringToUint(s, 8)
-	return uint8(newInt), err
-}
-
-func StringToUint16(s string) (uint16, error) {
-	newInt, err := StringToUint(s, 16)
-	return uint16(newInt), err
-}
-
-func StringToUint32(s string) (uint32, error) {
-	newInt, err := StringToUint(s, 32)
-	return uint32(newInt), err
-}
-
-func StringToUint(s string, maxBits int) (uint64, error) {
-	n, err := strconv.ParseUint(s, 10, maxBits)
-	if err != nil {
-		return 0, err
-	}
-	return n, nil
-}
-
-var (
-	ErrInvalidMonthOfYearString = errors.New(`un mes de año debe ser un string con formato: "MM-YYYY"`)
-	ErrMonthNotParseable        = errors.New("imposible procesar este mes")
-	ErrYearNotParseable         = errors.New("imposible procesar este año")
-)
-
-func NewMonthOfYearFromString(rawMonthOfYear any) (MonthOfYear, error) {
-	var monthOfYearString string
-	var ok bool
-
-	if monthOfYearString, ok = rawMonthOfYear.(string); !ok {
-		return MonthOfYear{}, ErrInvalidMonthOfYearString
-	}
-
-	splitString := strings.Split(monthOfYearString, "-")
-	month, err := StringToUint8(splitString[0])
-	if err != nil {
-		return MonthOfYear{}, ErrMonthNotParseable
-	}
-
-	year, err := StringToUint16(splitString[1])
-	if err != nil {
-		return MonthOfYear{}, ErrYearNotParseable
-	}
-
-	return MonthOfYear{Month: month, Year: year}, nil
-}
-
-func (monthOfYear MonthOfYear) MarshalJSON() ([]byte, error) {
-	return json.Marshal(monthOfYear.String())
 }
 
 func (monthOfYear *MonthOfYear) UnmarshalJSON(data []byte) error {
@@ -82,11 +67,15 @@ func (monthOfYear *MonthOfYear) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	newMonthOfYear, err := NewMonthOfYearFromString(stringFormatMonth)
+	newMonthOfYear, err := NewMonthOfYear(stringFormatMonth)
 	if err != nil {
 		return err
 	}
 
 	*monthOfYear = newMonthOfYear
 	return nil
+}
+
+func (monthOfYear MonthOfYear) MarshalJSON() ([]byte, error) {
+	return json.Marshal(monthOfYear.String())
 }

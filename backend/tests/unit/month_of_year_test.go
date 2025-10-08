@@ -7,7 +7,7 @@ import (
 
 func TestMonthOfYearCreatedFromString(t *testing.T) {
 	expectedMonthOfYear := "05-2001"
-	monthOfYear, err := domain.NewMonthOfYearFromString(expectedMonthOfYear)
+	monthOfYear, err := domain.NewMonthOfYear(expectedMonthOfYear)
 	if err != nil {
 		t.Fatal("Failed creating month of year: ", err)
 	}

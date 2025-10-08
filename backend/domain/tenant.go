@@ -100,7 +100,7 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 		return nil, err
 	}
 
-	tenant.EntryMonth, err = NewMonthOfYearFromString(entryMonth)
+	tenant.EntryMonth, err = NewMonthOfYear(entryMonth)
 	if err != nil {
 		return nil, err
 	}

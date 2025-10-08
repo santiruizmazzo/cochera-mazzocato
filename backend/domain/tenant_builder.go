@@ -13,7 +13,7 @@ func NewTenantBuilder() *TenantBuilder {
 		Address:    "22 Beer Heights St.",
 		Phone:      Phone{CountryCode: "54", LineNumber: "9815111526"},
 		Email:      "huang@lee.com",
-		EntryMonth: NewMonthOfYear(1, 2025),
+		EntryMonth: MonthOfYear{Month: 1, Year: 2025},
 	}
 	return &TenantBuilder{tenant: &tenant}
 }

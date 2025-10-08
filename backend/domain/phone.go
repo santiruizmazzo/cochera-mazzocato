@@ -34,44 +34,36 @@ var (
 )
 
 func NewPhone(rawValue any) (Phone, error) {
-	var stringValue string
-
-	switch value := rawValue.(type) {
-	case string:
-		stringValue = value
-	case *string:
-		if value == nil {
-			return Phone{}, nil
-		}
-		stringValue = *value
-	case nil:
-		return Phone{}, nil
-	default:
-		return Phone{}, ErrPhoneMustBeString
+	stringValue, err := extractValidString(rawValue)
+	if stringValue == "" || err != nil {
+		return Phone{}, err
 	}
 
-	phoneNumber, err := extractValidPhoneNumber(stringValue)
+	phoneNumber, err := extractValidNumber(stringValue)
 	if err != nil {
 		return Phone{}, err
 	}
 
-	var phone Phone
-
-	switch true {
-	case numberMatches(phoneNumber, ARGENTINA_CODE):
-		phone.CountryCode = ARGENTINA_CODE
-		phone.LineNumber = extractLineNumber(phoneNumber, ARGENTINA_CODE)
-	case numberMatches(phoneNumber, URUGUAY_CODE):
-		phone.CountryCode = URUGUAY_CODE
-		phone.LineNumber = extractLineNumber(phoneNumber, URUGUAY_CODE)
-	default:
-		err = ErrPhoneUnsupportedCountryCode
-	}
-
-	return phone, err
+	return createValidPhone(phoneNumber)
 }
 
-func extractValidPhoneNumber(phoneNumber string) (string, error) {
+func extractValidString(rawValue any) (string, error) {
+	switch value := rawValue.(type) {
+	case string:
+		return value, nil
+	case *string:
+		if value == nil {
+			return "", nil
+		}
+		return *value, nil
+	case nil:
+		return "", nil
+	default:
+		return "", ErrPhoneMustBeString
+	}
+}
+
+func extractValidNumber(phoneNumber string) (string, error) {
 	if !strings.HasPrefix(phoneNumber, PHONE_START_SIGN) {
 		return "", ErrPhoneMustStartWithPlusSign
 	}
@@ -90,6 +82,24 @@ func extractValidPhoneNumber(phoneNumber string) (string, error) {
 	}
 
 	return trimmedNumber, nil
+}
+
+func createValidPhone(phoneNumber string) (Phone, error) {
+	var phone Phone
+	var err error
+
+	switch true {
+	case numberMatches(phoneNumber, ARGENTINA_CODE):
+		phone.CountryCode = ARGENTINA_CODE
+		phone.LineNumber = extractLineNumber(phoneNumber, ARGENTINA_CODE)
+	case numberMatches(phoneNumber, URUGUAY_CODE):
+		phone.CountryCode = URUGUAY_CODE
+		phone.LineNumber = extractLineNumber(phoneNumber, URUGUAY_CODE)
+	default:
+		err = ErrPhoneUnsupportedCountryCode
+	}
+
+	return phone, err
 }
 
 func numberMatches(phoneNumber string, countryCode string) bool {

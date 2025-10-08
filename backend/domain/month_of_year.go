@@ -16,6 +16,8 @@ type MonthOfYear struct {
 const SEPARATION_CHARACTER string = "-"
 const MONTH_MIN_VALUE uint64 = 1
 const MONTH_MAX_VALUE uint64 = 12
+const YEAR_MIN_VALUE uint64 = 0
+const YEAR_MAX_VALUE uint64 = 9999
 
 var (
 	ErrMonthOfYearInvalidFormat = errors.New(`un mes de año debe seguir el formato: "MM-YYYY"`)
@@ -23,6 +25,7 @@ var (
 	ErrMonthNotParseable        = errors.New("imposible procesar este mes")
 	ErrMonthOfYearInvalidMonth  = errors.New("el mes debe estar entre 1 y 12")
 	ErrYearNotParseable         = errors.New("imposible procesar este año")
+	ErrMonthOfYearInvalidYear   = errors.New("el año debe estar entre 0 y 9999")
 )
 
 func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
@@ -48,26 +51,30 @@ func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
 	return MonthOfYear{Month: month, Year: year}, err
 }
 
-func ParseMonth(s string) (uint8, error) {
-	newInt, err := strconv.ParseUint(s, 10, 8)
+func ParseMonth(stringMonth string) (uint8, error) {
+	month, err := strconv.ParseUint(stringMonth, 10, 8)
 	if err != nil {
 		err = ErrMonthNotParseable
 	}
 
-	if newInt < MONTH_MIN_VALUE || newInt > MONTH_MAX_VALUE {
+	if month < MONTH_MIN_VALUE || month > MONTH_MAX_VALUE {
 		return 0, ErrMonthOfYearInvalidMonth
 	}
 
-	return uint8(newInt), err
+	return uint8(month), err
 }
 
-func ParseYear(s string) (uint16, error) {
-	newInt, err := strconv.ParseUint(s, 10, 16)
+func ParseYear(stringYear string) (uint16, error) {
+	year, err := strconv.ParseUint(stringYear, 10, 16)
 	if err != nil {
 		err = ErrYearNotParseable
 	}
 
-	return uint16(newInt), err
+	if year < YEAR_MIN_VALUE || year > YEAR_MAX_VALUE {
+		return 0, ErrMonthOfYearInvalidYear
+	}
+
+	return uint16(year), err
 }
 
 func (monthOfYear MonthOfYear) String() string {

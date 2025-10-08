@@ -87,12 +87,12 @@ func (monthOfYear MonthOfYear) String() string {
 }
 
 func (monthOfYear *MonthOfYear) UnmarshalJSON(data []byte) error {
-	var stringFormatMonth string
-	if err := json.Unmarshal(data, &stringFormatMonth); err != nil {
+	var rawValue any
+	if err := json.Unmarshal(data, &rawValue); err != nil {
 		return err
 	}
 
-	newMonthOfYear, err := NewMonthOfYear(stringFormatMonth)
+	newMonthOfYear, err := NewMonthOfYear(rawValue)
 	if err != nil {
 		return err
 	}

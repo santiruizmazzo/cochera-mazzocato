@@ -415,7 +415,7 @@ func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "imposible procesar este año", t)
+	utils.AssertResponseContains(responseMap, "detail", "el año debe estar entre 0 y 9999", t)
 }
 
 func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {

@@ -21,7 +21,7 @@ const YEAR_MAX_VALUE uint64 = 9999
 
 var (
 	ErrMonthOfYearInvalidFormat = errors.New(`un mes de año debe seguir el formato: "MM-YYYY"`)
-	ErrMonthOfYearMustBeString  = errors.New(`un mes de año debe ser un string con formato: "MM-YYYY"`)
+	ErrMonthOfYearMustBeString  = errors.New("un mes de año debe ser un string")
 	ErrMonthNotParseable        = errors.New("imposible procesar este mes")
 	ErrMonthOfYearInvalidMonth  = errors.New("el mes debe estar entre 1 y 12")
 	ErrYearNotParseable         = errors.New("imposible procesar este año")

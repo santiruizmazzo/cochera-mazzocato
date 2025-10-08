@@ -45,3 +45,11 @@ func TestFailToCreateMonthOfYearWithInvalidYear(t *testing.T) {
 		t.Fatal("Debería fallar la creación cuando el año no va del 0 al 9999")
 	}
 }
+
+func TestFailToCreateMonthOfYearFromNonStringValue(t *testing.T) {
+	_, err := domain.NewMonthOfYear(842892)
+
+	if err == nil || !errors.Is(err, domain.ErrMonthOfYearMustBeString) {
+		t.Fatal("Debería fallar la creación cuando no es un string")
+	}
+}

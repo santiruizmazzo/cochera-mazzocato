@@ -39,7 +39,7 @@ func TestFailToCreateMonthOfYearWithInvalidMonth(t *testing.T) {
 }
 
 func TestFailToCreateMonthOfYearWithInvalidYear(t *testing.T) {
-	_, err := domain.NewMonthOfYear("01-70000")
+	_, err := domain.NewMonthOfYear("01-20000")
 
 	if err == nil || !errors.Is(err, domain.ErrMonthOfYearInvalidYear) {
 		t.Fatal("Debería fallar la creación cuando el año no va del 0 al 9999")

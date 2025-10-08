@@ -29,52 +29,57 @@ var (
 )
 
 func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
-	var stringValue string
-	var ok bool
-
-	if stringValue, ok = rawValue.(string); !ok {
+	stringValue, ok := rawValue.(string)
+	if !ok {
 		return MonthOfYear{}, ErrMonthOfYearMustBeString
 	}
 
+	return createMonthOfYearFromString(stringValue)
+}
+
+func createMonthOfYearFromString(stringValue string) (MonthOfYear, error) {
 	parts := strings.Split(stringValue, SEPARATION_CHARACTER)
 	if len(parts) != 2 {
 		return MonthOfYear{}, ErrMonthOfYearInvalidFormat
 	}
 
-	month, err := ParseMonth(parts[0])
+	month, err := createMonthFromString(parts[0])
 	if err != nil {
 		return MonthOfYear{}, err
 	}
 
-	year, err := ParseYear(parts[1])
+	year, err := createYearFromString(parts[1])
+	if err != nil {
+		return MonthOfYear{}, err
+	}
 
-	return MonthOfYear{Month: month, Year: year}, err
+	return MonthOfYear{Month: month, Year: year}, nil
 }
 
-func ParseMonth(stringMonth string) (uint8, error) {
+func createMonthFromString(stringMonth string) (uint8, error) {
 	month, err := strconv.ParseUint(stringMonth, 10, 8)
 	if err != nil {
-		err = ErrMonthNotParseable
+		return 0, ErrMonthNotParseable
 	}
 
 	if month < MONTH_MIN_VALUE || month > MONTH_MAX_VALUE {
 		return 0, ErrMonthOfYearInvalidMonth
 	}
 
-	return uint8(month), err
+	return uint8(month), nil
 }
 
-func ParseYear(stringYear string) (uint16, error) {
+func createYearFromString(stringYear string) (uint16, error) {
 	year, err := strconv.ParseUint(stringYear, 10, 16)
 	if err != nil {
-		err = ErrYearNotParseable
+		return 0, ErrYearNotParseable
 	}
 
 	if year < YEAR_MIN_VALUE || year > YEAR_MAX_VALUE {
 		return 0, ErrMonthOfYearInvalidYear
 	}
 
-	return uint16(year), err
+	return uint16(year), nil
 }
 
 func (monthOfYear MonthOfYear) String() string {

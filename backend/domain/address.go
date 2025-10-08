@@ -7,32 +7,38 @@ import (
 
 type Address string
 
+const MAX_LENGTH int = 100
+
 var (
 	ErrAddressMustBeString = errors.New("el domicilio debe ser un string")
 	ErrAddressTooLong      = errors.New("el domicilio debe tener 100 caracteres como máximo")
 )
 
 func NewAddress(rawValue any) (Address, error) {
+	var stringValue string
+
 	switch value := rawValue.(type) {
 	case string:
-		if len(value) > 100 {
-			return Address(""), ErrAddressTooLong
-		}
-		return Address(value), nil
-	case nil:
-		return Address(""), nil
+		stringValue = value
 	case *string:
 		if value == nil {
 			return Address(""), nil
 		}
-
-		realValue := *value
-		if len(realValue) > 100 {
-			return Address(""), ErrAddressTooLong
-		}
-		return Address(realValue), nil
+		stringValue = *value
+	case nil:
+		return Address(""), nil
+	default:
+		return Address(""), ErrAddressMustBeString
 	}
-	return Address(""), ErrAddressMustBeString
+
+	if len(stringValue) > MAX_LENGTH {
+		return Address(""), ErrAddressTooLong
+	}
+	return Address(stringValue), nil
+}
+
+func (address Address) IsEmpty() bool {
+	return address == ""
 }
 
 func (address *Address) UnmarshalJSON(data []byte) error {
@@ -51,7 +57,7 @@ func (address *Address) UnmarshalJSON(data []byte) error {
 }
 
 func (address Address) MarshalJSON() ([]byte, error) {
-	if address == "" {
+	if address.IsEmpty() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(string(address))

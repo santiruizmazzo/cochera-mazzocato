@@ -1,5 +1,7 @@
 package domain
 
+import "errors"
+
 type Tenant struct {
 	ID         EntityID     `json:"id"`
 	DNI        DNI          `json:"dni"`
@@ -105,6 +107,13 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 
 	return &tenant, nil
 }
+
+var (
+	ErrRequiredDNI        = errors.New("el DNI es obligatorio")
+	ErrRequiredName       = errors.New("el nombre es obligatorio")
+	ErrRequiredLastName   = errors.New("el apellido es obligatorio")
+	ErrRequiredEntryMonth = errors.New("el mes de ingreso es obligatorio")
+)
 
 func (tenant *Tenant) Validate() error {
 	if tenant.DNI == 0 {

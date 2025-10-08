@@ -25,10 +25,6 @@ func (repo *PostgresTenantRepository) GetTenantByID(id int) (*domain.Tenant, err
 }
 
 func createTenantFromRow(row pgx.Row) (*domain.Tenant, error) {
-	// var tenant domain.Tenant
-	// var entryMonth string
-	// var address, phone, email *string
-
 	var (
 		id         int
 		dni        int
@@ -45,23 +41,8 @@ func createTenantFromRow(row pgx.Row) (*domain.Tenant, error) {
 		return nil, domain.ErrTenantNotFound
 	}
 
-	// var newAddress = pointerToString(address)
-	// var newPhone = pointerToString(phone)
-	// var newEmail = pointerToString(email)
-
-	// tenant.EntryMonth, err = domain.NewMonthOfYearFromString(entryMonth)
-	// if err != nil {
-	// 	return nil, err
-	// }
 	return domain.NewTenant(id, dni, name, lastName, address, phone, email, entryMonth)
 }
-
-// func pointerToString(s *string) string {
-// 	if s == nil {
-// 		return ""
-// 	}
-// 	return *s
-// }
 
 func (repo *PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants;`

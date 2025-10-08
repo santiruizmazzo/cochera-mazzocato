@@ -5,15 +5,13 @@ type TenantBuilder struct {
 }
 
 func NewTenantBuilder() *TenantBuilder {
-	phone, _ := NewPhone("+549815111526")
-
 	tenant := Tenant{
 		ID:         1,
 		DNI:        12345678,
 		Name:       "Huang",
 		LastName:   "Lee",
 		Address:    "22 Beer Heights St.",
-		Phone:      phone,
+		Phone:      Phone{CountryCode: "54", LineNumber: "9815111526"},
 		Email:      "huang@lee.com",
 		EntryMonth: NewMonthOfYear(1, 2025),
 	}

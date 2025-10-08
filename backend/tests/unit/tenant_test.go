@@ -1,34 +1,43 @@
 package unit
 
-// func TestTenantCreatedFromJSON(t *testing.T) {
-// 	expectedTenant := domain.NewTenantBuilder().Build()
-// 	jsonTenant, _ := json.Marshal(expectedTenant)
+import (
+	"cochera/domain"
+	"encoding/json"
+	"errors"
+	"testing"
+)
 
-// 	tenant, err := domain.NewTenantFromJSON(jsonTenant)
-// 	if err != nil {
-// 		t.Fatal("Failed creating tenant from json: ", err)
-// 	}
+func TestTenantCreatedFromJSON(t *testing.T) {
+	expectedTenant := domain.NewTenantBuilder().Build()
+	jsonTenant, _ := json.Marshal(expectedTenant)
 
-// 	if *expectedTenant != *tenant {
-// 		t.Fatalf("Expected %v, got %v", expectedTenant, tenant)
-// 	}
-// }
+	var tenant domain.Tenant
+	err := json.Unmarshal(jsonTenant, &tenant)
+	if err != nil {
+		t.Fatal("Failed creating tenant from json: ", err)
+	}
 
-// func TestNewTenantFromJSONReturnsCustomErrorWhenGivenNonNumericDNI(t *testing.T) {
-// 	jsonTenant, _ := json.Marshal(map[string]any{
-// 		"dni":         "adios",
-// 		"name":        "Toni",
-// 		"last_name":   "Cipriani",
-// 		"entry_month": "02-2023",
-// 	})
+	if *expectedTenant != tenant {
+		t.Fatalf("Expected %v, got %v", expectedTenant, tenant)
+	}
+}
 
-// 	tenant, err := domain.NewTenantFromJSON(jsonTenant)
+func TestNewTenantFromJSONReturnsCustomErrorWhenGivenNonNumericDNI(t *testing.T) {
+	jsonTenant, _ := json.Marshal(map[string]any{
+		"dni":         "adios",
+		"name":        "Toni",
+		"last_name":   "Cipriani",
+		"entry_month": "02-2023",
+	})
 
-// 	if tenant != nil || err == nil {
-// 		t.Fatal("Tenant creation from json should fail when DNI is not a number")
-// 	}
+	var tenant domain.Tenant
+	err := json.Unmarshal(jsonTenant, &tenant)
 
-// 	if !errors.Is(err, domain.ErrDNIMustBeNumber) {
-// 		t.Fatal("Returned error should be of type ErrInvalidDNI")
-// 	}
-// }
+	if err == nil {
+		t.Fatal("Tenant creation from json should fail when DNI is not a number")
+	}
+
+	if !errors.Is(err, domain.ErrDNIMustBeANumber) {
+		t.Fatal("Returned error should be of type ErrDNIMustBeANumber")
+	}
+}

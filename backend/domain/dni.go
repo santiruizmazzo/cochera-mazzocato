@@ -17,22 +17,31 @@ var (
 )
 
 func NewDNI(rawValue any) (DNI, error) {
-	var integerValue int
-
-	switch value := rawValue.(type) {
-	case int:
-		integerValue = value
-	case float64:
-		integerValue = int(value)
-	default:
-		return DNI(0), ErrDNIMustBeANumber
+	integerDni, err := extractIntegerDNI(rawValue)
+	if err != nil {
+		return DNI(0), err
 	}
 
-	if integerValue < DNI_MIN_VALUE || integerValue > DNI_MAX_VALUE {
+	if !isInValidRange(integerDni) {
 		return DNI(0), ErrDNINotInValidRange
 	}
 
-	return DNI(integerValue), nil
+	return DNI(integerDni), nil
+}
+
+func extractIntegerDNI(rawValue any) (int, error) {
+	switch value := rawValue.(type) {
+	case int:
+		return value, nil
+	case float64:
+		return int(value), nil
+	default:
+		return 0, ErrDNIMustBeANumber
+	}
+}
+
+func isInValidRange(integerDni int) bool {
+	return DNI_MIN_VALUE <= integerDni && integerDni <= DNI_MAX_VALUE
 }
 
 func (dni *DNI) UnmarshalJSON(data []byte) error {

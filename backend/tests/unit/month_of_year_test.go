@@ -53,3 +53,16 @@ func TestFailToCreateMonthOfYearFromNonStringValue(t *testing.T) {
 		t.Fatal("Debería fallar la creación cuando no es un string")
 	}
 }
+
+func TestCreateValidMonthOfYearFromJSON(t *testing.T) {
+	monthOfYear := domain.MonthOfYear{}
+	err := monthOfYear.UnmarshalJSON([]byte(`"09-2001"`))
+
+	if err != nil {
+		t.Fatal("MonthOfYear no debe devolver error cuando se decodifica un string válido desde json")
+	}
+
+	if monthOfYear.String() != "09-2001" {
+		t.Fatal("MonthOfYear decodificado de string desde json no coincide")
+	}
+}

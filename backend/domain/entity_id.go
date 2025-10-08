@@ -8,6 +8,9 @@ import (
 
 type EntityID uint32
 
+const ID_MIN_VALUE int = 1
+const ID_MAX_VALUE int = math.MaxUint32
+
 var (
 	ErrIDMustBeAnInteger = errors.New("el ID debe ser un número entero")
 	ErrIDTooSmall        = errors.New("el ID debe ser un entero mayor o igual a 1")
@@ -26,10 +29,10 @@ func NewEntityID(rawValue any) (EntityID, error) {
 		return EntityID(0), ErrIDMustBeAnInteger
 	}
 
-	if integerValue < 1 {
+	if integerValue < ID_MIN_VALUE {
 		return EntityID(0), ErrIDTooSmall
 	}
-	if integerValue > math.MaxUint32 {
+	if integerValue > ID_MAX_VALUE {
 		return EntityID(0), ErrIDTooBig
 	}
 	return EntityID(integerValue), nil

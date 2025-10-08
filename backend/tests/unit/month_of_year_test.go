@@ -2,21 +2,30 @@ package unit
 
 import (
 	"cochera/domain"
+	"errors"
 	"testing"
 )
 
 func TestMonthOfYearCreatedFromString(t *testing.T) {
-	expectedMonthOfYear := "05-2001"
-	monthOfYear, err := domain.NewMonthOfYear(expectedMonthOfYear)
+	monthOfYear, err := domain.NewMonthOfYear("05-2001")
+
 	if err != nil {
-		t.Fatal("Failed creating month of year: ", err)
+		t.Fatal("Error al crear MonthOfYear: ", err)
 	}
 
 	if monthOfYear.Month != 5 {
-		t.Fatalf("Expected month 5, got %v", monthOfYear.Month)
+		t.Fatal("Esperado mes 5, obtenido ", monthOfYear.Month)
 	}
 
 	if monthOfYear.Year != 2001 {
-		t.Fatalf("Expected year 2001, got %v", monthOfYear.Year)
+		t.Fatal("Esperado año 2001, obtenido ", monthOfYear.Year)
+	}
+}
+
+func TestFailToCreateMonthOfYearFromInvalidFormatString(t *testing.T) {
+	_, err := domain.NewMonthOfYear("052001")
+
+	if err == nil || !errors.Is(err, domain.ErrMonthOfYearInvalidFormat) {
+		t.Fatal("Debería fallar la creación cuando el string no sigue el formato esperado")
 	}
 }

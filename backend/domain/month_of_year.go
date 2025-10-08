@@ -14,9 +14,10 @@ type MonthOfYear struct {
 }
 
 var (
-	ErrMonthOfYearMustBeString = errors.New(`un mes de año debe ser un string con formato: "MM-YYYY"`)
-	ErrMonthNotParseable       = errors.New("imposible procesar este mes")
-	ErrYearNotParseable        = errors.New("imposible procesar este año")
+	ErrMonthOfYearInvalidFormat = errors.New(`un mes de año debe seguir el formato: "MM-YYYY"`)
+	ErrMonthOfYearMustBeString  = errors.New(`un mes de año debe ser un string con formato: "MM-YYYY"`)
+	ErrMonthNotParseable        = errors.New("imposible procesar este mes")
+	ErrYearNotParseable         = errors.New("imposible procesar este año")
 )
 
 func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
@@ -28,6 +29,9 @@ func NewMonthOfYear(rawValue any) (MonthOfYear, error) {
 	}
 
 	parts := strings.Split(stringValue, "-")
+	if len(parts) != 2 {
+		return MonthOfYear{}, ErrMonthOfYearInvalidFormat
+	}
 
 	month, err := ParseMonth(parts[0])
 	if err != nil {

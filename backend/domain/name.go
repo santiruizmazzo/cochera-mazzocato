@@ -15,15 +15,16 @@ var (
 )
 
 func NewName(rawValue any) (Name, error) {
-	switch value := rawValue.(type) {
-	case string:
-		if len(value) > NAME_MAX_LENGTH {
-			return Name(""), ErrNameTooLong
-		}
-		return Name(value), nil
-	default:
+	stringValue, ok := rawValue.(string)
+	if !ok {
 		return Name(""), ErrNameMustBeString
 	}
+
+	if len(stringValue) > NAME_MAX_LENGTH {
+		return Name(""), ErrNameTooLong
+	}
+
+	return Name(stringValue), nil
 }
 
 func (name *Name) UnmarshalJSON(data []byte) error {

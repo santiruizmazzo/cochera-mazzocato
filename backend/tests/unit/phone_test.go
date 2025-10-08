@@ -91,6 +91,14 @@ func TestCreateEmptyPhoneFromNilValue(t *testing.T) {
 	}
 }
 
+func TestFailToCreatePhoneFromParaguayCodedNumber(t *testing.T) {
+	_, err := domain.NewPhone("+595111111111")
+
+	if err == nil || !errors.Is(err, domain.ErrPhoneUnsupportedCountryCode) {
+		t.Fatal("Phone debe devolver error cuando no tiene un prefijo de país aceptado")
+	}
+}
+
 func TestCreateValidPhoneFromJSON(t *testing.T) {
 	phone := domain.Phone{}
 	err := phone.UnmarshalJSON([]byte(`"+59844298511"`))

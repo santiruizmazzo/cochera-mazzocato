@@ -18,24 +18,33 @@ var (
 )
 
 func NewEntityID(rawValue any) (EntityID, error) {
-	var integerValue int
+	integerID, err := extractIntegerID(rawValue)
+	if err != nil {
+		return EntityID(0), err
+	}
 
+	return createValidEntityID(integerID)
+}
+
+func extractIntegerID(rawValue any) (int, error) {
 	switch value := rawValue.(type) {
 	case int:
-		integerValue = value
+		return value, nil
 	case float64:
-		integerValue = int(value)
+		return int(value), nil
 	default:
-		return EntityID(0), ErrIDMustBeAnInteger
+		return 0, ErrIDMustBeAnInteger
 	}
+}
 
-	if integerValue < ID_MIN_VALUE {
+func createValidEntityID(integerID int) (EntityID, error) {
+	if integerID < ID_MIN_VALUE {
 		return EntityID(0), ErrIDTooSmall
 	}
-	if integerValue > ID_MAX_VALUE {
+	if integerID > ID_MAX_VALUE {
 		return EntityID(0), ErrIDTooBig
 	}
-	return EntityID(integerValue), nil
+	return EntityID(integerID), nil
 }
 
 func (id *EntityID) UnmarshalJSON(data []byte) error {

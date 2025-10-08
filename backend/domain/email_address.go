@@ -17,23 +17,32 @@ var (
 )
 
 func NewEmailAddress(rawValue any) (EmailAddress, error) {
-	var validEmailAddress *mail.Address
-	var err error
-
-	switch value := rawValue.(type) {
-	case string:
-		validEmailAddress, err = mail.ParseAddress(value)
-	case *string:
-		if value == nil {
-			return EmailAddress(""), nil
-		}
-		validEmailAddress, err = mail.ParseAddress(*value)
-	case nil:
-		return EmailAddress(""), nil
-	default:
-		return EmailAddress(""), ErrEmailMustBeString
+	stringEmailAddress, err := extractStringEmailAddress(rawValue)
+	if stringEmailAddress == "" || err != nil {
+		return EmailAddress(""), err
 	}
 
+	return createValidEmailAddress(stringEmailAddress)
+}
+
+func extractStringEmailAddress(rawValue any) (string, error) {
+	switch value := rawValue.(type) {
+	case string:
+		return value, nil
+	case *string:
+		if value == nil {
+			return "", nil
+		}
+		return *value, nil
+	case nil:
+		return "", nil
+	default:
+		return "", ErrEmailMustBeString
+	}
+}
+
+func createValidEmailAddress(stringEmailAddress string) (EmailAddress, error) {
+	validEmailAddress, err := mail.ParseAddress(stringEmailAddress)
 	if err != nil {
 		return EmailAddress(""), ErrInvalidEmailFormat
 	}

@@ -34,12 +34,12 @@ var (
 )
 
 func NewPhone(rawValue any) (Phone, error) {
-	stringValue, err := extractValidString(rawValue)
-	if stringValue == "" || err != nil {
+	stringNumber, err := extractStringNumber(rawValue)
+	if stringNumber == "" || err != nil {
 		return Phone{}, err
 	}
 
-	phoneNumber, err := extractValidNumber(stringValue)
+	phoneNumber, err := extractValidNumber(stringNumber)
 	if err != nil {
 		return Phone{}, err
 	}
@@ -47,7 +47,7 @@ func NewPhone(rawValue any) (Phone, error) {
 	return createValidPhone(phoneNumber)
 }
 
-func extractValidString(rawValue any) (string, error) {
+func extractStringNumber(rawValue any) (string, error) {
 	switch value := rawValue.(type) {
 	case string:
 		return value, nil

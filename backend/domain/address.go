@@ -15,26 +15,32 @@ var (
 )
 
 func NewAddress(rawValue any) (Address, error) {
-	var stringValue string
-
-	switch value := rawValue.(type) {
-	case string:
-		stringValue = value
-	case *string:
-		if value == nil {
-			return Address(""), nil
-		}
-		stringValue = *value
-	case nil:
-		return Address(""), nil
-	default:
-		return Address(""), ErrAddressMustBeString
+	stringAddress, err := extractStringAddress(rawValue)
+	if stringAddress == "" || err != nil {
+		return Address(""), err
 	}
 
-	if len(stringValue) > ADDRESS_MAX_LENGTH {
+	if len(stringAddress) > ADDRESS_MAX_LENGTH {
 		return Address(""), ErrAddressTooLong
 	}
-	return Address(stringValue), nil
+
+	return Address(stringAddress), nil
+}
+
+func extractStringAddress(rawValue any) (string, error) {
+	switch value := rawValue.(type) {
+	case string:
+		return value, nil
+	case *string:
+		if value == nil {
+			return "", nil
+		}
+		return *value, nil
+	case nil:
+		return "", nil
+	default:
+		return "", ErrAddressMustBeString
+	}
 }
 
 func (address Address) IsEmpty() bool {

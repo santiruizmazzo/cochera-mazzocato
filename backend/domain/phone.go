@@ -30,6 +30,11 @@ func NewPhone(rawValue any) (Phone, error) {
 		runes = []rune(value)
 	case nil:
 		return Phone{CountryCode: "", LineNumber: ""}, nil
+	case *string:
+		if value == nil {
+			return Phone{CountryCode: "", LineNumber: ""}, nil
+		}
+		runes = []rune(*value)
 	default:
 		return Phone{}, ErrPhoneMustBeString
 	}
@@ -86,6 +91,16 @@ func (phone *Phone) UnmarshalJSON(data []byte) error {
 }
 
 func (phone Phone) MarshalJSON() ([]byte, error) {
+	if phone.String() == "" {
+		return json.Marshal(nil)
+	}
 	stringFormat := fmt.Sprintf("+%s%s", phone.CountryCode, phone.LineNumber)
 	return json.Marshal(stringFormat)
+}
+
+func (phone Phone) String() string {
+	if phone.CountryCode == "" || phone.LineNumber == "" {
+		return ""
+	}
+	return fmt.Sprintf("+%s%s", phone.CountryCode, phone.LineNumber)
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"cochera/domain"
+	"encoding/json"
 )
 
 type TenantService struct {
@@ -29,12 +30,22 @@ func (service *TenantService) GetAllTenantsByLastName(lastName string) ([]*domai
 }
 
 func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, error) {
-	tenant, err := domain.NewTenantFromJSON(jsonTenant)
-	if err != nil {
+	var tenant domain.Tenant
+
+	if err := json.Unmarshal(jsonTenant, &tenant); err != nil {
 		return nil, err
 	}
 
-	dniAlreadyExists, err := service.repo.ExistsTenantWithDNI(tenant.DNI)
+	if err := tenant.Validate(); err != nil {
+		return nil, err
+	}
+
+	// tenant, err := domain.NewTenantFromJSON(jsonTenant)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	dniAlreadyExists, err := service.repo.ExistsTenantWithDNI(tenant.GetDNI())
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +54,7 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, e
 		return nil, domain.ErrDuplicateDNI
 	}
 
-	emailAlreadyExists, err := service.repo.ExistsTenantWithEmail(tenant.Email)
+	emailAlreadyExists, err := service.repo.ExistsTenantWithEmail(tenant.GetEmail())
 	if err != nil {
 		return nil, err
 	}
@@ -52,5 +63,5 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, e
 		return nil, domain.ErrDuplicateEmail
 	}
 
-	return service.repo.Save(tenant)
+	return service.repo.Save(&tenant)
 }

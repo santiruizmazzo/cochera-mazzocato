@@ -5,12 +5,15 @@ type TenantBuilder struct {
 }
 
 func NewTenantBuilder() *TenantBuilder {
+	phone, _ := NewPhone("+549815111526")
+
 	tenant := Tenant{
+		ID:         1,
 		DNI:        12345678,
 		Name:       "Huang",
 		LastName:   "Lee",
 		Address:    "22 Beer Heights St.",
-		Phone:      "+98151526",
+		Phone:      phone,
 		Email:      "huang@lee.com",
 		EntryMonth: NewMonthOfYear(1, 2025),
 	}
@@ -18,37 +21,37 @@ func NewTenantBuilder() *TenantBuilder {
 }
 
 func (builder *TenantBuilder) WithID(id int) *TenantBuilder {
-	builder.tenant.ID = uint32(id)
+	builder.tenant.ID = EntityID(id)
 	return builder
 }
 
 func (builder *TenantBuilder) WithDNI(dni int) *TenantBuilder {
-	builder.tenant.DNI = uint32(dni)
+	builder.tenant.DNI = DNI(dni)
 	return builder
 }
 
 func (builder *TenantBuilder) WithName(name string) *TenantBuilder {
-	builder.tenant.Name = name
+	builder.tenant.Name = Name(name)
 	return builder
 }
 
 func (builder *TenantBuilder) WithLastName(lastName string) *TenantBuilder {
-	builder.tenant.LastName = lastName
+	builder.tenant.LastName = Name(lastName)
 	return builder
 }
 
 func (builder *TenantBuilder) WithAddress(address string) *TenantBuilder {
-	builder.tenant.Address = address
+	builder.tenant.Address = Address(address)
 	return builder
 }
 
 func (builder *TenantBuilder) WithPhone(phone string) *TenantBuilder {
-	builder.tenant.Phone = phone
+	builder.tenant.Phone, _ = NewPhone(phone)
 	return builder
 }
 
 func (builder *TenantBuilder) WithEmail(email string) *TenantBuilder {
-	builder.tenant.Email = email
+	builder.tenant.Email = EmailAddress(email)
 	return builder
 }
 

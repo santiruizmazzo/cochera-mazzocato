@@ -23,7 +23,7 @@ func (mockRepo *mockTenantRepository) GetAllTenants() ([]*domain.Tenant, error) 
 func (mockRepo *mockTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
 	var list []*domain.Tenant
 	for _, tenant := range mockRepo.tenants {
-		if tenant.Name == name {
+		if tenant.HasName(name) {
 			list = append(list, tenant)
 		}
 	}
@@ -33,7 +33,7 @@ func (mockRepo *mockTenantRepository) GetAllTenantsByName(name string) ([]*domai
 func (mockRepo *mockTenantRepository) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
 	var list []*domain.Tenant
 	for _, tenant := range mockRepo.tenants {
-		if tenant.LastName == lastName {
+		if tenant.HasLastName(lastName) {
 			list = append(list, tenant)
 		}
 	}
@@ -54,7 +54,7 @@ func (mockRepo *mockTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenan
 
 func (mockRepo *mockTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {
 	for _, tenant := range mockRepo.tenants {
-		if tenant != nil && tenant.DNI == dni {
+		if tenant != nil && tenant.HasDNI(dni) {
 			return true, nil
 		}
 	}
@@ -63,7 +63,7 @@ func (mockRepo *mockTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, err
 
 func (mockRepo *mockTenantRepository) ExistsTenantWithEmail(email string) (bool, error) {
 	for _, tenant := range mockRepo.tenants {
-		if tenant != nil && tenant.Email == email {
+		if tenant != nil && tenant.HasEmail(email) {
 			return true, nil
 		}
 	}
@@ -123,8 +123,8 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 		t.Fatal("Tenant should not be created")
 	}
 
-	if err != domain.ErrDNIMustBeNumber {
-		t.Fatal("Error should be of type DNI must be a number")
+	if err != domain.ErrDNIMustBeANumber {
+		t.Fatal("Error should be of type DNI must be a number", err)
 	}
 }
 
@@ -188,7 +188,7 @@ func TestTenantService_GetAllTenantsByName_Successfully(t *testing.T) {
 		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
 	}
 
-	if tenants[0].Name != nameToFilter || tenants[1].Name != nameToFilter {
+	if !tenants[0].HasName(nameToFilter) || !tenants[1].HasName(nameToFilter) {
 		t.Fatal("Failed to get all tenants with same name")
 	}
 }
@@ -217,7 +217,7 @@ func TestTenantService_GetAllTenantsByLastName_Successfully(t *testing.T) {
 		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
 	}
 
-	if tenants[0].LastName != lastNameToFilter || tenants[1].LastName != lastNameToFilter {
+	if !tenants[0].HasLastName(lastNameToFilter) || !tenants[1].HasLastName(lastNameToFilter) {
 		t.Fatal("Failed to get all tenants with same last name")
 	}
 }

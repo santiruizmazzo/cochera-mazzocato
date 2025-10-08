@@ -23,6 +23,11 @@ func NewEmailAddress(rawValue any) (EmailAddress, error) {
 		validEmailAddress, err = mail.ParseAddress(value)
 	case nil:
 		return EmailAddress(""), nil
+	case *string:
+		if value == nil {
+			return EmailAddress(""), nil
+		}
+		validEmailAddress, err = mail.ParseAddress(*value)
 	default:
 		return EmailAddress(""), ErrEmailMustBeString
 	}
@@ -54,5 +59,8 @@ func (emailAddress *EmailAddress) UnmarshalJSON(data []byte) error {
 }
 
 func (emailAddress EmailAddress) MarshalJSON() ([]byte, error) {
+	if emailAddress == "" {
+		return json.Marshal(nil)
+	}
 	return json.Marshal(string(emailAddress))
 }

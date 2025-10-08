@@ -9,7 +9,7 @@ type Name string
 
 var (
 	ErrNameMustBeAString = errors.New("el nombre/apellido debe ser un string")
-	ErrNameTooLong       = errors.New("el nombre debe tener 50 caracteres como máximo")
+	ErrNameTooLong       = errors.New("el nombre/apellido debe tener 50 caracteres como máximo")
 )
 
 func NewName(rawValue any) (Name, error) {

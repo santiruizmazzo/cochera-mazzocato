@@ -239,7 +239,7 @@ func TestPostgresTenantRepository_GetAllTenantsByName_Successfully_Integration(t
 		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
 	}
 
-	if tenants[0].Name != nameToFilter || tenants[1].Name != nameToFilter {
+	if !tenants[0].HasName(nameToFilter) || !tenants[1].HasName(nameToFilter) {
 		t.Fatal("Names of filtered tenants are incorrect")
 	}
 }
@@ -280,8 +280,8 @@ func TestPostgresTenantRepository_GetAllTenantsByName_MatchPartially_Successfull
 		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
 	}
 
-	utils.AssertResponseStringContains(tenants[0].Name, nameToFilter, t)
-	utils.AssertResponseStringContains(tenants[1].Name, nameToFilter, t)
+	utils.AssertResponseStringContains(tenants[0].GetName(), nameToFilter, t)
+	utils.AssertResponseStringContains(tenants[1].GetName(), nameToFilter, t)
 }
 
 func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integration(t *testing.T) {
@@ -320,6 +320,6 @@ func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integrati
 		t.Fatal("Expected tenants list of size 2, got ", len(tenants))
 	}
 
-	utils.AssertResponseStringContains(tenants[0].LastName, lastNameToFilter, t)
-	utils.AssertResponseStringContains(tenants[1].LastName, lastNameToFilter, t)
+	utils.AssertResponseStringContains(tenants[0].GetLastName(), lastNameToFilter, t)
+	utils.AssertResponseStringContains(tenants[1].GetLastName(), lastNameToFilter, t)
 }

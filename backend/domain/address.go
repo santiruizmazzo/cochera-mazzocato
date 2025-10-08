@@ -21,6 +21,16 @@ func NewAddress(rawValue any) (Address, error) {
 		return Address(value), nil
 	case nil:
 		return Address(""), nil
+	case *string:
+		if value == nil {
+			return Address(""), nil
+		}
+
+		realValue := *value
+		if len(realValue) > 100 {
+			return Address(""), ErrAddressTooLong
+		}
+		return Address(realValue), nil
 	}
 	return Address(""), ErrAddressMustBeString
 }
@@ -41,5 +51,8 @@ func (address *Address) UnmarshalJSON(data []byte) error {
 }
 
 func (address Address) MarshalJSON() ([]byte, error) {
+	if address == "" {
+		return json.Marshal(nil)
+	}
 	return json.Marshal(string(address))
 }

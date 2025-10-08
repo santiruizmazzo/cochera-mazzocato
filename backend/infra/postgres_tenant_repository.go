@@ -25,33 +25,43 @@ func (repo *PostgresTenantRepository) GetTenantByID(id int) (*domain.Tenant, err
 }
 
 func createTenantFromRow(row pgx.Row) (*domain.Tenant, error) {
-	var tenant domain.Tenant
-	var entryMonth string
-	var address, phone, email *string
+	// var tenant domain.Tenant
+	// var entryMonth string
+	// var address, phone, email *string
 
-	err := row.Scan(&tenant.ID, &tenant.DNI, &tenant.Name, &tenant.LastName, &address, &phone, &email, &entryMonth)
+	var (
+		id         int
+		dni        int
+		name       string
+		lastName   string
+		address    *string
+		phone      *string
+		email      *string
+		entryMonth string
+	)
+
+	err := row.Scan(&id, &dni, &name, &lastName, &address, &phone, &email, &entryMonth)
 	if err != nil {
 		return nil, domain.ErrTenantNotFound
 	}
 
-	tenant.Address = pointerToString(address)
-	tenant.Phone = pointerToString(phone)
-	tenant.Email = pointerToString(email)
+	// var newAddress = pointerToString(address)
+	// var newPhone = pointerToString(phone)
+	// var newEmail = pointerToString(email)
 
-	tenant.EntryMonth, err = domain.NewMonthOfYearFromString(entryMonth)
-	if err != nil {
-		return nil, err
-	}
-
-	return &tenant, nil
+	// tenant.EntryMonth, err = domain.NewMonthOfYearFromString(entryMonth)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	return domain.NewTenant(id, dni, name, lastName, address, phone, email, entryMonth)
 }
 
-func pointerToString(s *string) string {
-	if s == nil {
-		return ""
-	}
-	return *s
-}
+// func pointerToString(s *string) string {
+// 	if s == nil {
+// 		return ""
+// 	}
+// 	return *s
+// }
 
 func (repo *PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants;`
@@ -142,30 +152,34 @@ func (repo *PostgresTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenan
 	`
 
 	var storableAddress any
-	if tenant.Address == "" {
+	if tenant.GetAddress() == "" {
 		storableAddress = nil
 	} else {
-		storableAddress = tenant.Address
+		storableAddress = tenant.GetAddress()
 	}
 
 	var storablePhone any
-	if tenant.Phone == "" {
+	if tenant.GetPhone() == "" {
 		storablePhone = nil
 	} else {
-		storablePhone = tenant.Phone
+		storablePhone = tenant.GetPhone()
 	}
 
 	var storableEmail any
-	if tenant.Email == "" {
+	if tenant.GetEmail() == "" {
 		storableEmail = nil
 	} else {
-		storableEmail = tenant.Email
+		storableEmail = tenant.GetEmail()
 	}
 
-	row := repo.db.QueryRow(context.Background(), query, tenant.DNI, tenant.Name, tenant.LastName, storableAddress, storablePhone, storableEmail, tenant.EntryMonth.String())
+	row := repo.db.QueryRow(context.Background(), query, tenant.GetDNI(), tenant.GetName(), tenant.GetLastName(), storableAddress, storablePhone, storableEmail, tenant.GetEntryMonth())
 
-	if err := row.Scan(&tenant.ID); err != nil {
+	var id int
+
+	if err := row.Scan(&id); err != nil {
 		return nil, err
 	}
+
+	tenant.SetID(id)
 	return tenant, nil
 }

@@ -8,6 +8,8 @@ import (
 
 type EmailAddress string
 
+const EMAIL_MAX_LENGTH int = 100
+
 var (
 	ErrInvalidEmailFormat = errors.New("el email debe seguir el formato estándar")
 	ErrEmailTooLong       = errors.New("el email debe tener 100 caracteres como máximo")
@@ -21,13 +23,13 @@ func NewEmailAddress(rawValue any) (EmailAddress, error) {
 	switch value := rawValue.(type) {
 	case string:
 		validEmailAddress, err = mail.ParseAddress(value)
-	case nil:
-		return EmailAddress(""), nil
 	case *string:
 		if value == nil {
 			return EmailAddress(""), nil
 		}
 		validEmailAddress, err = mail.ParseAddress(*value)
+	case nil:
+		return EmailAddress(""), nil
 	default:
 		return EmailAddress(""), ErrEmailMustBeString
 	}
@@ -36,7 +38,7 @@ func NewEmailAddress(rawValue any) (EmailAddress, error) {
 		return EmailAddress(""), ErrInvalidEmailFormat
 	}
 
-	if len(validEmailAddress.Address) > 100 {
+	if len(validEmailAddress.Address) > EMAIL_MAX_LENGTH {
 		return EmailAddress(""), ErrEmailTooLong
 	}
 

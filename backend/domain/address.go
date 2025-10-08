@@ -7,7 +7,7 @@ import (
 
 type Address string
 
-const MAX_LENGTH int = 100
+const ADDRESS_MAX_LENGTH int = 100
 
 var (
 	ErrAddressMustBeString = errors.New("el domicilio debe ser un string")
@@ -31,7 +31,7 @@ func NewAddress(rawValue any) (Address, error) {
 		return Address(""), ErrAddressMustBeString
 	}
 
-	if len(stringValue) > MAX_LENGTH {
+	if len(stringValue) > ADDRESS_MAX_LENGTH {
 		return Address(""), ErrAddressTooLong
 	}
 	return Address(stringValue), nil

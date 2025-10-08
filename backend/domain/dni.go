@@ -8,8 +8,8 @@ import (
 
 type DNI uint32
 
-const MIN_VALUE int = 1
-const MAX_VALUE int = math.MaxUint32
+const DNI_MIN_VALUE int = 1
+const DNI_MAX_VALUE int = math.MaxUint32
 
 var (
 	ErrDNINotInValidRange = errors.New("el DNI debe ser un entero positivo")
@@ -28,7 +28,7 @@ func NewDNI(rawValue any) (DNI, error) {
 		return DNI(0), ErrDNIMustBeANumber
 	}
 
-	if integerValue < MIN_VALUE || integerValue > MAX_VALUE {
+	if integerValue < DNI_MIN_VALUE || integerValue > DNI_MAX_VALUE {
 		return DNI(0), ErrDNINotInValidRange
 	}
 

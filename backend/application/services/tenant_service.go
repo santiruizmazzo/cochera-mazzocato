@@ -3,33 +3,39 @@ package services
 import (
 	"cochera/domain"
 	"encoding/json"
+	"errors"
 )
 
 type TenantService struct {
 	repo domain.TenantRepository
 }
 
+var (
+	ErrDuplicateDNI   = errors.New("el DNI ya existe")
+	ErrDuplicateEmail = errors.New("el email ya está en uso")
+)
+
 func NewTenantService(repo domain.TenantRepository) *TenantService {
 	return &TenantService{repo: repo}
 }
 
-func (service *TenantService) GetTenantByID(id int) (*domain.Tenant, error) {
+func (service TenantService) GetTenantByID(id int) (*domain.Tenant, error) {
 	return service.repo.GetTenantByID(id)
 }
 
-func (service *TenantService) GetAllTenants() ([]*domain.Tenant, error) {
+func (service TenantService) GetAllTenants() ([]*domain.Tenant, error) {
 	return service.repo.GetAllTenants()
 }
 
-func (service *TenantService) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
+func (service TenantService) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
 	return service.repo.GetAllTenantsByName(name)
 }
 
-func (service *TenantService) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
+func (service TenantService) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
 	return service.repo.GetAllTenantsByLastName(lastName)
 }
 
-func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, error) {
+func (service TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, error) {
 	var tenant domain.Tenant
 
 	if err := json.Unmarshal(jsonTenant, &tenant); err != nil {
@@ -46,7 +52,7 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, e
 	}
 
 	if dniAlreadyExists {
-		return nil, domain.ErrDuplicateDNI
+		return nil, ErrDuplicateDNI
 	}
 
 	emailAlreadyExists, err := service.repo.ExistsTenantWithEmail(tenant.Email.String())
@@ -55,7 +61,7 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, e
 	}
 
 	if emailAlreadyExists {
-		return nil, domain.ErrDuplicateEmail
+		return nil, ErrDuplicateEmail
 	}
 
 	return service.repo.Save(&tenant)

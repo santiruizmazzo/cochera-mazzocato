@@ -103,7 +103,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 		t.Fatal("Tenant should not be created")
 	}
 
-	if err != domain.ErrDuplicateDNI {
+	if err != services.ErrDuplicateDNI {
 		t.Fatal("Error should be of type duplicate DNI")
 	}
 }

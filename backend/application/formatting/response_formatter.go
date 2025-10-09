@@ -2,6 +2,7 @@ package formatting
 
 import (
 	"cochera/application/dtos"
+	"cochera/application/services"
 	"cochera/domain"
 	"cochera/infra"
 	"encoding/json"
@@ -42,7 +43,7 @@ func (formatter ResponseFormatter) RespondCouldNotCloseRequestBody() {
 func (formatter ResponseFormatter) RespondCouldNotCreateTenant(creationError error) {
 	statusCode := http.StatusBadRequest
 
-	if errors.Is(creationError, domain.ErrDuplicateDNI) || errors.Is(creationError, domain.ErrDuplicateEmail) {
+	if errors.Is(creationError, services.ErrDuplicateDNI) || errors.Is(creationError, services.ErrDuplicateEmail) {
 		statusCode = http.StatusConflict
 	}
 

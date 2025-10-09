@@ -8,71 +8,8 @@ import (
 	"testing"
 )
 
-type mockTenantRepository struct {
-	tenants map[int]*domain.Tenant
-	err     error
-}
-
-func (mockRepo *mockTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
-	var list []*domain.Tenant
-	for _, tenant := range mockRepo.tenants {
-		list = append(list, tenant)
-	}
-	return list, nil
-}
-
-func (mockRepo *mockTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
-	var list []*domain.Tenant
-	for _, tenant := range mockRepo.tenants {
-		if tenant.HasName(name) {
-			list = append(list, tenant)
-		}
-	}
-	return list, nil
-}
-
-func (mockRepo *mockTenantRepository) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
-	var list []*domain.Tenant
-	for _, tenant := range mockRepo.tenants {
-		if tenant.HasLastName(lastName) {
-			list = append(list, tenant)
-		}
-	}
-	return list, nil
-}
-
-func (mockRepo *mockTenantRepository) GetTenantByID(id int) (*domain.Tenant, error) {
-	return nil, infra.ErrTenantNotFound
-}
-
-func (mockRepo *mockTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenant, error) {
-	if mockRepo.err != nil {
-		return nil, mockRepo.err
-	}
-	tenant.ID = 1
-	return tenant, nil
-}
-
-func (mockRepo *mockTenantRepository) ExistsTenantWithDNI(dni uint32) (bool, error) {
-	for _, tenant := range mockRepo.tenants {
-		if tenant != nil && tenant.HasDNI(dni) {
-			return true, nil
-		}
-	}
-	return false, nil
-}
-
-func (mockRepo *mockTenantRepository) ExistsTenantWithEmail(email string) (bool, error) {
-	for _, tenant := range mockRepo.tenants {
-		if tenant != nil && tenant.HasEmail(email) {
-			return true, nil
-		}
-	}
-	return false, nil
-}
-
 func TestTenantService_CreateTenant_Successfully(t *testing.T) {
-	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{}}
+	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*domain.Tenant{}}
 
 	expectedTenant := domain.NewTenantBuilder().WithID(1).Build()
 	jsonTenant, _ := json.Marshal(expectedTenant)
@@ -91,7 +28,7 @@ func TestTenantService_CreateTenant_Successfully(t *testing.T) {
 
 func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 	existingTenant := domain.NewTenantBuilder().Build()
-	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{1: existingTenant}}
+	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*domain.Tenant{1: existingTenant}}
 
 	newTenant := domain.NewTenantBuilder().WithEmail("another@email.com").Build()
 	jsonTenant, _ := json.Marshal(newTenant)
@@ -109,7 +46,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 }
 
 func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
-	service := services.NewTenantService(&mockTenantRepository{})
+	service := services.NewTenantService(&infra.InMemoryTenantRepository{})
 
 	jsonTenant, _ := json.Marshal(map[string]any{
 		"dni":         "hola",
@@ -130,7 +67,7 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 }
 
 func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
-	service := services.NewTenantService(&mockTenantRepository{})
+	service := services.NewTenantService(&infra.InMemoryTenantRepository{})
 
 	tenant, err := service.GetTenantByID(9)
 
@@ -147,7 +84,7 @@ func TestTenantService_GetAllTenants_Successfully(t *testing.T) {
 	expectedTenant1 := domain.NewTenantBuilder().WithID(1).WithDNI(43295798).WithEmail("1@2.com").Build()
 	expectedTenant2 := domain.NewTenantBuilder().WithID(2).WithDNI(41630284).WithEmail("3@4.com").Build()
 
-	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{
+	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*domain.Tenant{
 		1: expectedTenant1,
 		2: expectedTenant2,
 	}}
@@ -171,7 +108,7 @@ func TestTenantService_GetAllTenantsByName_Successfully(t *testing.T) {
 	expectedTenant1 := domain.NewTenantBuilder().WithName(nameToFilter).Build()
 	expectedTenant2 := domain.NewTenantBuilder().WithName("Giuseppe").Build()
 	expectedTenant3 := domain.NewTenantBuilder().WithName(nameToFilter).Build()
-	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{
+	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*domain.Tenant{
 		1: expectedTenant1,
 		2: expectedTenant2,
 		3: expectedTenant3,
@@ -200,7 +137,7 @@ func TestTenantService_GetAllTenantsByLastName_Successfully(t *testing.T) {
 	expectedTenant1 := domain.NewTenantBuilder().WithLastName(lastNameToFilter).Build()
 	expectedTenant2 := domain.NewTenantBuilder().WithLastName("Cipriani").Build()
 	expectedTenant3 := domain.NewTenantBuilder().WithLastName(lastNameToFilter).Build()
-	mockRepo := &mockTenantRepository{tenants: map[int]*domain.Tenant{
+	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*domain.Tenant{
 		1: expectedTenant1,
 		2: expectedTenant2,
 		3: expectedTenant3,

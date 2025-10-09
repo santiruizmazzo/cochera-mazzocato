@@ -75,3 +75,11 @@ func (emailAddress EmailAddress) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(string(emailAddress))
 }
+
+func (emailAddress EmailAddress) IsEmpty() bool {
+	return emailAddress == ""
+}
+
+func (emailAddress EmailAddress) String() string {
+	return string(emailAddress)
+}

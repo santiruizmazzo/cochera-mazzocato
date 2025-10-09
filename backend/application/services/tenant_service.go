@@ -49,7 +49,7 @@ func (service *TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, e
 		return nil, domain.ErrDuplicateDNI
 	}
 
-	emailAlreadyExists, err := service.repo.ExistsTenantWithEmail(tenant.GetEmail())
+	emailAlreadyExists, err := service.repo.ExistsTenantWithEmail(tenant.Email.String())
 	if err != nil {
 		return nil, err
 	}

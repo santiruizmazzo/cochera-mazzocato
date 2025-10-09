@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/application/services"
 	"cochera/domain"
+	"cochera/infra"
 	"encoding/json"
 	"testing"
 )
@@ -41,7 +42,7 @@ func (mockRepo *mockTenantRepository) GetAllTenantsByLastName(lastName string) (
 }
 
 func (mockRepo *mockTenantRepository) GetTenantByID(id int) (*domain.Tenant, error) {
-	return nil, domain.ErrTenantNotFound
+	return nil, infra.ErrTenantNotFound
 }
 
 func (mockRepo *mockTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenant, error) {
@@ -137,7 +138,7 @@ func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
 		t.Fatal("Tenant should not be found")
 	}
 
-	if err != domain.ErrTenantNotFound {
+	if err != infra.ErrTenantNotFound {
 		t.Fatal("Error should be of type tenant not found")
 	}
 }

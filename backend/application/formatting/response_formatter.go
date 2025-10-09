@@ -3,6 +3,7 @@ package formatting
 import (
 	"cochera/application/dtos"
 	"cochera/domain"
+	"cochera/infra"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -73,7 +74,7 @@ func (formatter *ResponseFormatter) RespondTenantIDMustBeAnInteger() {
 func (formatter *ResponseFormatter) RespondCouldNotGetTenant(retrievingError error) {
 	statusCode := http.StatusInternalServerError
 
-	if errors.Is(retrievingError, domain.ErrTenantNotFound) {
+	if errors.Is(retrievingError, infra.ErrTenantNotFound) {
 		statusCode = http.StatusNotFound
 	}
 

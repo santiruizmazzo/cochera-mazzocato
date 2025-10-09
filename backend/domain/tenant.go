@@ -41,15 +41,24 @@ func (tenant Tenant) HasLastName(lastName string) bool {
 	return string(tenant.LastName) == lastName
 }
 
-func (tenant Tenant) GetAddress() string {
+func (tenant Tenant) GetAddress() any {
+	if tenant.Address.IsEmpty() {
+		return nil
+	}
 	return string(tenant.Address)
 }
 
-func (tenant Tenant) GetPhone() string {
+func (tenant Tenant) GetPhone() any {
+	if tenant.Phone.IsEmpty() {
+		return nil
+	}
 	return tenant.Phone.String()
 }
 
-func (tenant Tenant) GetEmail() string {
+func (tenant Tenant) GetEmail() any {
+	if tenant.Email.IsEmpty() {
+		return nil
+	}
 	return string(tenant.Email)
 }
 

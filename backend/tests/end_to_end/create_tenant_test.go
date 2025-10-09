@@ -101,7 +101,7 @@ func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un número", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un número entero", t)
 }
 
 func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {

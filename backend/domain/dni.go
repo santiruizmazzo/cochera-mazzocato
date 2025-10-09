@@ -13,7 +13,7 @@ const DNI_MAX_VALUE int = math.MaxUint32
 
 var (
 	ErrDNINotInValidRange = errors.New("el DNI debe ser un entero positivo")
-	ErrDNIMustBeANumber   = errors.New("el DNI debe ser un número")
+	ErrDNIMustBeAnInteger = errors.New("el DNI debe ser un número entero")
 )
 
 func NewDNI(rawValue any) (DNI, error) {
@@ -34,9 +34,12 @@ func extractIntegerDNI(rawValue any) (int, error) {
 	case int:
 		return value, nil
 	case float64:
+		if value != math.Floor(value) {
+			return 0, ErrDNIMustBeAnInteger
+		}
 		return int(value), nil
 	default:
-		return 0, ErrDNIMustBeANumber
+		return 0, ErrDNIMustBeAnInteger
 	}
 }
 

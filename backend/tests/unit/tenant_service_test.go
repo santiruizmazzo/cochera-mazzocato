@@ -61,7 +61,7 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 		t.Fatal("Tenant should not be created")
 	}
 
-	if err != domain.ErrDNIMustBeANumber {
+	if err != domain.ErrDNIMustBeAnInteger {
 		t.Fatal("Error should be of type DNI must be a number", err)
 	}
 }

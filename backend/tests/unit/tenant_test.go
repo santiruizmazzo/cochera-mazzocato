@@ -37,7 +37,7 @@ func TestNewTenantFromJSONReturnsCustomErrorWhenGivenNonNumericDNI(t *testing.T)
 		t.Fatal("Tenant creation from json should fail when DNI is not a number")
 	}
 
-	if !errors.Is(err, domain.ErrDNIMustBeANumber) {
-		t.Fatal("Returned error should be of type ErrDNIMustBeANumber")
+	if !errors.Is(err, domain.ErrDNIMustBeAnInteger) {
+		t.Fatal("Returned error should be of type ErrDNIMustBeAnInteger")
 	}
 }

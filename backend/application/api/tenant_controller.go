@@ -11,7 +11,7 @@ import (
 
 const TenantsBaseRoute string = "/tenants"
 
-func (api *API) tenantHandler(w http.ResponseWriter, r *http.Request) {
+func (api API) tenantHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		api.getTenants(w, r)
@@ -23,7 +23,7 @@ func (api *API) tenantHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api *API) getTenants(w http.ResponseWriter, r *http.Request) {
+func (api API) getTenants(w http.ResponseWriter, r *http.Request) {
 	formatter := formatting.NewResponseFormatter(w)
 
 	queryParams := r.URL.Query()
@@ -52,7 +52,7 @@ func (api *API) getTenants(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
+func (api API) createTenant(w http.ResponseWriter, r *http.Request) {
 	formatter := formatting.NewResponseFormatter(w)
 
 	requestBody, err := io.ReadAll(r.Body)
@@ -79,7 +79,7 @@ func (api *API) createTenant(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api *API) tenantByIDHandler(w http.ResponseWriter, r *http.Request) {
+func (api API) tenantByIDHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		api.getTenantByID(w, r)
@@ -89,7 +89,7 @@ func (api *API) tenantByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api *API) getTenantByID(w http.ResponseWriter, r *http.Request) {
+func (api API) getTenantByID(w http.ResponseWriter, r *http.Request) {
 	formatter := formatting.NewResponseFormatter(w)
 
 	path := strings.TrimPrefix(r.URL.Path, TenantsBaseRoute+"/")

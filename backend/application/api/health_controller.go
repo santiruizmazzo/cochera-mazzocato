@@ -8,7 +8,7 @@ import (
 
 const HealthRoute string = "/health"
 
-func (api *API) getHealthStatus(w http.ResponseWriter, r *http.Request) {
+func (api API) getHealthStatus(w http.ResponseWriter, r *http.Request) {
 	formatter := formatting.NewResponseFormatter(w)
 
 	err := formatter.RespondCurrentHealthStatus(application.CurrentVersion())

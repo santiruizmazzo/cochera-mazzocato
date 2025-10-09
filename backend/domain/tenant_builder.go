@@ -1,5 +1,7 @@
 package domain
 
+import vo "cochera/domain/value_objects"
+
 type TenantBuilder struct {
 	tenant *Tenant
 }
@@ -19,7 +21,7 @@ func NewTenantBuilder() *TenantBuilder {
 }
 
 func (builder *TenantBuilder) WithID(id int) *TenantBuilder {
-	builder.tenant.ID = EntityID(id)
+	builder.tenant.ID = vo.EntityID(id)
 	return builder
 }
 
@@ -39,7 +41,7 @@ func (builder *TenantBuilder) WithLastName(lastName string) *TenantBuilder {
 }
 
 func (builder *TenantBuilder) WithAddress(address string) *TenantBuilder {
-	builder.tenant.Address = Address(address)
+	builder.tenant.Address = vo.Address(address)
 	return builder
 }
 

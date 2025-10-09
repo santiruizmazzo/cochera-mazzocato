@@ -1,20 +1,23 @@
 package domain
 
-import "errors"
+import (
+	vo "cochera/domain/value_objects"
+	"errors"
+)
 
 type Tenant struct {
-	ID         EntityID     `json:"id"`
+	ID         vo.EntityID  `json:"id"`
 	DNI        DNI          `json:"dni"`
 	Name       Name         `json:"name"`
 	LastName   Name         `json:"last_name"`
-	Address    Address      `json:"address"`
+	Address    vo.Address   `json:"address"`
 	Phone      Phone        `json:"phone"`
 	Email      EmailAddress `json:"email"`
 	EntryMonth MonthOfYear  `json:"entry_month"`
 }
 
 func (tenant *Tenant) SetID(id int) {
-	tenant.ID = EntityID(id)
+	tenant.ID = vo.EntityID(id)
 }
 
 func (tenant Tenant) GetDNI() uint32 {
@@ -74,7 +77,7 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 	var tenant Tenant
 	var err error
 
-	if tenant.ID, err = NewEntityID(id); err != nil {
+	if tenant.ID, err = vo.NewEntityID(id); err != nil {
 		return nil, err
 	}
 
@@ -90,7 +93,7 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 		return nil, err
 	}
 
-	if tenant.Address, err = NewAddress(address); err != nil {
+	if tenant.Address, err = vo.NewAddress(address); err != nil {
 		return nil, err
 	}
 

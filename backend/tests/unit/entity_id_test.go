@@ -1,7 +1,7 @@
 package unit
 
 import (
-	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"errors"
 	"math"
 	"reflect"
@@ -9,7 +9,7 @@ import (
 )
 
 func TestCreateValidEntityID(t *testing.T) {
-	id, err := domain.NewEntityID(745)
+	id, err := vo.NewEntityID(745)
 
 	if err != nil {
 		t.Fatal("Entity ID no debe devolver error cuando es un número válido")
@@ -21,31 +21,31 @@ func TestCreateValidEntityID(t *testing.T) {
 }
 
 func TestFailToCreateEntityIDFromNonNumericType(t *testing.T) {
-	_, err := domain.NewEntityID("You shall not pass!")
+	_, err := vo.NewEntityID("You shall not pass!")
 
-	if err == nil || !errors.Is(err, domain.ErrIDMustBeAnInteger) {
+	if err == nil || !errors.Is(err, vo.ErrIDMustBeAnInteger) {
 		t.Fatal("Entity ID debe devolver error cuando no es un número entero")
 	}
 }
 
 func TestFailToCreateEntityIDFromTooSmallValue(t *testing.T) {
-	_, err := domain.NewEntityID(0)
+	_, err := vo.NewEntityID(0)
 
-	if err == nil || !errors.Is(err, domain.ErrIDTooSmall) {
+	if err == nil || !errors.Is(err, vo.ErrIDTooSmall) {
 		t.Fatal("Entity ID debe devolver error cuando es menor a 1")
 	}
 }
 
 func TestFailToCreateEntityIDFromTooBigValue(t *testing.T) {
-	_, err := domain.NewEntityID(math.MaxUint32 + 10)
+	_, err := vo.NewEntityID(math.MaxUint32 + 10)
 
-	if err == nil || !errors.Is(err, domain.ErrIDTooBig) {
+	if err == nil || !errors.Is(err, vo.ErrIDTooBig) {
 		t.Fatal("Entity ID debe devolver error cuando mayor al limite del tipo de dato")
 	}
 }
 
 func TestCreateValidEntityIDFromJSON(t *testing.T) {
-	id := domain.EntityID(0)
+	id := vo.EntityID(0)
 	err := id.UnmarshalJSON([]byte("1024"))
 
 	if err != nil {
@@ -58,16 +58,16 @@ func TestCreateValidEntityIDFromJSON(t *testing.T) {
 }
 
 func TestFailToCreateEntityIDFromJSON(t *testing.T) {
-	id := domain.EntityID(0)
+	id := vo.EntityID(0)
 	err := id.UnmarshalJSON([]byte(`"maiame"`))
 
-	if err == nil || !errors.Is(err, domain.ErrIDMustBeAnInteger) {
+	if err == nil || !errors.Is(err, vo.ErrIDMustBeAnInteger) {
 		t.Fatal("Entity ID debe devolver error cuando no se decodifica un número válido desde json")
 	}
 }
 
 func TestSuccessfullyEncodeEntityIDIntoJSON(t *testing.T) {
-	id, _ := domain.NewEntityID(6)
+	id, _ := vo.NewEntityID(6)
 	expectedJson := []byte("6")
 
 	json, err := id.MarshalJSON()

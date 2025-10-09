@@ -1,9 +1,12 @@
 package dtos
 
-import "cochera/domain"
+import (
+	"cochera/domain"
+	vo "cochera/domain/value_objects"
+)
 
 type TenantListDTO struct {
-	ID         domain.EntityID    `json:"id"`
+	ID         vo.EntityID        `json:"id"`
 	Name       domain.Name        `json:"name"`
 	LastName   domain.Name        `json:"last_name"`
 	EntryMonth domain.MonthOfYear `json:"entry_month"`

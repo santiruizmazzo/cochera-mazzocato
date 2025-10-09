@@ -1,13 +1,13 @@
 package unit
 
 import (
-	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"reflect"
 	"testing"
 )
 
 func TestCreateValidAddress(t *testing.T) {
-	_, err := domain.NewAddress("Roseti 745, Chacarita, CABA")
+	_, err := vo.NewAddress("Roseti 745, Chacarita, CABA")
 
 	if err != nil {
 		t.Fatalf("Address no debe devolver error cuando es un string válido")
@@ -15,7 +15,7 @@ func TestCreateValidAddress(t *testing.T) {
 }
 
 func TestCreateValidAddressFromNilValue(t *testing.T) {
-	_, err := domain.NewAddress(nil)
+	_, err := vo.NewAddress(nil)
 
 	if err != nil {
 		t.Fatalf("Address no debe devolver error cuando es un string válido")
@@ -23,7 +23,7 @@ func TestCreateValidAddressFromNilValue(t *testing.T) {
 }
 
 func TestFailToCreateAddressFromNonStringType(t *testing.T) {
-	_, err := domain.NewAddress([]byte("blabla"))
+	_, err := vo.NewAddress([]byte("blabla"))
 
 	if err == nil {
 		t.Fatalf("Address debe devolver error cuando no es un string")
@@ -31,7 +31,7 @@ func TestFailToCreateAddressFromNonStringType(t *testing.T) {
 }
 
 func TestFailToCreateAddressFromStringTooLong(t *testing.T) {
-	_, err := domain.NewAddress("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+	_, err := vo.NewAddress("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
 
 	if err == nil {
 		t.Fatalf("Address debe devolver error cuando es un string demasiado largo")
@@ -39,7 +39,7 @@ func TestFailToCreateAddressFromStringTooLong(t *testing.T) {
 }
 
 func TestCreateValidAddressFromJSON(t *testing.T) {
-	address := domain.Address("")
+	address := vo.Address("")
 	err := address.UnmarshalJSON([]byte(`"742 Evergreen Terrace, Springfield"`))
 
 	if err != nil {
@@ -52,7 +52,7 @@ func TestCreateValidAddressFromJSON(t *testing.T) {
 }
 
 func TestFailToCreateAddressFromJSON(t *testing.T) {
-	address := domain.Address("")
+	address := vo.Address("")
 	err := address.UnmarshalJSON([]byte("130501"))
 
 	if err == nil {
@@ -65,7 +65,7 @@ func TestFailToCreateAddressFromJSON(t *testing.T) {
 }
 
 func TestSuccessfullyEncodeAddressIntoJSON(t *testing.T) {
-	address, _ := domain.NewAddress("Av. Paseo Colón 850")
+	address, _ := vo.NewAddress("Av. Paseo Colón 850")
 	expectedJson := []byte(`"Av. Paseo Colón 850"`)
 
 	json, err := address.MarshalJSON()

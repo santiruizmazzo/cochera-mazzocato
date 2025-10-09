@@ -311,9 +311,9 @@ func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integrati
 	}
 
 	lastNameToFilter := "Lee"
-	tenants, err := repo.GetAllTenantsByLastName(lastNameToFilter)
+	tenants, err := repo.GetAllWithLastName(lastNameToFilter)
 	if err != nil {
-		t.Fatal("GetAllTenantsByLastName shouldn't fail when there exists tenants with last name 'Lee': ", err)
+		t.Fatal("GetAllWithLastName shouldn't fail when there exists tenants with last name 'Lee': ", err)
 	}
 
 	if len(tenants) != 2 {

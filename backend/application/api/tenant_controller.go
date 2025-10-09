@@ -34,7 +34,7 @@ func (api API) getTenants(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	if lastName != "" {
-		tenants, err = api.tenantService.GetAllTenantsByLastName(lastName)
+		tenants, err = api.tenantService.GetAllWithLastName(lastName)
 	} else if name != "" {
 		tenants, err = api.tenantService.GetAllWithName(name)
 	} else {

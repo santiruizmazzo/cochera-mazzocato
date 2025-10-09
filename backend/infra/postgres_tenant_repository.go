@@ -70,7 +70,7 @@ func (repo PostgresTenantRepository) GetAllWithName(name string) ([]*ent.Tenant,
 	return repo.createListOfTenantsFromRows(rows)
 }
 
-func (repo PostgresTenantRepository) GetAllTenantsByLastName(lastName string) ([]*ent.Tenant, error) {
+func (repo PostgresTenantRepository) GetAllWithLastName(lastName string) ([]*ent.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE last_name ILIKE $1;`
 
 	wildcardString := "%" + lastName + "%"

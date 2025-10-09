@@ -32,8 +32,8 @@ func (service TenantService) GetAllWithName(name string) ([]*ent.Tenant, error) 
 	return service.repo.GetAllWithName(name)
 }
 
-func (service TenantService) GetAllTenantsByLastName(lastName string) ([]*ent.Tenant, error) {
-	return service.repo.GetAllTenantsByLastName(lastName)
+func (service TenantService) GetAllWithLastName(lastName string) ([]*ent.Tenant, error) {
+	return service.repo.GetAllWithLastName(lastName)
 }
 
 func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error) {

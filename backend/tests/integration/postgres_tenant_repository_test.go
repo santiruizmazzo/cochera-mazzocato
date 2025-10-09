@@ -230,9 +230,9 @@ func TestPostgresTenantRepository_GetAllTenantsByName_Successfully_Integration(t
 		t.Fatal(err)
 	}
 
-	tenants, err := repo.GetAllTenantsByName(nameToFilter)
+	tenants, err := repo.GetAllWithName(nameToFilter)
 	if err != nil {
-		t.Fatal("GetAllTenantsByName shouldn't fail when there exists tenants with that name: ", err)
+		t.Fatal("GetAllWithName shouldn't fail when there exists tenants with that name: ", err)
 	}
 
 	if len(tenants) != 2 {
@@ -271,9 +271,9 @@ func TestPostgresTenantRepository_GetAllTenantsByName_MatchPartially_Successfull
 	}
 
 	nameToFilter := "Mar"
-	tenants, err := repo.GetAllTenantsByName(nameToFilter)
+	tenants, err := repo.GetAllWithName(nameToFilter)
 	if err != nil {
-		t.Fatal("GetAllTenantsByName shouldn't fail when there exists tenants with a name that matches 'Mar': ", err)
+		t.Fatal("GetAllWithName shouldn't fail when there exists tenants with a name that matches 'Mar': ", err)
 	}
 
 	if len(tenants) != 2 {

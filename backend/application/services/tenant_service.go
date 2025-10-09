@@ -28,8 +28,8 @@ func (service TenantService) GetAll() ([]*ent.Tenant, error) {
 	return service.repo.GetAll()
 }
 
-func (service TenantService) GetAllTenantsByName(name string) ([]*ent.Tenant, error) {
-	return service.repo.GetAllTenantsByName(name)
+func (service TenantService) GetAllWithName(name string) ([]*ent.Tenant, error) {
+	return service.repo.GetAllWithName(name)
 }
 
 func (service TenantService) GetAllTenantsByLastName(lastName string) ([]*ent.Tenant, error) {

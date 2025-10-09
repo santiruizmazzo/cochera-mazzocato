@@ -15,7 +15,7 @@ func (repo InMemoryTenantRepository) GetAll() ([]*ent.Tenant, error) {
 	return list, nil
 }
 
-func (repo InMemoryTenantRepository) GetAllTenantsByName(name string) ([]*ent.Tenant, error) {
+func (repo InMemoryTenantRepository) GetAllWithName(name string) ([]*ent.Tenant, error) {
 	var list []*ent.Tenant
 	for _, tenant := range repo.Tenants {
 		if tenant.HasName(name) {

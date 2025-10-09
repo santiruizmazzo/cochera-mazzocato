@@ -118,10 +118,10 @@ func TestTenantService_GetAllTenantsByName_Successfully(t *testing.T) {
 
 	service := services.NewTenantService(mockRepo)
 
-	tenants, err := service.GetAllTenantsByName(nameToFilter)
+	tenants, err := service.GetAllWithName(nameToFilter)
 
 	if err != nil {
-		t.Fatal("GetAllTenantsByName should not fail: ", err)
+		t.Fatal("GetAllWithName should not fail: ", err)
 	}
 
 	if len(tenants) != 2 {

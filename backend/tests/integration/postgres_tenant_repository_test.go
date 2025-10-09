@@ -92,7 +92,7 @@ func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) 
 		t.Fatal(err)
 	}
 
-	dniAlreadyInUse, err := repo.ExistsTenantWithDNI(22222222)
+	dniAlreadyInUse, err := repo.ExistsWithDNI(22222222)
 	if err != nil || !dniAlreadyInUse {
 		t.Fatal("Method should return that DNI already exists")
 	}

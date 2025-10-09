@@ -6,10 +6,10 @@ import (
 )
 
 type TenantListDTO struct {
-	ID         vo.EntityID        `json:"id"`
-	Name       domain.Name        `json:"name"`
-	LastName   domain.Name        `json:"last_name"`
-	EntryMonth domain.MonthOfYear `json:"entry_month"`
+	ID         vo.EntityID    `json:"id"`
+	Name       vo.Name        `json:"name"`
+	LastName   vo.Name        `json:"last_name"`
+	EntryMonth vo.MonthOfYear `json:"entry_month"`
 }
 
 func NewTenantListDTO(tenant *domain.Tenant) *TenantListDTO {

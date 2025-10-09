@@ -1,14 +1,14 @@
 package unit
 
 import (
-	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"errors"
 	"reflect"
 	"testing"
 )
 
 func TestCreateValidName(t *testing.T) {
-	_, err := domain.NewName("Vaas")
+	_, err := vo.NewName("Vaas")
 
 	if err != nil {
 		t.Fatalf("Name no debe devolver error cuando es un string válido")
@@ -16,23 +16,23 @@ func TestCreateValidName(t *testing.T) {
 }
 
 func TestFailToCreateNameFromNonStringType(t *testing.T) {
-	_, err := domain.NewName(222)
+	_, err := vo.NewName(222)
 
-	if err == nil || !errors.Is(err, domain.ErrNameMustBeString) {
+	if err == nil || !errors.Is(err, vo.ErrNameMustBeString) {
 		t.Fatalf("Name debe devolver error cuando no es un string")
 	}
 }
 
 func TestFailToCreateNameTooLarge(t *testing.T) {
-	_, err := domain.NewName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+	_, err := vo.NewName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
-	if err == nil || !errors.Is(err, domain.ErrNameTooLong) {
+	if err == nil || !errors.Is(err, vo.ErrNameTooLong) {
 		t.Fatalf("Name debe devolver error cuando es un string demasiado largo")
 	}
 }
 
 func TestCreateValidNameFromJSON(t *testing.T) {
-	name := domain.Name("")
+	name := vo.Name("")
 	err := name.UnmarshalJSON([]byte(`"Satoru"`))
 
 	if err != nil {
@@ -45,7 +45,7 @@ func TestCreateValidNameFromJSON(t *testing.T) {
 }
 
 func TestFailToCreateNameFromJSON(t *testing.T) {
-	name := domain.Name("")
+	name := vo.Name("")
 	err := name.UnmarshalJSON([]byte(`{"id":2}`))
 
 	if err == nil {
@@ -58,7 +58,7 @@ func TestFailToCreateNameFromJSON(t *testing.T) {
 }
 
 func TestSuccessfullyEncodeNameIntoJSON(t *testing.T) {
-	name, _ := domain.NewName("Big Smoke")
+	name, _ := vo.NewName("Big Smoke")
 	expectedJson := []byte(`"Big Smoke"`)
 
 	json, err := name.MarshalJSON()
@@ -73,9 +73,9 @@ func TestSuccessfullyEncodeNameIntoJSON(t *testing.T) {
 }
 
 func TestFailToCreateNameFromStringWithNumbers(t *testing.T) {
-	_, err := domain.NewName("askflj98242")
+	_, err := vo.NewName("askflj98242")
 
-	if err == nil || !errors.Is(err, domain.ErrNameMustIncludeCharactersOnly) {
+	if err == nil || !errors.Is(err, vo.ErrNameMustIncludeCharactersOnly) {
 		t.Fatalf("Name debe devolver error cuando contiene números")
 	}
 }

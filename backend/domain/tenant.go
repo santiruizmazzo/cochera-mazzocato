@@ -8,12 +8,12 @@ import (
 type Tenant struct {
 	ID         vo.EntityID     `json:"id"`
 	DNI        vo.DNI          `json:"dni"`
-	Name       Name            `json:"name"`
-	LastName   Name            `json:"last_name"`
+	Name       vo.Name         `json:"name"`
+	LastName   vo.Name         `json:"last_name"`
 	Address    vo.Address      `json:"address"`
 	Phone      Phone           `json:"phone"`
 	Email      vo.EmailAddress `json:"email"`
-	EntryMonth MonthOfYear     `json:"entry_month"`
+	EntryMonth vo.MonthOfYear  `json:"entry_month"`
 }
 
 func (tenant *Tenant) SetID(id int) {
@@ -85,11 +85,11 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 		return nil, err
 	}
 
-	if tenant.Name, err = NewName(name); err != nil {
+	if tenant.Name, err = vo.NewName(name); err != nil {
 		return nil, err
 	}
 
-	if tenant.LastName, err = NewName(lastName); err != nil {
+	if tenant.LastName, err = vo.NewName(lastName); err != nil {
 		return nil, err
 	}
 
@@ -105,7 +105,7 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 		return nil, err
 	}
 
-	if tenant.EntryMonth, err = NewMonthOfYear(entryMonth); err != nil {
+	if tenant.EntryMonth, err = vo.NewMonthOfYear(entryMonth); err != nil {
 		return nil, err
 	}
 

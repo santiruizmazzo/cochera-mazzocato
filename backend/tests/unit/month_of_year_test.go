@@ -1,14 +1,14 @@
 package unit
 
 import (
-	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"errors"
 	"reflect"
 	"testing"
 )
 
 func TestMonthOfYearCreatedFromString(t *testing.T) {
-	monthOfYear, err := domain.NewMonthOfYear("05-2001")
+	monthOfYear, err := vo.NewMonthOfYear("05-2001")
 
 	if err != nil {
 		t.Fatal("Error al crear MonthOfYear: ", err)
@@ -24,39 +24,39 @@ func TestMonthOfYearCreatedFromString(t *testing.T) {
 }
 
 func TestFailToCreateMonthOfYearFromInvalidFormatString(t *testing.T) {
-	_, err := domain.NewMonthOfYear("052001")
+	_, err := vo.NewMonthOfYear("052001")
 
-	if err == nil || !errors.Is(err, domain.ErrMonthOfYearInvalidFormat) {
+	if err == nil || !errors.Is(err, vo.ErrMonthOfYearInvalidFormat) {
 		t.Fatal("Debería fallar la creación cuando el string no sigue el formato esperado")
 	}
 }
 
 func TestFailToCreateMonthOfYearWithInvalidMonth(t *testing.T) {
-	_, err := domain.NewMonthOfYear("20-2001")
+	_, err := vo.NewMonthOfYear("20-2001")
 
-	if err == nil || !errors.Is(err, domain.ErrMonthOfYearInvalidMonth) {
+	if err == nil || !errors.Is(err, vo.ErrMonthOfYearInvalidMonth) {
 		t.Fatal("Debería fallar la creación cuando el mes no va del 1 al 12")
 	}
 }
 
 func TestFailToCreateMonthOfYearWithInvalidYear(t *testing.T) {
-	_, err := domain.NewMonthOfYear("01-20000")
+	_, err := vo.NewMonthOfYear("01-20000")
 
-	if err == nil || !errors.Is(err, domain.ErrMonthOfYearInvalidYear) {
+	if err == nil || !errors.Is(err, vo.ErrMonthOfYearInvalidYear) {
 		t.Fatal("Debería fallar la creación cuando el año no va del 0 al 9999")
 	}
 }
 
 func TestFailToCreateMonthOfYearFromNonStringValue(t *testing.T) {
-	_, err := domain.NewMonthOfYear(842892)
+	_, err := vo.NewMonthOfYear(842892)
 
-	if err == nil || !errors.Is(err, domain.ErrMonthOfYearMustBeString) {
+	if err == nil || !errors.Is(err, vo.ErrMonthOfYearMustBeString) {
 		t.Fatal("Debería fallar la creación cuando no es un string")
 	}
 }
 
 func TestCreateValidMonthOfYearFromJSON(t *testing.T) {
-	monthOfYear := domain.MonthOfYear{}
+	monthOfYear := vo.MonthOfYear{}
 	err := monthOfYear.UnmarshalJSON([]byte(`"09-2001"`))
 
 	if err != nil {
@@ -69,7 +69,7 @@ func TestCreateValidMonthOfYearFromJSON(t *testing.T) {
 }
 
 func TestFailToCreateMonthOfYearFromJSON(t *testing.T) {
-	monthOfYear := domain.MonthOfYear{}
+	monthOfYear := vo.MonthOfYear{}
 	err := monthOfYear.UnmarshalJSON([]byte("[1,2,3]"))
 
 	if err == nil {
@@ -82,7 +82,7 @@ func TestFailToCreateMonthOfYearFromJSON(t *testing.T) {
 }
 
 func TestSuccessfullyEncodeMonthOfYearIntoJSON(t *testing.T) {
-	monthOfYear, _ := domain.NewMonthOfYear("04-1999")
+	monthOfYear, _ := vo.NewMonthOfYear("04-1999")
 	expectedJson := []byte(`"04-1999"`)
 
 	json, err := monthOfYear.MarshalJSON()

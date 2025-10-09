@@ -93,7 +93,7 @@ func TestTenantService_GetAllTenants_Successfully(t *testing.T) {
 
 	service := services.NewTenantService(mockRepo)
 
-	tenants, err := service.GetAllTenants()
+	tenants, err := service.GetAll()
 
 	if err != nil {
 		t.Fatal("GetTenants shouldn't fail here")

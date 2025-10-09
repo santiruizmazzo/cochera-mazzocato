@@ -184,9 +184,9 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 		t.Fatal(err)
 	}
 
-	tenants, err := repo.GetAllTenants()
+	tenants, err := repo.GetAll()
 	if err != nil {
-		t.Fatal("GetAllTenants shouldn't fail when there exists tenants: ", err)
+		t.Fatal("GetAll shouldn't fail when there exists tenants: ", err)
 	}
 
 	if len(tenants) != 2 {

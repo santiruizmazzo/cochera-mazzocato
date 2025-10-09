@@ -7,7 +7,7 @@ type InMemoryTenantRepository struct {
 	err     error
 }
 
-func (repo InMemoryTenantRepository) GetAllTenants() ([]*ent.Tenant, error) {
+func (repo InMemoryTenantRepository) GetAll() ([]*ent.Tenant, error) {
 	var list []*ent.Tenant
 	for _, tenant := range repo.Tenants {
 		list = append(list, tenant)

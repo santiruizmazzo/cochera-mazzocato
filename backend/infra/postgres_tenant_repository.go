@@ -45,7 +45,7 @@ func (repo PostgresTenantRepository) createTenantFromRow(row pgx.Row) (*ent.Tena
 	return ent.NewTenant(id, dni, name, lastName, address, phone, email, entryMonth)
 }
 
-func (repo PostgresTenantRepository) GetAllTenants() ([]*ent.Tenant, error) {
+func (repo PostgresTenantRepository) GetAll() ([]*ent.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants;`
 
 	rows, err := repo.db.Query(context.Background(), query)

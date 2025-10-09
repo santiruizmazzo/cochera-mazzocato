@@ -4,7 +4,7 @@ import ent "cochera/domain/entities"
 
 type TenantRepository interface {
 	GetByID(id int) (*ent.Tenant, error)
-	GetAllTenants() ([]*ent.Tenant, error)
+	GetAll() ([]*ent.Tenant, error)
 	GetAllTenantsByName(name string) ([]*ent.Tenant, error)
 	GetAllTenantsByLastName(lastName string) ([]*ent.Tenant, error)
 	Save(tenant *ent.Tenant) (*ent.Tenant, error)

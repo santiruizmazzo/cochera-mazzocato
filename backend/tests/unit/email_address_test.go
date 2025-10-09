@@ -1,14 +1,14 @@
 package unit
 
 import (
-	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"errors"
 	"reflect"
 	"testing"
 )
 
 func TestCreateValidEmailAddress(t *testing.T) {
-	_, err := domain.NewEmailAddress("claude@speed.com")
+	_, err := vo.NewEmailAddress("claude@speed.com")
 
 	if err != nil {
 		t.Fatal("Email no debe devolver error cuando es un string válido")
@@ -16,23 +16,23 @@ func TestCreateValidEmailAddress(t *testing.T) {
 }
 
 func TestFailToCreateEmailAddressFromInvalidString(t *testing.T) {
-	_, err := domain.NewEmailAddress("claudespeed.com")
+	_, err := vo.NewEmailAddress("claudespeed.com")
 
-	if err == nil || !errors.Is(err, domain.ErrInvalidEmailFormat) {
+	if err == nil || !errors.Is(err, vo.ErrInvalidEmailFormat) {
 		t.Fatal("Email debe devolver error cuando no es un string válido")
 	}
 }
 
 func TestFailToCreateEmailAddressFromStringTooLong(t *testing.T) {
-	_, err := domain.NewEmailAddress("carl@johnson.commmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+	_, err := vo.NewEmailAddress("carl@johnson.commmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
 
-	if err == nil || !errors.Is(err, domain.ErrEmailTooLong) {
+	if err == nil || !errors.Is(err, vo.ErrEmailTooLong) {
 		t.Fatal("Email debe devolver error cuando es un string demasiado largo")
 	}
 }
 
 func TestCreateValidEmptyEmailAddressFromNilValue(t *testing.T) {
-	emailAddress, err := domain.NewEmailAddress(nil)
+	emailAddress, err := vo.NewEmailAddress(nil)
 
 	if err != nil {
 		t.Fatal("Email no debe devolver error cuando es un nil")
@@ -44,15 +44,15 @@ func TestCreateValidEmptyEmailAddressFromNilValue(t *testing.T) {
 }
 
 func TestFailToCreateEmailAddressFromNonStringType(t *testing.T) {
-	_, err := domain.NewEmailAddress(map[string]int{"JL": 2579})
+	_, err := vo.NewEmailAddress(map[string]int{"JL": 2579})
 
-	if err == nil || !errors.Is(err, domain.ErrEmailMustBeString) {
+	if err == nil || !errors.Is(err, vo.ErrEmailMustBeString) {
 		t.Fatal("Email debe devolver error cuando no es de tipo string")
 	}
 }
 
 func TestCreateValidEmailAddressFromJSON(t *testing.T) {
-	emailAddress := domain.EmailAddress("")
+	emailAddress := vo.EmailAddress("")
 	err := emailAddress.UnmarshalJSON([]byte(`"huanglee@triads.org"`))
 
 	if err != nil {
@@ -65,10 +65,10 @@ func TestCreateValidEmailAddressFromJSON(t *testing.T) {
 }
 
 func TestFailToCreateEmailAddressFromJSON(t *testing.T) {
-	emailAddress := domain.EmailAddress("")
+	emailAddress := vo.EmailAddress("")
 	err := emailAddress.UnmarshalJSON([]byte("777"))
 
-	if err == nil || !errors.Is(err, domain.ErrEmailMustBeString) {
+	if err == nil || !errors.Is(err, vo.ErrEmailMustBeString) {
 		t.Fatal("Email debe devolver error cuando se decodifica valor no string desde json")
 	}
 
@@ -78,7 +78,7 @@ func TestFailToCreateEmailAddressFromJSON(t *testing.T) {
 }
 
 func TestSuccessfullyEncodeEmailAddressIntoJSON(t *testing.T) {
-	emailAddress, _ := domain.NewEmailAddress("illo@juan.com")
+	emailAddress, _ := vo.NewEmailAddress("illo@juan.com")
 	expectedJson := []byte(`"illo@juan.com"`)
 
 	json, err := emailAddress.MarshalJSON()

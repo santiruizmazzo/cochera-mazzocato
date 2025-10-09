@@ -26,7 +26,7 @@ func (builder *TenantBuilder) WithID(id int) *TenantBuilder {
 }
 
 func (builder *TenantBuilder) WithDNI(dni int) *TenantBuilder {
-	builder.tenant.DNI = DNI(dni)
+	builder.tenant.DNI = vo.DNI(dni)
 	return builder
 }
 
@@ -51,7 +51,7 @@ func (builder *TenantBuilder) WithPhone(phone string) *TenantBuilder {
 }
 
 func (builder *TenantBuilder) WithEmail(email string) *TenantBuilder {
-	builder.tenant.Email = EmailAddress(email)
+	builder.tenant.Email = vo.EmailAddress(email)
 	return builder
 }
 

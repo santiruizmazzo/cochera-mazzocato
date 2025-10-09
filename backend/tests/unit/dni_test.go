@@ -1,14 +1,14 @@
 package unit
 
 import (
-	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"errors"
 	"reflect"
 	"testing"
 )
 
 func TestCreateValidDNI(t *testing.T) {
-	_, err := domain.NewDNI(12345678)
+	_, err := vo.NewDNI(12345678)
 
 	if err != nil {
 		t.Fatalf("DNI no debe devolver error cuando es un número válido")
@@ -16,47 +16,47 @@ func TestCreateValidDNI(t *testing.T) {
 }
 
 func TestFailToCreateValidDNIFromFloatNumber(t *testing.T) {
-	_, err := domain.NewDNI(12345678.8298)
+	_, err := vo.NewDNI(12345678.8298)
 
-	if err == nil || !errors.Is(err, domain.ErrDNIMustBeAnInteger) {
+	if err == nil || !errors.Is(err, vo.ErrDNIMustBeAnInteger) {
 		t.Fatal("DNI debe devolver error cuando no es un número entero")
 	}
 }
 
 func TestFailToCreateDNIFromZero(t *testing.T) {
-	_, err := domain.NewDNI(0)
+	_, err := vo.NewDNI(0)
 
-	if err == nil || !errors.Is(err, domain.ErrDNINotInValidRange) {
+	if err == nil || !errors.Is(err, vo.ErrDNINotInValidRange) {
 		t.Fatalf("DNI debe devolver error cuando es menor a 1")
 	}
 }
 
 func TestFailToCreateDNIFromOverflowValue(t *testing.T) {
-	_, err := domain.NewDNI(4500000000)
+	_, err := vo.NewDNI(4500000000)
 
-	if err == nil || !errors.Is(err, domain.ErrDNINotInValidRange) {
+	if err == nil || !errors.Is(err, vo.ErrDNINotInValidRange) {
 		t.Fatalf("DNI debe devolver error cuando es mayor a 4294967295")
 	}
 }
 
 func TestFailToCreateDNIFromNegativeValue(t *testing.T) {
-	_, err := domain.NewDNI(-99)
+	_, err := vo.NewDNI(-99)
 
-	if err == nil || !errors.Is(err, domain.ErrDNINotInValidRange) {
+	if err == nil || !errors.Is(err, vo.ErrDNINotInValidRange) {
 		t.Fatalf("DNI debe devolver error cuando es menor a 1")
 	}
 }
 
 func TestFailToCreateDNIFromNonNumericValue(t *testing.T) {
-	_, err := domain.NewDNI("hola")
+	_, err := vo.NewDNI("hola")
 
-	if err == nil || !errors.Is(err, domain.ErrDNIMustBeAnInteger) {
+	if err == nil || !errors.Is(err, vo.ErrDNIMustBeAnInteger) {
 		t.Fatalf("DNI debe devolver error cuando no es un número")
 	}
 }
 
 func TestCreateValidDNIFromJSON(t *testing.T) {
-	dni := domain.DNI(0)
+	dni := vo.DNI(0)
 	err := dni.UnmarshalJSON([]byte("43295798"))
 
 	if err != nil {
@@ -69,7 +69,7 @@ func TestCreateValidDNIFromJSON(t *testing.T) {
 }
 
 func TestFailToCreateDNIFromJSON(t *testing.T) {
-	dni := domain.DNI(0)
+	dni := vo.DNI(0)
 	err := dni.UnmarshalJSON([]byte(`{"name":"Roberto"}`))
 
 	if err == nil {
@@ -82,7 +82,7 @@ func TestFailToCreateDNIFromJSON(t *testing.T) {
 }
 
 func TestSuccessfullyEncodeDNIIntoJSON(t *testing.T) {
-	dni, _ := domain.NewDNI(666)
+	dni, _ := vo.NewDNI(666)
 	expectedJson := []byte("666")
 
 	json, err := dni.MarshalJSON()

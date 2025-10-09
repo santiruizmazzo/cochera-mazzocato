@@ -3,6 +3,7 @@ package unit
 import (
 	"cochera/application/services"
 	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"cochera/infra"
 	"encoding/json"
 	"testing"
@@ -61,7 +62,7 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 		t.Fatal("Tenant should not be created")
 	}
 
-	if err != domain.ErrDNIMustBeAnInteger {
+	if err != vo.ErrDNIMustBeAnInteger {
 		t.Fatal("Error should be of type DNI must be a number", err)
 	}
 }

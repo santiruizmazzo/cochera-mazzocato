@@ -2,6 +2,7 @@ package unit
 
 import (
 	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"encoding/json"
 	"errors"
 	"testing"
@@ -37,7 +38,7 @@ func TestNewTenantFromJSONReturnsCustomErrorWhenGivenNonNumericDNI(t *testing.T)
 		t.Fatal("Tenant creation from json should fail when DNI is not a number")
 	}
 
-	if !errors.Is(err, domain.ErrDNIMustBeAnInteger) {
+	if !errors.Is(err, vo.ErrDNIMustBeAnInteger) {
 		t.Fatal("Returned error should be of type ErrDNIMustBeAnInteger")
 	}
 }

@@ -114,6 +114,20 @@ body {
 
 .home-button {
   font-size: 2rem;
+  display: flex;
+  gap: 0.3rem;
+
+  svg {
+    --side-size: 3rem;
+
+    pointer-events: none;
+    width: var(--side-size);
+    height: var(--side-size);
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
 .nav-link {

@@ -71,3 +71,11 @@ func TestSuccessfullyEncodeNameIntoJSON(t *testing.T) {
 		t.Fatalf("Name codificado como json no coincide con esperado")
 	}
 }
+
+func TestFailToCreateNameFromStringWithNumbers(t *testing.T) {
+	_, err := domain.NewName("askflj98242")
+
+	if err == nil || !errors.Is(err, domain.ErrNameMustIncludeCharactersOnly) {
+		t.Fatalf("Name debe devolver error cuando contiene números")
+	}
+}

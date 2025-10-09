@@ -1,23 +1,30 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
+    :host {
+      display: flex;
+      flex-direction: column;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
-      display: block;
+      display: flex;
       margin: 0;
       padding: 0;
       border: none;
       background: transparent;
       cursor: pointer;
+      flex-grow: 1;
     }
 
     div {
       display: flex;
       flex-direction: column;
-      min-height: 7rem;
       background-color: var(--clr-main-darker);
       padding: 1rem;
+      flex-grow: 1;
+      overflow-wrap: anywhere;
     }
 
     #name, #last-name, #id {
@@ -35,7 +42,7 @@ template.innerHTML = /*html*/ `
     svg {
       --side-size: 1.75rem;
       
-      display: none;
+      visibility: hidden;
       width: var(--side-size);
       height: var(--side-size);
 
@@ -55,7 +62,7 @@ template.innerHTML = /*html*/ `
       }
 
       svg {
-        display: block;
+        visibility: visible;
       }
     }
   </style>

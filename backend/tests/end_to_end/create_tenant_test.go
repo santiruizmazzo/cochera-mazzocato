@@ -133,7 +133,7 @@ func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un entero positivo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI debe estar entre 1 y 4294967295", t)
 }
 
 func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
@@ -159,7 +159,7 @@ func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un entero positivo", t)
+	utils.AssertResponseContains(responseMap, "detail", "el DNI debe estar entre 1 y 4294967295", t)
 }
 
 func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {

@@ -12,7 +12,7 @@ const DNI_MIN_VALUE int = 1
 const DNI_MAX_VALUE int = math.MaxUint32
 
 var (
-	ErrDNINotInValidRange = errors.New("el DNI debe ser un entero positivo")
+	ErrDNINotInValidRange = errors.New("el DNI debe estar entre 1 y 4294967295")
 	ErrDNIMustBeAnInteger = errors.New("el DNI debe ser un número entero")
 )
 

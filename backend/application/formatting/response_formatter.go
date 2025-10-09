@@ -19,27 +19,27 @@ func NewResponseFormatter(w http.ResponseWriter) *ResponseFormatter {
 	return &ResponseFormatter{w: w}
 }
 
-func (formatter *ResponseFormatter) CreateErrorBodyWith(errorDetail string) string {
+func (formatter ResponseFormatter) CreateErrorBodyWith(errorDetail string) string {
 	errorResponseScheme := `{"detail":"%s"}`
 	return fmt.Sprintf(errorResponseScheme, errorDetail)
 }
 
-func (formatter *ResponseFormatter) RespondMethodIsNotAllowed() {
+func (formatter ResponseFormatter) RespondMethodIsNotAllowed() {
 	responseBody := formatter.CreateErrorBodyWith("method not allowed")
 	http.Error(formatter.w, responseBody, http.StatusMethodNotAllowed)
 }
 
-func (formatter *ResponseFormatter) RespondCouldNotReadRequestBody() {
+func (formatter ResponseFormatter) RespondCouldNotReadRequestBody() {
 	responseBody := formatter.CreateErrorBodyWith("could not read request body")
 	http.Error(formatter.w, responseBody, http.StatusBadRequest)
 }
 
-func (formatter *ResponseFormatter) RespondCouldNotCloseRequestBody() {
+func (formatter ResponseFormatter) RespondCouldNotCloseRequestBody() {
 	responseBody := formatter.CreateErrorBodyWith("could not close request body")
 	http.Error(formatter.w, responseBody, http.StatusInternalServerError)
 }
 
-func (formatter *ResponseFormatter) RespondCouldNotCreateTenant(creationError error) {
+func (formatter ResponseFormatter) RespondCouldNotCreateTenant(creationError error) {
 	statusCode := http.StatusBadRequest
 
 	if errors.Is(creationError, domain.ErrDuplicateDNI) || errors.Is(creationError, domain.ErrDuplicateEmail) {
@@ -50,28 +50,28 @@ func (formatter *ResponseFormatter) RespondCouldNotCreateTenant(creationError er
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter *ResponseFormatter) RespondTenantWasCreatedSuccessfully(tenant *domain.Tenant) error {
+func (formatter ResponseFormatter) RespondTenantWasCreatedSuccessfully(tenant *domain.Tenant) error {
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusCreated)
 	return json.NewEncoder(formatter.w).Encode(tenant)
 }
 
-func (formatter *ResponseFormatter) RespondCouldNotWriteResponse(responseError error) {
+func (formatter ResponseFormatter) RespondCouldNotWriteResponse(responseError error) {
 	responseBody := formatter.CreateErrorBodyWith(responseError.Error())
 	http.Error(formatter.w, responseBody, http.StatusInternalServerError)
 }
 
-func (formatter *ResponseFormatter) RespondTenantIDMustNotBeMissing() {
+func (formatter ResponseFormatter) RespondTenantIDMustNotBeMissing() {
 	responseBody := formatter.CreateErrorBodyWith("tenant id is required")
 	http.Error(formatter.w, responseBody, http.StatusBadRequest)
 }
 
-func (formatter *ResponseFormatter) RespondTenantIDMustBeAnInteger() {
+func (formatter ResponseFormatter) RespondTenantIDMustBeAnInteger() {
 	responseBody := formatter.CreateErrorBodyWith("tenant id must be an integer")
 	http.Error(formatter.w, responseBody, http.StatusBadRequest)
 }
 
-func (formatter *ResponseFormatter) RespondCouldNotGetTenant(retrievingError error) {
+func (formatter ResponseFormatter) RespondCouldNotGetTenant(retrievingError error) {
 	statusCode := http.StatusInternalServerError
 
 	if errors.Is(retrievingError, infra.ErrTenantNotFound) {
@@ -82,25 +82,25 @@ func (formatter *ResponseFormatter) RespondCouldNotGetTenant(retrievingError err
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter *ResponseFormatter) RespondTenantGotSuccessfully(tenant *domain.Tenant) error {
+func (formatter ResponseFormatter) RespondTenantGotSuccessfully(tenant *domain.Tenant) error {
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(formatter.w).Encode(tenant)
 }
 
-func (formatter *ResponseFormatter) RespondCurrentHealthStatus(currentVersion string) error {
+func (formatter ResponseFormatter) RespondCurrentHealthStatus(currentVersion string) error {
 	response := map[string]string{"status": "operational", "version": currentVersion}
 	formatter.w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(formatter.w).Encode(response)
 }
 
-func (formatter *ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingError error) {
+func (formatter ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingError error) {
 	statusCode := http.StatusNotFound
 	responseBody := formatter.CreateErrorBodyWith(retrievingError.Error())
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter *ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*domain.Tenant) error {
+func (formatter ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*domain.Tenant) error {
 	responseData := make([]*dtos.TenantListDTO, len(tenants))
 	for i, tenant := range tenants {
 		responseData[i] = dtos.NewTenantListDTO(tenant)

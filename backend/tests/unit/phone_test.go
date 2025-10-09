@@ -1,14 +1,14 @@
 package unit
 
 import (
-	"cochera/domain"
+	vo "cochera/domain/value_objects"
 	"errors"
 	"reflect"
 	"testing"
 )
 
 func TestCreateValidPhone(t *testing.T) {
-	phone, err := domain.NewPhone("+543442407277")
+	phone, err := vo.NewPhone("+543442407277")
 
 	if err != nil {
 		t.Fatal("Phone no debe devolver error cuando es un string válido")
@@ -24,15 +24,15 @@ func TestCreateValidPhone(t *testing.T) {
 }
 
 func TestFailToCreatePhoneWithMissingCountryCode(t *testing.T) {
-	_, err := domain.NewPhone("543442407277")
+	_, err := vo.NewPhone("543442407277")
 
-	if err == nil || !errors.Is(err, domain.ErrPhoneMustStartWithPlusSign) {
+	if err == nil || !errors.Is(err, vo.ErrPhoneMustStartWithPlusSign) {
 		t.Fatal("Phone debe devolver error cuando no tiene + al inicio")
 	}
 }
 
 func TestCreateValidPhoneFromUruguayCodedNumber(t *testing.T) {
-	phone, err := domain.NewPhone("+59812341234")
+	phone, err := vo.NewPhone("+59812341234")
 
 	if err != nil {
 		t.Fatal("Phone no debe devolver error cuando es un string válido")
@@ -48,39 +48,39 @@ func TestCreateValidPhoneFromUruguayCodedNumber(t *testing.T) {
 }
 
 func TestFailToCreatePhoneTooLong(t *testing.T) {
-	_, err := domain.NewPhone("+5981234123412341234")
+	_, err := vo.NewPhone("+5981234123412341234")
 
-	if err == nil || !errors.Is(err, domain.ErrPhoneTooLong) {
+	if err == nil || !errors.Is(err, vo.ErrPhoneTooLong) {
 		t.Fatal("Phone debe devolver error cuando es demasiado largo")
 	}
 }
 
 func TestFailToCreatePhoneFullOfZeroes(t *testing.T) {
-	_, err := domain.NewPhone("+0000000000")
+	_, err := vo.NewPhone("+0000000000")
 
-	if err == nil || !errors.Is(err, domain.ErrPhoneFullOfZeroes) {
+	if err == nil || !errors.Is(err, vo.ErrPhoneFullOfZeroes) {
 		t.Fatal("Phone debe devolver error cuando está lleno de ceros")
 	}
 }
 
 func TestFailToCreatePhoneThatContainsLetters(t *testing.T) {
-	_, err := domain.NewPhone("+57HolaComoEsta")
+	_, err := vo.NewPhone("+57HolaComoEsta")
 
-	if err == nil || !errors.Is(err, domain.ErrPhoneMustContainNumbersOnly) {
+	if err == nil || !errors.Is(err, vo.ErrPhoneMustContainNumbersOnly) {
 		t.Fatal("Phone debe devolver error cuando contiene caracteres")
 	}
 }
 
 func TestFailToCreatePhoneThatIsNotAString(t *testing.T) {
-	_, err := domain.NewPhone(482984292)
+	_, err := vo.NewPhone(482984292)
 
-	if err == nil || !errors.Is(err, domain.ErrPhoneMustBeString) {
+	if err == nil || !errors.Is(err, vo.ErrPhoneMustBeString) {
 		t.Fatal("Phone debe devolver error cuando no es un string")
 	}
 }
 
 func TestCreateEmptyPhoneFromNilValue(t *testing.T) {
-	phone, err := domain.NewPhone(nil)
+	phone, err := vo.NewPhone(nil)
 
 	if err != nil {
 		t.Fatal("Phone no debe devolver error cuando se le pasa un nil")
@@ -92,15 +92,15 @@ func TestCreateEmptyPhoneFromNilValue(t *testing.T) {
 }
 
 func TestFailToCreatePhoneFromParaguayCodedNumber(t *testing.T) {
-	_, err := domain.NewPhone("+595111111111")
+	_, err := vo.NewPhone("+595111111111")
 
-	if err == nil || !errors.Is(err, domain.ErrPhoneUnsupportedCountryCode) {
+	if err == nil || !errors.Is(err, vo.ErrPhoneUnsupportedCountryCode) {
 		t.Fatal("Phone debe devolver error cuando no tiene un prefijo de país aceptado")
 	}
 }
 
 func TestCreateValidPhoneFromJSON(t *testing.T) {
-	phone := domain.Phone{}
+	phone := vo.Phone{}
 	err := phone.UnmarshalJSON([]byte(`"+59844298511"`))
 
 	if err != nil {
@@ -113,10 +113,10 @@ func TestCreateValidPhoneFromJSON(t *testing.T) {
 }
 
 func TestFailToCreatePhoneFromJSON(t *testing.T) {
-	phone := domain.Phone{}
+	phone := vo.Phone{}
 	err := phone.UnmarshalJSON([]byte(`{"entry_month":"09-2025"}`))
 
-	if err == nil || !errors.Is(err, domain.ErrPhoneMustBeString) {
+	if err == nil || !errors.Is(err, vo.ErrPhoneMustBeString) {
 		t.Fatal("Phone debe devolver error cuando se decodifica un tipo no string desde json")
 	}
 
@@ -126,7 +126,7 @@ func TestFailToCreatePhoneFromJSON(t *testing.T) {
 }
 
 func TestSuccessfullyEncodePhoneIntoJSON(t *testing.T) {
-	phone, _ := domain.NewPhone("+543442407276")
+	phone, _ := vo.NewPhone("+543442407276")
 	expectedJson := []byte(`"+543442407276"`)
 
 	json, err := phone.MarshalJSON()

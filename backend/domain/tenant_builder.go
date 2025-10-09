@@ -13,7 +13,7 @@ func NewTenantBuilder() *TenantBuilder {
 		Name:       "Huang",
 		LastName:   "Lee",
 		Address:    "22 Beer Heights St.",
-		Phone:      Phone{CountryCode: "54", LineNumber: "9815111526"},
+		Phone:      vo.Phone{CountryCode: "54", LineNumber: "9815111526"},
 		Email:      "huang@lee.com",
 		EntryMonth: vo.MonthOfYear{Month: 1, Year: 2025},
 	}
@@ -46,7 +46,7 @@ func (builder *TenantBuilder) WithAddress(address string) *TenantBuilder {
 }
 
 func (builder *TenantBuilder) WithPhone(phone string) *TenantBuilder {
-	builder.tenant.Phone, _ = NewPhone(phone)
+	builder.tenant.Phone, _ = vo.NewPhone(phone)
 	return builder
 }
 

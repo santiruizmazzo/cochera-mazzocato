@@ -11,7 +11,7 @@ type Tenant struct {
 	Name       vo.Name         `json:"name"`
 	LastName   vo.Name         `json:"last_name"`
 	Address    vo.Address      `json:"address"`
-	Phone      Phone           `json:"phone"`
+	Phone      vo.Phone        `json:"phone"`
 	Email      vo.EmailAddress `json:"email"`
 	EntryMonth vo.MonthOfYear  `json:"entry_month"`
 }
@@ -97,7 +97,7 @@ func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (
 		return nil, err
 	}
 
-	if tenant.Phone, err = NewPhone(phone); err != nil {
+	if tenant.Phone, err = vo.NewPhone(phone); err != nil {
 		return nil, err
 	}
 

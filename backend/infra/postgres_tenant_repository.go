@@ -110,7 +110,7 @@ func (repo PostgresTenantRepository) ExistsWithDNI(dni uint32) (bool, error) {
 	return exists, nil
 }
 
-func (repo PostgresTenantRepository) ExistsTenantWithEmail(email string) (bool, error) {
+func (repo PostgresTenantRepository) ExistsWithEmail(email string) (bool, error) {
 	if email == "" {
 		return false, nil
 	}

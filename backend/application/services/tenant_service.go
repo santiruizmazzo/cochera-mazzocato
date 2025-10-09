@@ -56,7 +56,7 @@ func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error
 		return nil, ErrDuplicateDNI
 	}
 
-	emailAlreadyExists, err := service.repo.ExistsTenantWithEmail(tenant.Email.String())
+	emailAlreadyExists, err := service.repo.ExistsWithEmail(tenant.Email.String())
 	if err != nil {
 		return nil, err
 	}

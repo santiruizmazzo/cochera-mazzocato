@@ -56,7 +56,7 @@ func (repo InMemoryTenantRepository) ExistsWithDNI(dni uint32) (bool, error) {
 	return false, nil
 }
 
-func (repo InMemoryTenantRepository) ExistsTenantWithEmail(email string) (bool, error) {
+func (repo InMemoryTenantRepository) ExistsWithEmail(email string) (bool, error) {
 	for _, tenant := range repo.Tenants {
 		if tenant != nil && tenant.HasEmail(email) {
 			return true, nil

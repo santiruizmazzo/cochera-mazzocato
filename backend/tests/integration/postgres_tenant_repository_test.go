@@ -140,7 +140,7 @@ func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T
 		t.Fatal(err)
 	}
 
-	emailAlreadyInUse, err := repo.ExistsTenantWithEmail("neo@cortex.com")
+	emailAlreadyInUse, err := repo.ExistsWithEmail("neo@cortex.com")
 	if err != nil || !emailAlreadyInUse {
 		t.Fatal("Method should return that email is already in use")
 	}

@@ -104,7 +104,7 @@ func (api API) getTenantByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tenant, err := api.tenantService.GetTenantByID(id)
+	tenant, err := api.tenantService.GetByID(id)
 	if err != nil {
 		formatter.RespondCouldNotGetTenant(err)
 		return

@@ -154,9 +154,9 @@ func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) 
 	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
-	tenant, err := repo.GetTenantByID(666)
+	tenant, err := repo.GetByID(666)
 	if err == nil {
-		t.Fatal("GetTenantByID should return error when it tenant does not exist")
+		t.Fatal("GetByID should return error when it tenant does not exist")
 	}
 
 	if tenant != nil {

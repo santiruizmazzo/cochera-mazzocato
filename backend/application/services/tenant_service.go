@@ -20,8 +20,8 @@ func NewTenantService(repo domain.TenantRepository) *TenantService {
 	return &TenantService{repo: repo}
 }
 
-func (service TenantService) GetTenantByID(id int) (*ent.Tenant, error) {
-	return service.repo.GetTenantByID(id)
+func (service TenantService) GetByID(id int) (*ent.Tenant, error) {
+	return service.repo.GetByID(id)
 }
 
 func (service TenantService) GetAllTenants() ([]*ent.Tenant, error) {

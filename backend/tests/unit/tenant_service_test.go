@@ -71,7 +71,7 @@ func TestTenantService_CreateTenant_Fails_NonNumericDNI(t *testing.T) {
 func TestTenantService_GetTenantByID_Fails_TenantDoesNotExist(t *testing.T) {
 	service := services.NewTenantService(&infra.InMemoryTenantRepository{})
 
-	tenant, err := service.GetTenantByID(9)
+	tenant, err := service.GetByID(9)
 
 	if tenant != nil {
 		t.Fatal("Tenant should not be found")

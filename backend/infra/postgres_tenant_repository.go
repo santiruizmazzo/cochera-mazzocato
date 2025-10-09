@@ -22,7 +22,7 @@ func NewPostgresTenantRepository(db *pgxpool.Pool) *PostgresTenantRepository {
 	return &PostgresTenantRepository{db: db}
 }
 
-func (repo PostgresTenantRepository) GetTenantByID(id int) (*ent.Tenant, error) {
+func (repo PostgresTenantRepository) GetByID(id int) (*ent.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE id = $1;`
 
 	row := repo.db.QueryRow(context.Background(), query, id)

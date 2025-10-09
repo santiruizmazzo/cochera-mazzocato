@@ -35,7 +35,7 @@ func (repo InMemoryTenantRepository) GetAllTenantsByLastName(lastName string) ([
 	return list, nil
 }
 
-func (repo InMemoryTenantRepository) GetTenantByID(id int) (*ent.Tenant, error) {
+func (repo InMemoryTenantRepository) GetByID(id int) (*ent.Tenant, error) {
 	return nil, ErrTenantNotFound
 }
 

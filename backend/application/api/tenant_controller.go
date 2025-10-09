@@ -2,7 +2,7 @@ package api
 
 import (
 	"cochera/application/formatting"
-	"cochera/domain"
+	ent "cochera/domain/entities"
 	"io"
 	"net/http"
 	"strconv"
@@ -30,7 +30,7 @@ func (api API) getTenants(w http.ResponseWriter, r *http.Request) {
 	name := queryParams.Get("name")
 	lastName := queryParams.Get("lastName")
 
-	var tenants []*domain.Tenant
+	var tenants []*ent.Tenant
 	var err error
 
 	if lastName != "" {

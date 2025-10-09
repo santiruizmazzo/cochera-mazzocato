@@ -3,7 +3,7 @@ package formatting
 import (
 	"cochera/application/dtos"
 	"cochera/application/services"
-	"cochera/domain"
+	ent "cochera/domain/entities"
 	"cochera/infra"
 	"encoding/json"
 	"errors"
@@ -51,7 +51,7 @@ func (formatter ResponseFormatter) RespondCouldNotCreateTenant(creationError err
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter ResponseFormatter) RespondTenantWasCreatedSuccessfully(tenant *domain.Tenant) error {
+func (formatter ResponseFormatter) RespondTenantWasCreatedSuccessfully(tenant *ent.Tenant) error {
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusCreated)
 	return json.NewEncoder(formatter.w).Encode(tenant)
@@ -83,7 +83,7 @@ func (formatter ResponseFormatter) RespondCouldNotGetTenant(retrievingError erro
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter ResponseFormatter) RespondTenantGotSuccessfully(tenant *domain.Tenant) error {
+func (formatter ResponseFormatter) RespondTenantGotSuccessfully(tenant *ent.Tenant) error {
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(formatter.w).Encode(tenant)
@@ -101,7 +101,7 @@ func (formatter ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingError
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*domain.Tenant) error {
+func (formatter ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*ent.Tenant) error {
 	responseData := make([]*dtos.TenantListDTO, len(tenants))
 	for i, tenant := range tenants {
 		responseData[i] = dtos.NewTenantListDTO(tenant)

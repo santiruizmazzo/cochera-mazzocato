@@ -1,7 +1,7 @@
 package infra
 
 import (
-	"cochera/domain"
+	ent "cochera/domain/entities"
 	"context"
 	"errors"
 
@@ -22,7 +22,7 @@ func NewPostgresTenantRepository(db *pgxpool.Pool) *PostgresTenantRepository {
 	return &PostgresTenantRepository{db: db}
 }
 
-func (repo PostgresTenantRepository) GetTenantByID(id int) (*domain.Tenant, error) {
+func (repo PostgresTenantRepository) GetTenantByID(id int) (*ent.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE id = $1;`
 
 	row := repo.db.QueryRow(context.Background(), query, id)
@@ -30,7 +30,7 @@ func (repo PostgresTenantRepository) GetTenantByID(id int) (*domain.Tenant, erro
 	return repo.createTenantFromRow(row)
 }
 
-func (repo PostgresTenantRepository) createTenantFromRow(row pgx.Row) (*domain.Tenant, error) {
+func (repo PostgresTenantRepository) createTenantFromRow(row pgx.Row) (*ent.Tenant, error) {
 	var (
 		id, dni                    int
 		name, lastName, entryMonth string
@@ -42,10 +42,10 @@ func (repo PostgresTenantRepository) createTenantFromRow(row pgx.Row) (*domain.T
 		return nil, ErrTenantNotFound
 	}
 
-	return domain.NewTenant(id, dni, name, lastName, address, phone, email, entryMonth)
+	return ent.NewTenant(id, dni, name, lastName, address, phone, email, entryMonth)
 }
 
-func (repo PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
+func (repo PostgresTenantRepository) GetAllTenants() ([]*ent.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants;`
 
 	rows, err := repo.db.Query(context.Background(), query)
@@ -57,7 +57,7 @@ func (repo PostgresTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
 	return repo.createListOfTenantsFromRows(rows)
 }
 
-func (repo PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
+func (repo PostgresTenantRepository) GetAllTenantsByName(name string) ([]*ent.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE name ILIKE $1;`
 
 	wildcardString := "%" + name + "%"
@@ -70,7 +70,7 @@ func (repo PostgresTenantRepository) GetAllTenantsByName(name string) ([]*domain
 	return repo.createListOfTenantsFromRows(rows)
 }
 
-func (repo PostgresTenantRepository) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
+func (repo PostgresTenantRepository) GetAllTenantsByLastName(lastName string) ([]*ent.Tenant, error) {
 	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE last_name ILIKE $1;`
 
 	wildcardString := "%" + lastName + "%"
@@ -83,8 +83,8 @@ func (repo PostgresTenantRepository) GetAllTenantsByLastName(lastName string) ([
 	return repo.createListOfTenantsFromRows(rows)
 }
 
-func (repo PostgresTenantRepository) createListOfTenantsFromRows(rows pgx.Rows) ([]*domain.Tenant, error) {
-	tenants, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*domain.Tenant, error) {
+func (repo PostgresTenantRepository) createListOfTenantsFromRows(rows pgx.Rows) ([]*ent.Tenant, error) {
+	tenants, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*ent.Tenant, error) {
 		return repo.createTenantFromRow(row)
 	})
 	if err != nil {
@@ -126,7 +126,7 @@ func (repo PostgresTenantRepository) ExistsTenantWithEmail(email string) (bool, 
 	return exists, nil
 }
 
-func (repo PostgresTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenant, error) {
+func (repo PostgresTenantRepository) Save(tenant *ent.Tenant) (*ent.Tenant, error) {
 	query := `
 		INSERT INTO tenants (dni, name, last_name, address, phone, email, entry_month)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)

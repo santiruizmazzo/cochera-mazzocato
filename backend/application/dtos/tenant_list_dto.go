@@ -1,7 +1,7 @@
 package dtos
 
 import (
-	"cochera/domain"
+	ent "cochera/domain/entities"
 	vo "cochera/domain/value_objects"
 )
 
@@ -12,7 +12,7 @@ type TenantListDTO struct {
 	EntryMonth vo.MonthOfYear `json:"entry_month"`
 }
 
-func NewTenantListDTO(tenant *domain.Tenant) *TenantListDTO {
+func NewTenantListDTO(tenant *ent.Tenant) *TenantListDTO {
 	return &TenantListDTO{
 		ID:         tenant.ID,
 		Name:       tenant.Name,

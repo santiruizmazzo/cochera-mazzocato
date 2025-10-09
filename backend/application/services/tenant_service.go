@@ -2,6 +2,7 @@ package services
 
 import (
 	"cochera/domain"
+	ent "cochera/domain/entities"
 	"encoding/json"
 	"errors"
 )
@@ -19,24 +20,24 @@ func NewTenantService(repo domain.TenantRepository) *TenantService {
 	return &TenantService{repo: repo}
 }
 
-func (service TenantService) GetTenantByID(id int) (*domain.Tenant, error) {
+func (service TenantService) GetTenantByID(id int) (*ent.Tenant, error) {
 	return service.repo.GetTenantByID(id)
 }
 
-func (service TenantService) GetAllTenants() ([]*domain.Tenant, error) {
+func (service TenantService) GetAllTenants() ([]*ent.Tenant, error) {
 	return service.repo.GetAllTenants()
 }
 
-func (service TenantService) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
+func (service TenantService) GetAllTenantsByName(name string) ([]*ent.Tenant, error) {
 	return service.repo.GetAllTenantsByName(name)
 }
 
-func (service TenantService) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
+func (service TenantService) GetAllTenantsByLastName(lastName string) ([]*ent.Tenant, error) {
 	return service.repo.GetAllTenantsByLastName(lastName)
 }
 
-func (service TenantService) CreateTenant(jsonTenant []byte) (*domain.Tenant, error) {
-	var tenant domain.Tenant
+func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error) {
+	var tenant ent.Tenant
 
 	if err := json.Unmarshal(jsonTenant, &tenant); err != nil {
 		return nil, err

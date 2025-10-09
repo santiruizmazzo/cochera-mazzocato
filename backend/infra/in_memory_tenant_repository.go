@@ -1,24 +1,22 @@
 package infra
 
-import (
-	"cochera/domain"
-)
+import ent "cochera/domain/entities"
 
 type InMemoryTenantRepository struct {
-	Tenants map[int]*domain.Tenant
+	Tenants map[int]*ent.Tenant
 	err     error
 }
 
-func (repo InMemoryTenantRepository) GetAllTenants() ([]*domain.Tenant, error) {
-	var list []*domain.Tenant
+func (repo InMemoryTenantRepository) GetAllTenants() ([]*ent.Tenant, error) {
+	var list []*ent.Tenant
 	for _, tenant := range repo.Tenants {
 		list = append(list, tenant)
 	}
 	return list, nil
 }
 
-func (repo InMemoryTenantRepository) GetAllTenantsByName(name string) ([]*domain.Tenant, error) {
-	var list []*domain.Tenant
+func (repo InMemoryTenantRepository) GetAllTenantsByName(name string) ([]*ent.Tenant, error) {
+	var list []*ent.Tenant
 	for _, tenant := range repo.Tenants {
 		if tenant.HasName(name) {
 			list = append(list, tenant)
@@ -27,8 +25,8 @@ func (repo InMemoryTenantRepository) GetAllTenantsByName(name string) ([]*domain
 	return list, nil
 }
 
-func (repo InMemoryTenantRepository) GetAllTenantsByLastName(lastName string) ([]*domain.Tenant, error) {
-	var list []*domain.Tenant
+func (repo InMemoryTenantRepository) GetAllTenantsByLastName(lastName string) ([]*ent.Tenant, error) {
+	var list []*ent.Tenant
 	for _, tenant := range repo.Tenants {
 		if tenant.HasLastName(lastName) {
 			list = append(list, tenant)
@@ -37,11 +35,11 @@ func (repo InMemoryTenantRepository) GetAllTenantsByLastName(lastName string) ([
 	return list, nil
 }
 
-func (repo InMemoryTenantRepository) GetTenantByID(id int) (*domain.Tenant, error) {
+func (repo InMemoryTenantRepository) GetTenantByID(id int) (*ent.Tenant, error) {
 	return nil, ErrTenantNotFound
 }
 
-func (repo InMemoryTenantRepository) Save(tenant *domain.Tenant) (*domain.Tenant, error) {
+func (repo InMemoryTenantRepository) Save(tenant *ent.Tenant) (*ent.Tenant, error) {
 	if repo.err != nil {
 		return nil, repo.err
 	}

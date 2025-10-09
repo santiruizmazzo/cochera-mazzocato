@@ -1,4 +1,4 @@
-package domain
+package ent
 
 import (
 	vo "cochera/domain/value_objects"

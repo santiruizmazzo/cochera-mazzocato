@@ -1,13 +1,16 @@
 package domain
 
-import vo "cochera/domain/value_objects"
+import (
+	ent "cochera/domain/entities"
+	vo "cochera/domain/value_objects"
+)
 
 type TenantBuilder struct {
-	tenant *Tenant
+	tenant *ent.Tenant
 }
 
 func NewTenantBuilder() *TenantBuilder {
-	tenant := Tenant{
+	tenant := ent.Tenant{
 		ID:         1,
 		DNI:        12345678,
 		Name:       "Huang",
@@ -55,6 +58,6 @@ func (builder *TenantBuilder) WithEmail(email string) *TenantBuilder {
 	return builder
 }
 
-func (builder *TenantBuilder) Build() *Tenant {
+func (builder *TenantBuilder) Build() *ent.Tenant {
 	return builder.tenant
 }

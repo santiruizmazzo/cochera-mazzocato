@@ -33,7 +33,7 @@ func setupTenantService(db *pgxpool.Pool) *services.TenantService {
 	return services.NewTenantService(repo)
 }
 
-func (api *API) addCORSToRouter(router http.Handler) http.Handler {
+func (api API) addCORSToRouter(router http.Handler) http.Handler {
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
@@ -43,7 +43,7 @@ func (api *API) addCORSToRouter(router http.Handler) http.Handler {
 	return c.Handler(router)
 }
 
-func (api *API) Routes() *http.ServeMux {
+func (api API) Routes() *http.ServeMux {
 	apiRouter := http.NewServeMux()
 	apiRouter.HandleFunc(HealthRoute, api.getHealthStatus)
 	apiRouter.HandleFunc(TenantsBaseRoute, api.tenantHandler)
@@ -55,7 +55,7 @@ func (api *API) Routes() *http.ServeMux {
 	return mainRouter
 }
 
-func (api *API) DB() *pgxpool.Pool {
+func (api API) DB() *pgxpool.Pool {
 	return api.db
 }
 

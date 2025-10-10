@@ -8,9 +8,7 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="tenant-detail-view">
-        <tenant-full-card id="${this.params.id}">
-          <svg class="spinner"><use href="#spinner"/></svg>
-        </tenant-full-card>
+        <tenant-full-card id="${this.params.id}"></tenant-full-card>
       </section>
     `;
   }

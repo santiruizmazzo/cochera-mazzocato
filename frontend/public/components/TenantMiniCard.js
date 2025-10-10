@@ -26,16 +26,14 @@ template.innerHTML = /*html*/ `
       flex-grow: 1;
       overflow-wrap: anywhere;
     }
-
-    #name, #last-name, #id {
-      margin: 0;
-    }
-
+    
     #name {
+      margin: 0;
       color: var(--clr-main-darkest);
     }
 
-    #id {
+    #last-name {
+      margin: 0;
       flex-grow: 1;
     }
 
@@ -57,7 +55,7 @@ template.innerHTML = /*html*/ `
         color: var(--clr-main-darker);
       }
 
-      #last-name, #id {
+      #last-name {
         color: var(--clr-main);
       }
 
@@ -71,7 +69,6 @@ template.innerHTML = /*html*/ `
     <div>
       <h3 id="name"></h3>
       <h3 id="last-name"></h3>
-      <span id="id"></span>
       <svg viewBox="0 -960 960 960">
         <path d="M200-200v-560 179-19zm80-240h221q2-22 10-42t20-38H280zm0 160h157q17-20 39-32.5t46-20.5q-4-6-7-13t-5-14H280zm0-320h400v-80H280zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v258q-14-26-34-46t-46-33v-179H200v560h202q-1 6-1.5 12t-.5 12v56zm480-200q-42 0-71-29t-29-71 29-71 71-29 71 29 29 71-29 71-71 29M480-120v-56q0-24 12.5-44.5T528-250q36-15 74.5-22.5T680-280t77.5 7.5T832-250q23 9 35.5 29.5T880-176v56z"/>
       </svg>
@@ -112,7 +109,6 @@ export default class TenantMiniCard extends HTMLElement {
   render() {
     this.shadowRoot.querySelector("#name").innerHTML = this.name;
     this.shadowRoot.querySelector("#last-name").innerHTML = this.lastName;
-    this.shadowRoot.querySelector("#id").innerHTML = `#${this.id}`;
   }
 }
 

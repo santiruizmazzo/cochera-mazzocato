@@ -1,6 +1,10 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    
     :host {
       aspect-ratio: 16 / 9;
       min-width: 65%;
@@ -44,18 +48,7 @@ template.innerHTML = /*html*/ `
       margin-bottom: 1rem;
     }
 
-    #info {
-      flex-grow: 1;
-      padding: 1rem;
-    }
-
-    #entry-month {
-      text-align: center;
-      background-color: var(--clr-main-darkest);
-      padding: 0.4rem 0;
-    }
-
-    .undefined {
+    .unknown {
       display: inline-block;
       background-color: var(--clr-main-darkest);
       color: var(--clr-main);
@@ -68,7 +61,7 @@ template.innerHTML = /*html*/ `
 
   <div class="left-side">
     <div class="photo-placeholder"></div>
-    <h2 class="dni">43.295.798</h2>
+    <h2 class="dni"></h2>
   </div>
   <div class="right-side">
     <p>Apellido/s</p>
@@ -79,10 +72,10 @@ template.innerHTML = /*html*/ `
     <h3 class="entry-month"></h3>
     <p>Teléfono</p>
     <h3 class="phone"></h3>
-    <p>Domicilio</p>
-    <h3 class="address"></h3>
     <p>Email</p>
     <h3 class="email"></h3>
+    <p>Domicilio</p>
+    <h3 class="address"></h3>
   </div>
 `;
 
@@ -132,10 +125,10 @@ export default class TenantFullCard extends HTMLElement {
     if (this.tenantData["phone"]) {
       phoneElement.innerHTML = this.tenantData["phone"];
     } else {
-      const undefinedPlaceholder = document.createElement("p");
-      undefinedPlaceholder.classList.add("undefined");
-      undefinedPlaceholder.innerHTML = "Desconocido";
-      phoneElement.appendChild(undefinedPlaceholder);
+      const unknownPlaceholder = document.createElement("p");
+      unknownPlaceholder.classList.add("unknown");
+      unknownPlaceholder.innerHTML = "Desconocido";
+      phoneElement.appendChild(unknownPlaceholder);
     }
 
     const addressElement = this.shadowRoot.querySelector(".address");
@@ -143,10 +136,10 @@ export default class TenantFullCard extends HTMLElement {
     if (this.tenantData["address"]) {
       addressElement.innerHTML = this.tenantData["address"];
     } else {
-      const undefinedPlaceholder = document.createElement("p");
-      undefinedPlaceholder.classList.add("undefined");
-      undefinedPlaceholder.innerHTML = "Desconocido";
-      addressElement.appendChild(undefinedPlaceholder);
+      const unknownPlaceholder = document.createElement("p");
+      unknownPlaceholder.classList.add("unknown");
+      unknownPlaceholder.innerHTML = "Desconocido";
+      addressElement.appendChild(unknownPlaceholder);
     }
 
     const emailElement = this.shadowRoot.querySelector(".email");
@@ -154,10 +147,10 @@ export default class TenantFullCard extends HTMLElement {
     if (this.tenantData["email"]) {
       emailElement.innerHTML = this.tenantData["email"];
     } else {
-      const undefinedPlaceholder = document.createElement("p");
-      undefinedPlaceholder.classList.add("undefined");
-      undefinedPlaceholder.innerHTML = "Desconocido";
-      emailElement.appendChild(undefinedPlaceholder);
+      const unknownPlaceholder = document.createElement("p");
+      unknownPlaceholder.classList.add("unknown");
+      unknownPlaceholder.innerHTML = "Desconocido";
+      emailElement.appendChild(unknownPlaceholder);
     }
   }
 }

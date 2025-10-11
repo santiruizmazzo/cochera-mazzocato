@@ -116,20 +116,21 @@ export default class TenantFullCard extends HTMLElement {
     lastNameElement.innerHTML = this.tenantData["last_name"];
 
     const entryMonthElement = this.shadowRoot.querySelector(".entry-month");
-    entryMonthElement.innerHTML = formatDateMMYYYY(
+    entryMonthElement.innerHTML = formatEntryMonth(
       this.tenantData["entry_month"],
     );
 
     const phoneElement = this.shadowRoot.querySelector(".phone");
+    phoneElement.innerHTML = formatPhone(this.tenantData["phone"]);
 
-    if (this.tenantData["phone"]) {
-      phoneElement.innerHTML = this.tenantData["phone"];
-    } else {
-      const unknownPlaceholder = document.createElement("p");
-      unknownPlaceholder.classList.add("unknown");
-      unknownPlaceholder.innerHTML = "Desconocido";
-      phoneElement.appendChild(unknownPlaceholder);
-    }
+    // if (this.tenantData["phone"]) {
+    //   phoneElement.innerHTML = this.tenantData["phone"];
+    // } else {
+    //   const unknownPlaceholder = document.createElement("p");
+    //   unknownPlaceholder.classList.add("unknown");
+    //   unknownPlaceholder.innerHTML = "Desconocido";
+    //   phoneElement.appendChild(unknownPlaceholder);
+    // }
 
     const addressElement = this.shadowRoot.querySelector(".address");
 
@@ -155,8 +156,8 @@ export default class TenantFullCard extends HTMLElement {
   }
 }
 
-function formatDateMMYYYY(input) {
-  const [month, year] = input.split("-").map(Number);
+function formatEntryMonth(rawEntryMonth) {
+  const [month, year] = rawEntryMonth.split("-").map(Number);
   const date = new Date(year, month - 1);
   const monthsFromDate = new Date().getMonth() - date.getMonth();
   const yearsFromDate = new Date().getFullYear() - date.getFullYear();
@@ -174,6 +175,29 @@ function formatDateMMYYYY(input) {
 
   const commentedDate = `${capitalizedDate} (${comment})`;
   return commentedDate;
+}
+
+function formatPhone(rawPhone) {
+  if (!rawPhone) {
+    // const unknownPlaceholder = document.createElement("p");
+    // unknownPlaceholder.classList.add("unknown");
+    // unknownPlaceholder.innerHTML = "Desconocido";
+    // return unknownPlaceholder;
+    // phoneElement.appendChild(unknownPlaceholder);
+    return "Desconocido";
+  }
+
+  let newString;
+
+  switch (true) {
+    case rawPhone.startsWith("+54"):
+      newString = `🇦🇷 +54 ${rawPhone.slice(3)}`;
+      break;
+    case rawPhone.startsWith("+598"):
+      newString = `🇺🇾 +598 ${rawPhone.slice(4)}`;
+      break;
+  }
+  return newString;
 }
 
 customElements.define("tenant-full-card", TenantFullCard);

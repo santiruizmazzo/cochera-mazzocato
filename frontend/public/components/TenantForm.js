@@ -97,7 +97,7 @@ template.innerHTML = /*html*/ `
       </select>
 
       <input id="phone" name="phone" type="tel"
-              minlength="10"
+              minlength="8"
               maxlength="15"
               placeholder="3442518388">
     </div>

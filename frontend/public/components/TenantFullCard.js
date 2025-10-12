@@ -38,14 +38,27 @@ template.innerHTML = /*html*/ `
     .right-side {
       background-color: var(--clr-main-darker);
       padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    p, h3 {
+    fieldset {
       margin: 0;
+      padding: 0;
+      border: none;
     }
 
-    h3 {
-      margin-bottom: 1rem;
+    legend {
+      padding: 0;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    p {
+      margin: 0;
+      font-weight: 500;
+      font-size: 1.2rem;
     }
 
     .unknown {
@@ -64,18 +77,24 @@ template.innerHTML = /*html*/ `
     <h2 class="dni"></h2>
   </div>
   <div class="right-side">
-    <p>Apellido/s</p>
-    <h3 class="last-name"></h3>
-    <p>Nombre/s</p>
-    <h3 class="name"></h3>
-    <p>Mes de ingreso</p>
-    <h3 class="entry-month"></h3>
-    <p>Teléfono</p>
-    <h3 class="phone"></h3>
-    <p>Email</p>
-    <h3 class="email"></h3>
-    <p>Domicilio</p>
-    <h3 class="address"></h3>
+    <fieldset id="last-name">
+      <legend>Apellido/s</legend>
+    </fieldset>
+    <fieldset id="name">
+      <legend>Nombre/s</legend>
+    </fieldset>
+    <fieldset id="entry-month">
+      <legend>Mes de ingreso</legend>
+    </fieldset>
+    <fieldset id="phone">
+      <legend>Teléfono</legend>
+    </fieldset>
+    <fieldset id="email">
+      <legend>Email</legend>
+    </fieldset>
+    <fieldset id="address">
+      <legend>Domicilio</legend>
+    </fieldset>
   </div>
 `;
 
@@ -109,50 +128,48 @@ export default class TenantFullCard extends HTMLElement {
     const dniElement = this.shadowRoot.querySelector(".dni");
     dniElement.innerHTML = this.tenantData["dni"];
 
-    const nameElement = this.shadowRoot.querySelector(".name");
-    nameElement.innerHTML = this.tenantData["name"];
-
-    const lastNameElement = this.shadowRoot.querySelector(".last-name");
+    const lastNameFieldset = this.shadowRoot.querySelector("#last-name");
+    const lastNameElement = document.createElement("p");
     lastNameElement.innerHTML = this.tenantData["last_name"];
+    lastNameFieldset.appendChild(lastNameElement);
 
-    const entryMonthElement = this.shadowRoot.querySelector(".entry-month");
+    const nameFieldset = this.shadowRoot.querySelector("#name");
+    const nameElement = document.createElement("p");
+    nameElement.innerHTML = this.tenantData["name"];
+    nameFieldset.appendChild(nameElement);
+
+    const entryMonthFieldset = this.shadowRoot.querySelector("#entry-month");
+    const entryMonthElement = document.createElement("p");
     entryMonthElement.innerHTML = formatEntryMonth(
       this.tenantData["entry_month"],
     );
+    entryMonthFieldset.appendChild(entryMonthElement);
 
-    const phoneElement = this.shadowRoot.querySelector(".phone");
-    phoneElement.innerHTML = formatPhone(this.tenantData["phone"]);
+    const phoneFieldset = this.shadowRoot.querySelector("#phone");
+    const phoneElement = formatPhone(this.tenantData["phone"]);
+    phoneFieldset.appendChild(phoneElement);
 
-    // if (this.tenantData["phone"]) {
-    //   phoneElement.innerHTML = this.tenantData["phone"];
-    // } else {
-    //   const unknownPlaceholder = document.createElement("p");
-    //   unknownPlaceholder.classList.add("unknown");
-    //   unknownPlaceholder.innerHTML = "Desconocido";
-    //   phoneElement.appendChild(unknownPlaceholder);
-    // }
-
-    const addressElement = this.shadowRoot.querySelector(".address");
+    const addressFieldset = this.shadowRoot.querySelector("#address");
+    const addressElement = document.createElement("p");
 
     if (this.tenantData["address"]) {
       addressElement.innerHTML = this.tenantData["address"];
     } else {
-      const unknownPlaceholder = document.createElement("p");
-      unknownPlaceholder.classList.add("unknown");
-      unknownPlaceholder.innerHTML = "Desconocido";
-      addressElement.appendChild(unknownPlaceholder);
+      addressElement.innerHTML = "Desconocido";
+      addressElement.classList.add("unknown");
     }
+    addressFieldset.appendChild(addressElement);
 
-    const emailElement = this.shadowRoot.querySelector(".email");
+    const emailFieldset = this.shadowRoot.querySelector("#email");
+    const emailElement = document.createElement("p");
 
     if (this.tenantData["email"]) {
       emailElement.innerHTML = this.tenantData["email"];
     } else {
-      const unknownPlaceholder = document.createElement("p");
-      unknownPlaceholder.classList.add("unknown");
-      unknownPlaceholder.innerHTML = "Desconocido";
-      emailElement.appendChild(unknownPlaceholder);
+      emailElement.innerHTML = "Desconocido";
+      emailElement.classList.add("unknown");
     }
+    emailFieldset.appendChild(emailElement);
   }
 }
 
@@ -178,13 +195,12 @@ function formatEntryMonth(rawEntryMonth) {
 }
 
 function formatPhone(rawPhone) {
+  const phoneElement = document.createElement("p");
+
   if (!rawPhone) {
-    // const unknownPlaceholder = document.createElement("p");
-    // unknownPlaceholder.classList.add("unknown");
-    // unknownPlaceholder.innerHTML = "Desconocido";
-    // return unknownPlaceholder;
-    // phoneElement.appendChild(unknownPlaceholder);
-    return "Desconocido";
+    phoneElement.classList.add("unknown");
+    phoneElement.innerHTML = "Desconocido";
+    return phoneElement;
   }
 
   let newString;
@@ -197,7 +213,9 @@ function formatPhone(rawPhone) {
       newString = `🇺🇾 +598 ${rawPhone.slice(4)}`;
       break;
   }
-  return newString;
+
+  phoneElement.innerHTML = newString;
+  return phoneElement;
 }
 
 customElements.define("tenant-full-card", TenantFullCard);

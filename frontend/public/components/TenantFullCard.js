@@ -6,7 +6,6 @@ template.innerHTML = /*html*/ `
     }
     
     :host {
-      aspect-ratio: 16 / 9;
       min-width: 65%;
       display: grid;
       grid-template-columns: 1.25fr 2fr;
@@ -38,6 +37,7 @@ template.innerHTML = /*html*/ `
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      overflow-wrap: anywhere;
     }
 
     fieldset {

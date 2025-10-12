@@ -243,15 +243,6 @@ dialog[open] > header {
   }
 }
 
-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem 0;
-  background-color: var(--clr-contrast);
-  color: var(--clr-main);
-}
-
 .spinner {
   --spin-time: 0.7s;
   --side-length: 3rem;

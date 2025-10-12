@@ -9,11 +9,11 @@ template.innerHTML = /*html*/ `
       aspect-ratio: 16 / 9;
       min-width: 65%;
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 1.25fr 2fr;
+      background-color: var(--clr-main-darker);
     }
 
     .left-side {
-      background-color: var(--clr-main-darker);
       display: flex;
       flex-direction: column;
       padding: 1.5rem;
@@ -30,13 +30,11 @@ template.innerHTML = /*html*/ `
       margin: 0;
       padding: 0;
       font-size: 2rem;
-      text-align: center;
       line-height: 1;
       font-weight: 600;
     }
     
     .right-side {
-      background-color: var(--clr-main-darker);
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
@@ -52,7 +50,10 @@ template.innerHTML = /*html*/ `
     legend {
       padding: 0;
       margin: 0;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--clr-main-darkest);
     }
 
     p {
@@ -74,7 +75,10 @@ template.innerHTML = /*html*/ `
 
   <div class="left-side">
     <div class="photo-placeholder"></div>
-    <h2 class="dni"></h2>
+    <fieldset>
+      <legend>DNI</legend>
+      <h2 class="dni"></h2>
+    </fieldset>
   </div>
   <div class="right-side">
     <fieldset id="last-name">
@@ -126,7 +130,7 @@ export default class TenantFullCard extends HTMLElement {
 
   render() {
     const dniElement = this.shadowRoot.querySelector(".dni");
-    dniElement.innerHTML = this.tenantData["dni"];
+    dniElement.innerHTML = formatDni(this.tenantData["dni"]);
 
     const lastNameFieldset = this.shadowRoot.querySelector("#last-name");
     const lastNameElement = document.createElement("p");
@@ -155,7 +159,7 @@ export default class TenantFullCard extends HTMLElement {
     if (this.tenantData["address"]) {
       addressElement.innerHTML = this.tenantData["address"];
     } else {
-      addressElement.innerHTML = "Desconocido";
+      addressElement.innerHTML = "Desconocido ¿?";
       addressElement.classList.add("unknown");
     }
     addressFieldset.appendChild(addressElement);
@@ -166,11 +170,15 @@ export default class TenantFullCard extends HTMLElement {
     if (this.tenantData["email"]) {
       emailElement.innerHTML = this.tenantData["email"];
     } else {
-      emailElement.innerHTML = "Desconocido";
+      emailElement.innerHTML = "Desconocido ¿?";
       emailElement.classList.add("unknown");
     }
     emailFieldset.appendChild(emailElement);
   }
+}
+
+function formatDni(rawDni) {
+  return new Intl.NumberFormat("es-ES").format(rawDni);
 }
 
 function formatEntryMonth(rawEntryMonth) {
@@ -188,7 +196,9 @@ function formatEntryMonth(rawEntryMonth) {
   const lessThanAYearComment =
     monthsFromDate < 1 ? "este mes" : `hace ${monthsFromDate} meses`;
   const comment =
-    yearsFromDate < 1 ? lessThanAYearComment : `hace ${yearsFromDate} años`;
+    yearsFromDate < 1
+      ? lessThanAYearComment
+      : `hace ${yearsFromDate} año${yearsFromDate > 1 ? "s" : ""}`;
 
   const commentedDate = `${capitalizedDate} (${comment})`;
   return commentedDate;
@@ -199,7 +209,7 @@ function formatPhone(rawPhone) {
 
   if (!rawPhone) {
     phoneElement.classList.add("unknown");
-    phoneElement.innerHTML = "Desconocido";
+    phoneElement.innerHTML = "Desconocido ¿?";
     return phoneElement;
   }
 

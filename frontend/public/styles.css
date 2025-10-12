@@ -243,16 +243,6 @@ dialog[open] > header {
   }
 }
 
-.spinner {
-  --spin-time: 0.7s;
-  --side-length: 3rem;
-
-  width: var(--side-length);
-  height: var(--side-length);
-  fill: var(--clr-main-darkest);
-  animation: spin var(--spin-time) linear infinite;
-}
-
 @keyframes spin {
   to {
     transform: rotate(360deg);

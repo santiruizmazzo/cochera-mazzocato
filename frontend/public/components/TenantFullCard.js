@@ -22,11 +22,10 @@ template.innerHTML = /*html*/ `
 
     .photo-placeholder {
       flex-grow: 1;
-      background-image: linear-gradient(45deg, var(--clr-main), var(--clr-main-darkest));
+      background-color: var(--clr-main-darkest);
     }
 
     .dni {
-      display: block;
       margin: 0;
       padding: 0;
       font-size: 2rem;
@@ -71,33 +70,70 @@ template.innerHTML = /*html*/ `
       font-weight: 500;
       line-height: 1;
     }
+
+    .loading {
+      --anmtn-clr-base: var(--clr-main-darkest);
+      --anmtn-clr-1: rgb(from var(--anmtn-clr-base) r g b / calc(alpha - 0.75));
+      --anmtn-clr-2: rgb(from var(--anmtn-clr-base) r g b / calc(alpha - 0.55));
+
+      color: transparent;
+      background: linear-gradient(
+        90deg,
+        var(--anmtn-clr-2) 0%,
+        var(--anmtn-clr-1) 50%,
+        var(--anmtn-clr-2) 100%
+      );
+      background-size: 200% 100%;
+      animation: pulse 1s infinite linear;
+    }
+
+    @keyframes pulse {
+      0% {
+        background-position: 0% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
   </style>
 
   <div class="left-side">
     <div class="photo-placeholder"></div>
     <fieldset>
       <legend>DNI</legend>
-      <h2 class="dni"></h2>
+      <p class="dni loading">99.999.999</p>
     </fieldset>
   </div>
+
   <div class="right-side">
     <fieldset id="last-name">
       <legend>Apellido/s</legend>
+      <p class="loading">Sonnet</p>
     </fieldset>
+
     <fieldset id="name">
       <legend>Nombre/s</legend>
+      <p class="loading">Claude</p>
     </fieldset>
+
     <fieldset id="entry-month">
       <legend>Mes de ingreso</legend>
+      <p class="loading">Marzo de 2023</p>
     </fieldset>
+
     <fieldset id="phone">
       <legend>Teléfono</legend>
+      <p class="loading">+546666888888</p>
     </fieldset>
+
     <fieldset id="email">
       <legend>Email</legend>
+      <p class="loading">claude@anthropic.com</p>
     </fieldset>
+
     <fieldset id="address">
       <legend>Domicilio</legend>
+      <p class="loading">74 Lincoln Ave., San Francisco</p>
     </fieldset>
   </div>
 `;
@@ -129,51 +165,77 @@ export default class TenantFullCard extends HTMLElement {
   }
 
   render() {
-    const dniElement = this.shadowRoot.querySelector(".dni");
-    dniElement.innerHTML = formatDni(this.tenantData["dni"]);
+    this.renderDni();
+    this.renderLastName();
+    this.renderName();
+    this.renderEntryMonth();
+    this.renderPhone();
+    this.renderAddress();
+    this.renderEmail();
+  }
 
-    const lastNameFieldset = this.shadowRoot.querySelector("#last-name");
-    const lastNameElement = document.createElement("p");
-    lastNameElement.innerHTML = this.tenantData["last_name"];
-    lastNameFieldset.appendChild(lastNameElement);
+  renderDni() {
+    const dni = this.shadowRoot.querySelector(".dni");
+    dni.innerHTML = formatDni(this.tenantData["dni"]);
+    dni.className = "dni";
+  }
 
-    const nameFieldset = this.shadowRoot.querySelector("#name");
-    const nameElement = document.createElement("p");
-    nameElement.innerHTML = this.tenantData["name"];
-    nameFieldset.appendChild(nameElement);
+  renderLastName() {
+    const lastName = this.shadowRoot.querySelector("#last-name p");
+    lastName.innerHTML = this.tenantData["last_name"];
+    lastName.className = "";
+  }
 
-    const entryMonthFieldset = this.shadowRoot.querySelector("#entry-month");
-    const entryMonthElement = document.createElement("p");
-    entryMonthElement.innerHTML = formatEntryMonth(
-      this.tenantData["entry_month"],
-    );
-    entryMonthFieldset.appendChild(entryMonthElement);
+  renderName() {
+    const name = this.shadowRoot.querySelector("#name p");
+    name.innerHTML = this.tenantData["name"];
+    name.className = "";
+  }
 
-    const phoneFieldset = this.shadowRoot.querySelector("#phone");
-    const phoneElement = formatPhone(this.tenantData["phone"]);
-    phoneFieldset.appendChild(phoneElement);
+  renderEntryMonth() {
+    const entryMonth = this.shadowRoot.querySelector("#entry-month p");
+    entryMonth.innerHTML = formatEntryMonth(this.tenantData["entry_month"]);
+    entryMonth.className = "";
+  }
 
-    const addressFieldset = this.shadowRoot.querySelector("#address");
-    const addressElement = document.createElement("p");
+  renderPhone() {
+    const phone = this.shadowRoot.querySelector("#phone p");
+    const formattedPhone = formatPhone(this.tenantData["phone"]);
 
-    if (this.tenantData["address"]) {
-      addressElement.innerHTML = this.tenantData["address"];
-    } else {
-      addressElement.innerHTML = "Desconocido ¿?";
-      addressElement.classList.add("unknown");
+    if (!formattedPhone) {
+      phone.innerHTML = "Desconocido";
+      phone.className = "unknown";
+      return;
     }
-    addressFieldset.appendChild(addressElement);
 
-    const emailFieldset = this.shadowRoot.querySelector("#email");
-    const emailElement = document.createElement("p");
+    phone.innerHTML = formattedPhone;
+    phone.className = "";
+  }
 
-    if (this.tenantData["email"]) {
-      emailElement.innerHTML = this.tenantData["email"];
-    } else {
-      emailElement.innerHTML = "Desconocido ¿?";
-      emailElement.classList.add("unknown");
+  renderAddress() {
+    const address = this.shadowRoot.querySelector("#address p");
+
+    if (!this.tenantData["address"]) {
+      address.innerHTML = "Desconocido";
+      address.className = "unknown";
+      return;
     }
-    emailFieldset.appendChild(emailElement);
+
+    address.innerHTML = this.tenantData["address"];
+    address.className = "";
+  }
+
+  renderEmail() {
+    const email = this.shadowRoot.querySelector("#email p");
+
+    if (!this.tenantData["email"]) {
+      email.innerHTML = "Desconocido";
+      email.className = "unknown";
+      return;
+    }
+
+    email.innerHTML = this.tenantData["email"];
+    email.className = "";
   }
 }
 
@@ -184,8 +246,8 @@ function formatDni(rawDni) {
 function formatEntryMonth(rawEntryMonth) {
   const [month, year] = rawEntryMonth.split("-").map(Number);
   const date = new Date(year, month - 1);
-  const monthsFromDate = new Date().getMonth() - date.getMonth();
-  const yearsFromDate = new Date().getFullYear() - date.getFullYear();
+  const monthsFromEntry = new Date().getMonth() - date.getMonth();
+  const yearsFromEntry = new Date().getFullYear() - date.getFullYear();
 
   const baseDate = date.toLocaleDateString("es-ES", {
     month: "long",
@@ -194,23 +256,19 @@ function formatEntryMonth(rawEntryMonth) {
   const capitalizedDate = baseDate.charAt(0).toUpperCase() + baseDate.slice(1);
 
   const lessThanAYearComment =
-    monthsFromDate < 1 ? "este mes" : `hace ${monthsFromDate} meses`;
-  const comment =
-    yearsFromDate < 1
-      ? lessThanAYearComment
-      : `hace ${yearsFromDate} año${yearsFromDate > 1 ? "s" : ""}`;
+    monthsFromEntry < 1 ? "este mes" : `hace ${monthsFromEntry} meses`;
 
-  const commentedDate = `${capitalizedDate} (${comment})`;
-  return commentedDate;
+  const moreThanAYearComment = `hace ${yearsFromEntry} año${yearsFromEntry > 1 ? "s" : ""}`;
+
+  const comment =
+    yearsFromEntry < 1 ? lessThanAYearComment : moreThanAYearComment;
+
+  return `${capitalizedDate} (${comment})`;
 }
 
 function formatPhone(rawPhone) {
-  const phoneElement = document.createElement("p");
-
   if (!rawPhone) {
-    phoneElement.classList.add("unknown");
-    phoneElement.innerHTML = "Desconocido ¿?";
-    return phoneElement;
+    return rawPhone;
   }
 
   let newString;
@@ -224,8 +282,7 @@ function formatPhone(rawPhone) {
       break;
   }
 
-  phoneElement.innerHTML = newString;
-  return phoneElement;
+  return newString;
 }
 
 customElements.define("tenant-full-card", TenantFullCard);

@@ -26,9 +26,7 @@ export default class extends AbstractView {
           </button>
         </header>
         
-        <tenants-collection>
-          <svg class="spinner"><use href="#spinner"/></svg>
-        </tenants-collection>
+        <tenants-collection></tenants-collection>
       </section>
     `;
   }

@@ -7,23 +7,14 @@ template.innerHTML = /*html*/ `
       flex-grow: 1;
     }
 
-    .empty {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .loaded {
+    div {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
       gap: 0.625rem;
     }
   </style>
 
-  <div class="empty">
-    <slot></slot>
-  </div>
+  <div></div>
 `;
 
 export default class TenantsCollection extends HTMLElement {
@@ -48,6 +39,7 @@ export default class TenantsCollection extends HTMLElement {
 
     document.addEventListener("tenants:update", this);
 
+    this.renderPlaceholders();
     await this.fetchTenants();
     this.render();
   }
@@ -65,10 +57,19 @@ export default class TenantsCollection extends HTMLElement {
       });
   }
 
+  renderPlaceholders() {
+    const container = this.shadowRoot.querySelector("div");
+    const COLLECTION_LENGTH = 15;
+
+    for (let i = 0; i < COLLECTION_LENGTH; i++) {
+      const emptyCard = document.createElement("tenant-mini-card");
+      container.appendChild(emptyCard);
+    }
+  }
+
   render() {
     const container = this.shadowRoot.querySelector("div");
     container.innerHTML = "";
-    container.className = "loaded";
 
     this.tenants.forEach((tenant) => {
       const card = TenantMiniCard.fromJson(tenant);

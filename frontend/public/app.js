@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (link) {
       event.preventDefault();
-      router.navigateTo(event.target.href);
+      router.navigateTo(link.href);
     }
   });
 

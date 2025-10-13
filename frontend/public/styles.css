@@ -91,13 +91,13 @@ body {
 }
 
 .nav-bar {
-  --border-width: 0.16rem;
+  --border-width: 0.11rem;
 
   display: flex;
   flex-direction: column;
   align-content: center;
   gap: 3rem;
-  border-right: var(--border-width) solid var(--clr-main-darkest);
+  border-right: var(--border-width) dotted var(--clr-main-darkest);
   padding: 1rem;
 
   ul {
@@ -213,7 +213,7 @@ dialog[open] > header {
 }
 
 .new-action-btn {
-  --separation: 0.6rem;
+  --separation: 0.5rem;
   --border-size: 0.2rem;
   --font-weight: 600;
   --stroke-color: var(--clr-contrast);
@@ -277,7 +277,19 @@ dialog[open] > header {
 
 .tenant-detail-view {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
+  gap: var(--vertical-spacing);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  svg {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
 }

@@ -10,6 +10,7 @@ template.innerHTML = /*html*/ `
       display: grid;
       grid-template-columns: 1fr 2fr;
       background-color: var(--clr-main-darker);
+      align-self: center;
     }
 
     .left-side {

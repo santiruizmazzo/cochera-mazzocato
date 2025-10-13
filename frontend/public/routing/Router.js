@@ -34,7 +34,18 @@ export default class Router {
     if (url.endsWith(location.pathname)) return;
 
     history.pushState(null, null, url);
+    this.selectNavLink(url);
     this.route();
+  }
+
+  selectNavLink(url) {
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    navLinks.forEach((navLink) => {
+      navLink.className = url.startsWith(navLink.href)
+        ? "selected nav-link"
+        : "nav-link";
+    });
   }
 
   async route() {

@@ -146,6 +146,10 @@ body {
   }
 }
 
+.selected {
+  background-color: var(--clr-main-darker);
+}
+
 main {
   height: 100%;
   padding: var(--vertical-spacing);

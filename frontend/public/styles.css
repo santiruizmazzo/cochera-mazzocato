@@ -109,7 +109,7 @@ body {
   }
 
   a {
-    font-weight: bold;
+    font-weight: 650;
     text-decoration: none;
     color: var(--clr-contrast);
   }
@@ -132,8 +132,14 @@ body {
 }
 
 .nav-link {
-  display: block;
-  padding: 0.3125rem;
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.32rem 0.7rem;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 
   &:hover {
     background-color: var(--clr-main-darker);

@@ -85,24 +85,27 @@ svg {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 7fr;
   background-color: var(--clr-main);
 }
 
 .nav-bar {
-  --border-width: 0.1875rem;
+  --border-width: 0.16rem;
 
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  place-items: center;
-  border-bottom: var(--border-width) solid var(--clr-main-darkest);
-  padding: 0.8rem 0;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  gap: 3rem;
+  border-right: var(--border-width) solid var(--clr-main-darkest);
+  padding: 1rem;
 
   ul {
     display: flex;
+    flex-direction: column;
     gap: 0.75rem;
     list-style: none;
+    width: 100%;
   }
 
   a {
@@ -115,6 +118,8 @@ body {
 .home-button {
   font-size: 2rem;
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.3rem;
 
   svg {
@@ -124,13 +129,10 @@ body {
     width: var(--side-size);
     height: var(--side-size);
   }
-
-  &:hover {
-    transform: scale(1.1);
-  }
 }
 
 .nav-link {
+  display: block;
   padding: 0.3125rem;
 
   &:hover {
@@ -139,10 +141,8 @@ body {
 }
 
 main {
-  width: 70%;
-  flex-grow: 1;
-  align-self: center;
-  padding: var(--vertical-spacing) 0;
+  height: 100%;
+  padding: var(--vertical-spacing);
 }
 
 dialog[open] {
@@ -243,14 +243,11 @@ dialog[open] > header {
   }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .home-view {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 
   span {
     font-weight: bold;
@@ -259,7 +256,10 @@ dialog[open] > header {
 }
 
 .payments-view {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .tenants-view {

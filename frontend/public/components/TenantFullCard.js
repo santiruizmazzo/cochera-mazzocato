@@ -6,9 +6,9 @@ template.innerHTML = /*html*/ `
     }
     
     :host {
-      min-width: 65%;
+      width: 60%;
       display: grid;
-      grid-template-columns: 1.25fr 2fr;
+      grid-template-columns: 1fr 2fr;
       background-color: var(--clr-main-darker);
     }
 

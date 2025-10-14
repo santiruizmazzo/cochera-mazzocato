@@ -255,9 +255,9 @@ dialog[open] > header {
 
 .home-view {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   height: 100%;
+  gap: var(--vertical-spacing);
 
   span {
     font-weight: bold;
@@ -295,5 +295,55 @@ dialog[open] > header {
   svg {
     width: 1.7rem;
     height: 1.7rem;
+  }
+}
+
+.slots-collection {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(10rem, 1fr));
+  gap: 1rem;
+  place-items: center;
+}
+
+.slot {
+  width: 100%;
+  background-color: var(--clr-main-darker);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  container: slot;
+
+  h2 {
+    color: var(--clr-main-darkest);
+    line-height: 1;
+    font-size: 3.5rem;
+    font-weight: 500;
+  }
+
+  p {
+    text-align: end;
+  }
+
+  a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+
+    &:hover {
+      text-decoration: underline dotted;
+    }
+  }
+}
+
+.slot:nth-child(2),
+.slot:nth-child(4),
+.slot:nth-child(5),
+.slot:nth-child(6),
+.slot:nth-child(7) {
+  background-color: rgb(53, 200, 45);
+
+  * {
+    color: rgb(17, 63, 14);
   }
 }

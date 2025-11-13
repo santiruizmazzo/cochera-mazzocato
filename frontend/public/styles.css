@@ -109,7 +109,6 @@ body {
   }
 
   a {
-    font-weight: 650;
     text-decoration: none;
     color: var(--clr-contrast);
   }
@@ -121,6 +120,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.3rem;
+  font-weight: 650;
+  color: var(--clr-contrast);
 
   svg {
     --side-size: 3rem;
@@ -137,6 +138,7 @@ body {
   padding: 0.32rem 0.7rem;
 
   svg {
+    fill: var(--clr-main-darkest);
     width: 1.5rem;
     height: 1.5rem;
   }
@@ -148,6 +150,11 @@ body {
 
 .selected {
   background-color: var(--clr-main-darker);
+  font-weight: 650;
+
+  svg {
+    fill: var(--clr-contrast);
+  }
 }
 
 main {

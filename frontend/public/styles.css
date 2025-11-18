@@ -265,6 +265,7 @@ dialog[open] > header {
   flex-direction: column;
   height: 100%;
   gap: var(--vertical-spacing);
+  justify-content: space-between;
 
   span {
     font-weight: bold;
@@ -314,15 +315,18 @@ dialog[open] > header {
 
 .slot {
   width: 100%;
-  background-color: var(--clr-main-darker);
+  background-color: rgb(250, 250, 166);
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   container: slot;
 
+  * {
+    color: rgb(116, 116, 25);
+  }
+
   h2 {
-    color: var(--clr-main-darkest);
     line-height: 1;
     font-size: 3.5rem;
     font-weight: 500;
@@ -335,7 +339,6 @@ dialog[open] > header {
   a {
     text-decoration: none;
     font-weight: bold;
-    color: black;
 
     &:hover {
       text-decoration: underline dotted;
@@ -352,5 +355,36 @@ dialog[open] > header {
 
   * {
     color: rgb(17, 63, 14);
+  }
+}
+
+.slot:nth-child(10),
+.slot:nth-child(11) {
+  background-color: var(--clr-main-darker);
+
+  * {
+    color: var(--clr-main-darkest);
+  }
+}
+
+.assign-tenant-btn {
+  border: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  width: fit-content;
+  align-self: end;
+
+  &:hover {
+    cursor: pointer;
+    scale: 1.03;
+  }
+
+  svg {
+    fill: var(--clr-main-darkest);
+    width: 1.7rem;
+    height: 1.7rem;
   }
 }

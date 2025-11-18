@@ -12,22 +12,12 @@ export default class extends AbstractView {
         
         <dialog id="assign-tenant-to-slot-modal" closedby="any">
           <header>
-            <h3>Asignar inquilino a plaza</h3>
+            <h3>Reservar plaza</h3>
             <button class="close-action-btn close-modal-btn">
               <svg><use href="#close"/></svg>
             </button>
           </header>
-
-          <form>
-            <select name="">
-              <option value="1">Pablo Lamponne</option>
-              <option value="2">Emilio Ravenna</option>
-            </select>
-            <div>
-              <activatable-button type="submit">Confirmar</activatable-button>
-              <error-box></error-box>
-            </div>
-          </form>
+          <slot-form></slot-form>
         </dialog>
 
         <div class="slots-collection">
@@ -95,18 +85,14 @@ export default class extends AbstractView {
     const modal = document.querySelector("#assign-tenant-to-slot-modal");
     const openModalButtons = document.querySelectorAll(".open-modal-btn");
     const closeModal = document.querySelector(".close-modal-btn");
-    // const form = document.querySelector("tenant-form");
+    const form = document.querySelector("slot-form");
 
     openModalButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        const modalTitle = document.querySelector(
-          "#assign-tenant-to-slot-modal h3",
-        );
-        modalTitle.innerHTML = `Asignar inquilino a plaza N° ${button.parentElement.id}`;
+        form.slotNumber = button.parentElement.id;
         modal.showModal();
       });
     });
-    // openModal.addEventListener("click", () => modal.showModal());
     closeModal.addEventListener("click", () => {
       modal.close();
       form.clear();

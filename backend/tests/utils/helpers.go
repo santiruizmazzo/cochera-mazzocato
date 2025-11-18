@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 	"testing"
 )
 
@@ -18,4 +19,13 @@ func CreateMapFromBody(responseBody io.ReadCloser, t *testing.T) map[string]any 
 	}
 
 	return jsonBody
+}
+
+func HTTPPut(url string, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest("PUT", url, body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", contentType)
+	return http.DefaultClient.Do(req)
 }

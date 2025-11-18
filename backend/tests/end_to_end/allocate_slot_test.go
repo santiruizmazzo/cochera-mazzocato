@@ -17,11 +17,12 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 
 	jsonBody, _ := json.Marshal(map[string]int{
 		"tenant_id": 1,
+		"slot_id":   1,
 	})
 
-	response, err := http.Post(testAPI.GetSlotsRoute(), "application/json", bytes.NewBuffer(jsonBody))
+	response, err := utils.HTTPPut(testAPI.GetSlotsRoute(), "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		t.Fatalf("Failed sending POST request to %s: %v", testAPI.GetSlotsRoute(), err)
+		t.Fatalf("Failed sending PUT request to %s: %v", testAPI.GetSlotsRoute(), err)
 	}
 
 	defer func() {

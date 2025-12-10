@@ -20,11 +20,11 @@ Característica: Modificar inquilino
         Cuando intento modificar su id a 2
         Entonces se informa que el id no se puede modificar
 
-    Escenario: Nuevo valor inválido
+    Escenario: Nuevo email inválido
         Dado que existe el inquilino con id 1
         Y que su email es juanalberto@garcia.com
         Cuando intento modificar su email a illojuan.com
-        Entonces se informa que el nuevo valor no es válido
+        Entonces se informa que el nuevo email no es válido
 
     Escenario: Eliminar dato obligatorio
         Dado que existe el inquilino con id 1
@@ -44,10 +44,18 @@ Característica: Modificar inquilino
         Cuando intento modificar su DNI a 666 y su nombre a Lucifer
         Entonces se modifican correctamente
     
-    Escenario: Nuevo valor ya en uso
+    Escenario: Nuevo DNI ya en uso
         Dado que existe el inquilino con id 1
         Y que su DNI es 777
         Y que existe el inquilino con id 2
         Y que su DNI es 1234
         Cuando intento modificar el DNI del inquilino 1 a 1234
         Entonces se informa que ese DNI ya está en uso
+    
+    Escenario: Nuevo email ya en uso
+        Dado que existe el inquilino con id 1
+        Y que su email es shigeru@nintendo.com
+        Y que existe el inquilino con id 2
+        Y que su email es shigeru@miyamoto.com
+        Cuando intento modificar el email del inquilino 1 a shigeru@miyamoto.com
+        Entonces se informa que ese email ya está en uso

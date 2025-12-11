@@ -69,6 +69,17 @@ func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error
 }
 
 func (service TenantService) ModifyByID(id int, requestBody []byte) (*ent.Tenant, error) {
-	// return service.repo.ModifyByID(id, requestBody)
-	panic("unimplemented")
+	var newTenant ent.Tenant
+
+	if err := json.Unmarshal(requestBody, &newTenant); err != nil {
+		return nil, err
+	}
+
+	existingTenant, err := service.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	existingTenant.DNI = newTenant.DNI
+	return service.repo.Save(existingTenant)
 }

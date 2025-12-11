@@ -38,7 +38,12 @@ func (repo InMemoryTenantRepository) GetAllWithLastName(lastName string) ([]*ent
 }
 
 func (repo InMemoryTenantRepository) GetByID(id int) (*ent.Tenant, error) {
-	return nil, ErrTenantNotFound
+	tenant := repo.Tenants[id]
+	if tenant == nil {
+		return nil, ErrTenantNotFound
+	}
+
+	return tenant, nil
 }
 
 func (repo InMemoryTenantRepository) Save(tenant *ent.Tenant) (*ent.Tenant, error) {

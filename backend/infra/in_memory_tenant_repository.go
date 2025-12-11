@@ -64,3 +64,7 @@ func (repo InMemoryTenantRepository) ExistsWithEmail(email string) (bool, error)
 	}
 	return false, nil
 }
+
+func (repo InMemoryTenantRepository) ModifyByID(id int, requestBody []byte) (*ent.Tenant, error) {
+	panic("unimplemented")
+}

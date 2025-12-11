@@ -144,3 +144,7 @@ func (repo PostgresTenantRepository) Save(tenant *ent.Tenant) (*ent.Tenant, erro
 	tenant.SetID(id)
 	return tenant, nil
 }
+
+func (repo PostgresTenantRepository) ModifyByID(id int, requestBody []byte) (*ent.Tenant, error) {
+	panic("unimplemented")
+}

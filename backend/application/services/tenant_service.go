@@ -69,5 +69,5 @@ func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error
 }
 
 func (service TenantService) ModifyByID(id int, requestBody []byte) (*ent.Tenant, error) {
-	panic("unimplemented")
+	return service.repo.ModifyByID(id, requestBody)
 }

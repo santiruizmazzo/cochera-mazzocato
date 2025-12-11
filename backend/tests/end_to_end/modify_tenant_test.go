@@ -1,9 +1,7 @@
 package endtoend
 
 import (
-	"bytes"
 	"cochera/tests/utils"
-	"encoding/json"
 
 	"net/http"
 	"testing"
@@ -30,13 +28,9 @@ func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
 		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
-	jsonBody, _ := json.Marshal(map[string]any{
-		"dni": 43295798,
-	})
+	modifiedTenant := map[string]any{"dni": 43295798}
 
-	fullEndpointURL := testAPI.GetTenantsRoute() + "/1"
-
-	response, err = utils.HTTPPatch(fullEndpointURL, "application/json", bytes.NewBuffer(jsonBody))
+	response, err = testAPI.ModifyTenant(modifiedTenant)
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}

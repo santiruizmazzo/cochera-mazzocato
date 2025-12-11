@@ -40,28 +40,34 @@ func (api *TestingAPI) Run() {
 	api.server = httptest.NewServer(api.router)
 }
 
-func (api *TestingAPI) Stop() {
+func (api TestingAPI) Stop() {
 	utils.CleanupAndCloseTestDatabase(api.realAPI.DB())
 	api.server.Close()
 }
 
-func (api *TestingAPI) ClearTenants() {
+func (api TestingAPI) ClearTenants() {
 	utils.ClearTenantsTable(api.realAPI.DB())
 }
 
-func (api *TestingAPI) GetHealthStatusRoute() string {
+func (api TestingAPI) GetHealthStatusRoute() string {
 	return api.server.URL + "/api/health"
 }
 
-func (api *TestingAPI) GetTenantsRoute() string {
+func (api TestingAPI) GetTenantsRoute() string {
 	return api.server.URL + "/api/tenants"
 }
 
-func (api *TestingAPI) GetSlotsRoute() string {
+func (api TestingAPI) GetSlotsRoute() string {
 	return api.server.URL + "/api/slots"
 }
 
-func (api *TestingAPI) CreateTenant(tenant any) (*http.Response, error) {
+func (api TestingAPI) CreateTenant(tenant any) (*http.Response, error) {
 	jsonTenant, _ := json.Marshal(tenant)
 	return http.Post(api.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
+}
+
+func (api TestingAPI) ModifyTenant(tenant any) (*http.Response, error) {
+	fullEndpointURL := api.GetTenantsRoute() + "/1"
+	jsonTenant, _ := json.Marshal(tenant)
+	return utils.HTTPPatch(fullEndpointURL, "application/json", bytes.NewBuffer(jsonTenant))
 }

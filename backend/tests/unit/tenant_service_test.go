@@ -163,8 +163,6 @@ func TestTenantService_GetAllTenantsByLastName_Successfully(t *testing.T) {
 }
 
 func TestTenantService_ModifyByID_Successfully(t *testing.T) {
-	t.Skip("POR AHORA")
-
 	existingTenant := domain.NewTenantBuilder().Build()
 	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*ent.Tenant{1: existingTenant}}
 

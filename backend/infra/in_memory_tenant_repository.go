@@ -1,6 +1,9 @@
 package infra
 
-import ent "cochera/domain/entities"
+import (
+	ent "cochera/domain/entities"
+	"encoding/json"
+)
 
 type InMemoryTenantRepository struct {
 	Tenants map[int]*ent.Tenant
@@ -66,5 +69,14 @@ func (repo InMemoryTenantRepository) ExistsWithEmail(email string) (bool, error)
 }
 
 func (repo InMemoryTenantRepository) ModifyByID(id int, requestBody []byte) (*ent.Tenant, error) {
-	panic("unimplemented")
+	var tenant ent.Tenant
+
+	if err := json.Unmarshal(requestBody, &tenant); err != nil {
+		return nil, err
+	}
+
+	existingTenant := repo.Tenants[id]
+	existingTenant.DNI = tenant.DNI
+
+	return existingTenant, nil
 }

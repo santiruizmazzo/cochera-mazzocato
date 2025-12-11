@@ -161,3 +161,24 @@ func TestTenantService_GetAllTenantsByLastName_Successfully(t *testing.T) {
 		t.Fatal("Failed to get all tenants with same last name")
 	}
 }
+
+func TestTenantService_ModifyByID_Successfully(t *testing.T) {
+	t.Skip("POR AHORA")
+
+	existingTenant := domain.NewTenantBuilder().Build()
+	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*ent.Tenant{1: existingTenant}}
+
+	service := services.NewTenantService(mockRepo)
+
+	requestBody, _ := json.Marshal(map[string]any{"dni": 666})
+
+	modifiedTenant, err := service.ModifyByID(1, requestBody)
+
+	if err != nil {
+		t.Fatal("ModifyByID should not fail: ", err)
+	}
+
+	if modifiedTenant.DNI != 666 {
+		t.Fatal("Expected new DNI value of 666, got", modifiedTenant.DNI)
+	}
+}

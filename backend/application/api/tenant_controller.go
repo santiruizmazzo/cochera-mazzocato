@@ -3,7 +3,6 @@ package api
 import (
 	"cochera/application/formatting"
 	ent "cochera/domain/entities"
-	"errors"
 	"io"
 	"net/http"
 	"strconv"
@@ -121,5 +120,39 @@ func (api API) getTenantByID(w http.ResponseWriter, r *http.Request) {
 
 func (api API) modifyTenantByID(w http.ResponseWriter, r *http.Request) {
 	formatter := formatting.NewResponseFormatter(w)
-	formatter.RespondCouldNotGetTenant(errors.New("ERROR PLACEHOLDER"))
+
+	requestBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		formatter.RespondCouldNotReadRequestBody()
+		return
+	}
+
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			formatter.RespondCouldNotCloseRequestBody()
+		}
+	}()
+
+	path := strings.TrimPrefix(r.URL.Path, TenantsBaseRoute+"/")
+	if path == "" {
+		formatter.RespondTenantIDMustNotBeMissing()
+		return
+	}
+
+	id, err := strconv.Atoi(path)
+	if err != nil {
+		formatter.RespondTenantIDMustBeAnInteger()
+		return
+	}
+
+	tenant, err := api.tenantService.ModifyByID(id, requestBody)
+	if err != nil {
+		formatter.RespondCouldNotModifyTenant(err)
+		return
+	}
+
+	err = formatter.RespondTenantModifiedSuccessfully(tenant)
+	if err != nil {
+		formatter.RespondCouldNotWriteResponse(err)
+	}
 }

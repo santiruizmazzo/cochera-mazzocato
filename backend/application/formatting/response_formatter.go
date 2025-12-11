@@ -111,3 +111,11 @@ func (formatter ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*ent.
 	formatter.w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(formatter.w).Encode(response)
 }
+
+func (formatter *ResponseFormatter) RespondCouldNotModifyTenant(err error) {
+	panic("unimplemented")
+}
+
+func (formatter *ResponseFormatter) RespondTenantModifiedSuccessfully(tenant *ent.Tenant) error {
+	panic("unimplemented")
+}

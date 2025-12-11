@@ -3,6 +3,7 @@ package api
 import (
 	"cochera/application/formatting"
 	ent "cochera/domain/entities"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
@@ -83,6 +84,8 @@ func (api API) tenantByIDHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		api.getTenantByID(w, r)
+	case http.MethodPatch:
+		api.modifyTenantByID(w, r)
 	default:
 		formatter := formatting.NewResponseFormatter(w)
 		formatter.RespondMethodIsNotAllowed()
@@ -114,4 +117,9 @@ func (api API) getTenantByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		formatter.RespondCouldNotWriteResponse(err)
 	}
+}
+
+func (api API) modifyTenantByID(w http.ResponseWriter, r *http.Request) {
+	formatter := formatting.NewResponseFormatter(w)
+	formatter.RespondCouldNotGetTenant(errors.New("ERROR PLACEHOLDER"))
 }

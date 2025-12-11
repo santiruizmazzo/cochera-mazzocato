@@ -29,3 +29,12 @@ func HTTPPut(url string, contentType string, body io.Reader) (*http.Response, er
 	req.Header.Set("Content-Type", contentType)
 	return http.DefaultClient.Do(req)
 }
+
+func HTTPPatch(url string, contentType string, body io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest("PATCH", url, body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", contentType)
+	return http.DefaultClient.Do(req)
+}

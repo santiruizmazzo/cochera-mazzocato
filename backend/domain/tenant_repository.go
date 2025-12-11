@@ -10,5 +10,4 @@ type TenantRepository interface {
 	Save(tenant *ent.Tenant) (*ent.Tenant, error)
 	ExistsWithDNI(dni uint32) (bool, error)
 	ExistsWithEmail(email string) (bool, error)
-	ModifyByID(id int, requestBody []byte) (*ent.Tenant, error)
 }

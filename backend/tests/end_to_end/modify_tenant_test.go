@@ -28,7 +28,8 @@ func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
 		t.Fatalf("Failed creating tenant: %v", err)
 	}
 
-	modifiedTenant := map[string]any{"dni": 43295798}
+	expectedTenant["dni"] = 43295798
+	modifiedTenant := expectedTenant
 
 	response, err = testAPI.ModifyTenant(modifiedTenant)
 	if err != nil {
@@ -41,5 +42,9 @@ func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
 		}
 	}()
 
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "dni", 43295798, t)
 }

@@ -117,5 +117,7 @@ func (formatter *ResponseFormatter) RespondCouldNotModifyTenant(err error) {
 }
 
 func (formatter *ResponseFormatter) RespondTenantModifiedSuccessfully(tenant *ent.Tenant) error {
-	panic("unimplemented")
+	formatter.w.Header().Set("Content-Type", "application/json")
+	formatter.w.WriteHeader(http.StatusOK)
+	return json.NewEncoder(formatter.w).Encode(tenant)
 }

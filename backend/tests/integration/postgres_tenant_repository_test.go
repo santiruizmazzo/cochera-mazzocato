@@ -323,3 +323,36 @@ func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integrati
 	utils.AssertResponseStringContains(tenants[0].GetLastName(), lastNameToFilter, t)
 	utils.AssertResponseStringContains(tenants[1].GetLastName(), lastNameToFilter, t)
 }
+
+func TestPostgresTenantRepository_Save_UpdatesExistingTenantInfo_Successfully_Integration(t *testing.T) {
+	t.Skip()
+
+	if testing.Short() {
+		t.Skip()
+	}
+
+	repo := infra.NewPostgresTenantRepository(db)
+
+	localTenant := domain.NewTenantBuilder().Build()
+
+	_, err := repo.Save(localTenant)
+	if err != nil {
+		t.Fatal("Saving should not fail", err)
+	}
+
+	localTenant = domain.NewTenantBuilder().WithDNI(777).Build()
+
+	newTenant, err := repo.Save(localTenant)
+	if err != nil {
+		t.Fatal("Saving should not fail", err)
+	}
+
+	savedTenant, err := repo.GetByID(int(newTenant.ID))
+	if err != nil {
+		t.Fatal("Saving should not fail", err)
+	}
+
+	if savedTenant.DNI != localTenant.DNI {
+		t.Fatal("Expected tenant DNI is different from saved tenant")
+	}
+}

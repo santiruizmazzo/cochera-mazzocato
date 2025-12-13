@@ -8,12 +8,12 @@ import (
 
 type EntityID uint32
 
-const ID_MIN_VALUE int = 1
+const ID_MIN_VALUE int = 0
 const ID_MAX_VALUE int = math.MaxUint32
 
 var (
 	ErrIDMustBeAnInteger = errors.New("el ID debe ser un número entero")
-	ErrIDTooSmall        = errors.New("el ID debe ser un entero mayor o igual a 1")
+	ErrIDTooSmall        = errors.New("el ID debe ser un entero mayor o igual a 0")
 	ErrIDTooBig          = errors.New("el ID debe ser un entero menor o igual a 4294967295")
 )
 

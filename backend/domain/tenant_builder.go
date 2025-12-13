@@ -11,7 +11,7 @@ type TenantBuilder struct {
 
 func NewTenantBuilder() *TenantBuilder {
 	tenant := ent.Tenant{
-		ID:         1,
+		ID:         0,
 		DNI:        12345678,
 		Name:       "Huang",
 		LastName:   "Lee",

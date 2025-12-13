@@ -43,7 +43,7 @@ func TestTenantService_CreateTenant_Fails_DNIAlreadyExists(t *testing.T) {
 	}
 
 	if err != services.ErrDuplicateDNI {
-		t.Fatal("Error should be of type duplicate DNI")
+		t.Fatal("Error should be of type duplicate DNI: ", err)
 	}
 }
 

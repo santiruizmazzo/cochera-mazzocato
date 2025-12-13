@@ -128,19 +128,59 @@ func (repo PostgresTenantRepository) ExistsWithEmail(email string) (bool, error)
 
 func (repo PostgresTenantRepository) Save(tenant *ent.Tenant) (*ent.Tenant, error) {
 	query := `
-		INSERT INTO tenants (dni, name, last_name, address, phone, email, entry_month)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
-		RETURNING id
+		INSERT INTO tenants (id, dni, name, last_name, address, phone, email, entry_month, updated_at)
+		SELECT
+			COALESCE($1, nextval(pg_get_serial_sequence('tenants', 'id'))),
+			$2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP
+		ON CONFLICT (id) DO UPDATE
+		SET
+			dni = EXCLUDED.dni,
+			name = EXCLUDED.name,
+			last_name = EXCLUDED.last_name,
+			address = EXCLUDED.address,
+			phone = EXCLUDED.phone,
+			email = EXCLUDED.email,
+			entry_month = EXCLUDED.entry_month,
+			updated_at = CURRENT_TIMESTAMP
+		RETURNING id, dni, name, last_name, address, phone, email, entry_month;
 	`
 
-	row := repo.db.QueryRow(context.Background(), query, tenant.GetDNI(), tenant.GetName(), tenant.GetLastName(), tenant.GetAddress(), tenant.GetPhone(), tenant.GetEmail(), tenant.GetEntryMonth())
+	var tenantID any
+	if tenant.ID == 0 {
+		tenantID = nil
+	} else {
+		tenantID = tenant.ID
+	}
 
-	var id int
+	row := repo.db.QueryRow(context.Background(), query, tenantID, tenant.GetDNI(), tenant.GetName(), tenant.GetLastName(), tenant.GetAddress(), tenant.GetPhone(), tenant.GetEmail(), tenant.GetEntryMonth())
 
-	if err := row.Scan(&id); err != nil {
+	var id, dni int
+	var name, last_name, entry_month string
+	var address, phone, email *string
+
+	if err := row.Scan(&id, &dni, &name, &last_name, &address, &phone, &email, &entry_month); err != nil {
 		return nil, err
 	}
 
-	tenant.SetID(id)
-	return tenant, nil
+	var newAddress, newPhone, newEmail string
+
+	if address == nil {
+		newAddress = ""
+	} else {
+		newAddress = *address
+	}
+
+	if phone == nil {
+		newPhone = ""
+	} else {
+		newPhone = *phone
+	}
+
+	if email == nil {
+		newEmail = ""
+	} else {
+		newEmail = *email
+	}
+
+	return ent.NewTenant(id, dni, name, last_name, newAddress, newPhone, newEmail, entry_month)
 }

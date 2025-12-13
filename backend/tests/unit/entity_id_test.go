@@ -29,10 +29,10 @@ func TestFailToCreateEntityIDFromNonNumericType(t *testing.T) {
 }
 
 func TestFailToCreateEntityIDFromTooSmallValue(t *testing.T) {
-	_, err := vo.NewEntityID(0)
+	_, err := vo.NewEntityID(-1)
 
 	if err == nil || !errors.Is(err, vo.ErrIDTooSmall) {
-		t.Fatal("Entity ID debe devolver error cuando es menor a 1")
+		t.Fatal("Entity ID debe devolver error cuando es menor a 0")
 	}
 }
 

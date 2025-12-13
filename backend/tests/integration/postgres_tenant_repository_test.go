@@ -69,7 +69,7 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 
 	createdTenant, err := repo.Save(newTenant)
 	if err == nil {
-		t.Fatal("Save should return error when it already exists a tenant with same DNI")
+		t.Fatal("Save should return error when it already exists a tenant with same DNI", err)
 	}
 
 	if createdTenant != nil {
@@ -173,13 +173,13 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant1 := domain.NewTenantBuilder().WithDNI(433).WithEmail("first@tenant.com").Build()
-	_, err := repo.Save(existingTenant1)
+	existingTenant1, err := repo.Save(existingTenant1)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	existingTenant2 := domain.NewTenantBuilder().WithDNI(442).WithEmail("second@tenant.com").Build()
-	_, err = repo.Save(existingTenant2)
+	existingTenant2, err = repo.Save(existingTenant2)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -324,35 +324,29 @@ func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integrati
 	utils.AssertResponseStringContains(tenants[1].GetLastName(), lastNameToFilter, t)
 }
 
-func TestPostgresTenantRepository_Save_UpdatesExistingTenantInfo_Successfully_Integration(t *testing.T) {
-	t.Skip()
-
+func TestPostgresTenantRepository_Save_UpdatesExistingTenant_Successfully_Integration(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
 
+	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	localTenant := domain.NewTenantBuilder().Build()
 
-	_, err := repo.Save(localTenant)
+	savedTenant, err := repo.Save(localTenant)
 	if err != nil {
-		t.Fatal("Saving should not fail", err)
+		t.Fatal("Saving for the first time should not fail", err)
 	}
 
-	localTenant = domain.NewTenantBuilder().WithDNI(777).Build()
+	newLocalTenant := domain.NewTenantBuilder().WithID(int(savedTenant.ID)).WithDNI(777).Build()
 
-	newTenant, err := repo.Save(localTenant)
+	modifiedTenant, err := repo.Save(newLocalTenant)
 	if err != nil {
-		t.Fatal("Saving should not fail", err)
+		t.Fatal("Saving an existing tenant should not fail", err)
 	}
 
-	savedTenant, err := repo.GetByID(int(newTenant.ID))
-	if err != nil {
-		t.Fatal("Saving should not fail", err)
-	}
-
-	if savedTenant.DNI != localTenant.DNI {
-		t.Fatal("Expected tenant DNI is different from saved tenant")
+	if *modifiedTenant != *newLocalTenant {
+		t.Fatal("Expected modified tenant is different from saved tenant")
 	}
 }

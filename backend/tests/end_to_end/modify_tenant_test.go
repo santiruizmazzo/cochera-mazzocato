@@ -8,13 +8,9 @@ import (
 )
 
 func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
-	t.Skip()
-
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := map[string]any{
 		"dni":         14571272,
@@ -46,5 +42,5 @@ func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "dni", 43295798, t)
+	utils.AssertResponseContains(responseMap, "dni", float64(43295798), t)
 }

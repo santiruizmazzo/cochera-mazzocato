@@ -22,15 +22,12 @@ func NewName(rawValue any) (Name, error) {
 		return Name(""), ErrNameMustBeString
 	}
 
-	if len(stringValue) > NAME_MAX_LENGTH {
-		return Name(""), ErrNameTooLong
+	name := Name(stringValue)
+	if err := name.Validate(); err != nil {
+		return Name(""), err
 	}
 
-	if containsNumber(stringValue) {
-		return Name(""), ErrNameMustIncludeCharactersOnly
-	}
-
-	return Name(stringValue), nil
+	return name, nil
 }
 
 func containsNumber(s string) bool {
@@ -59,4 +56,16 @@ func (name *Name) UnmarshalJSON(data []byte) error {
 
 func (name Name) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(name))
+}
+
+func (name Name) Validate() error {
+	if len(name) > NAME_MAX_LENGTH {
+		return ErrNameTooLong
+	}
+
+	if containsNumber(string(name)) {
+		return ErrNameMustIncludeCharactersOnly
+	}
+
+	return nil
 }

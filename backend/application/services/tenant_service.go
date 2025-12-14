@@ -81,5 +81,12 @@ func (service TenantService) ModifyByID(id int, requestBody []byte) (*ent.Tenant
 	}
 
 	existingTenant.DNI = newTenant.DNI
+
+	err = newTenant.Email.Validate()
+	if newTenant.Email != "" && err != nil {
+		return nil, err
+	}
+	existingTenant.Email = newTenant.Email
+
 	return service.repo.Save(existingTenant)
 }

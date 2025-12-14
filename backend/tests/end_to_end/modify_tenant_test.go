@@ -76,7 +76,6 @@ func TestModifyTenantThatDoesNotExist_EndToEnd(t *testing.T) {
 }
 
 func TestModifyTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}

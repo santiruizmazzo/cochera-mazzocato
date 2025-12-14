@@ -22,7 +22,12 @@ func NewEmailAddress(rawValue any) (EmailAddress, error) {
 		return EmailAddress(""), err
 	}
 
-	return createValidEmailAddress(stringEmailAddress)
+	emailAddress := EmailAddress(stringEmailAddress)
+	if err = emailAddress.Validate(); err != nil {
+		return EmailAddress(""), err
+	}
+
+	return emailAddress, nil
 }
 
 func extractStringEmailAddress(rawValue any) (string, error) {
@@ -39,19 +44,6 @@ func extractStringEmailAddress(rawValue any) (string, error) {
 	default:
 		return "", ErrEmailMustBeString
 	}
-}
-
-func createValidEmailAddress(stringEmailAddress string) (EmailAddress, error) {
-	validEmailAddress, err := mail.ParseAddress(stringEmailAddress)
-	if err != nil {
-		return EmailAddress(""), ErrInvalidEmailFormat
-	}
-
-	if len(validEmailAddress.Address) > EMAIL_MAX_LENGTH {
-		return EmailAddress(""), ErrEmailTooLong
-	}
-
-	return EmailAddress(validEmailAddress.Address), nil
 }
 
 func (emailAddress *EmailAddress) UnmarshalJSON(data []byte) error {
@@ -82,4 +74,17 @@ func (emailAddress EmailAddress) IsEmpty() bool {
 
 func (emailAddress EmailAddress) String() string {
 	return string(emailAddress)
+}
+
+func (emailAddress EmailAddress) Validate() error {
+	_, err := mail.ParseAddress(emailAddress.String())
+	if err != nil {
+		return ErrInvalidEmailFormat
+	}
+
+	if len(emailAddress.String()) > EMAIL_MAX_LENGTH {
+		return ErrEmailTooLong
+	}
+
+	return nil
 }

@@ -6,6 +6,7 @@ import (
 	"cochera/tests/utils"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -66,8 +67,8 @@ func (api TestingAPI) CreateTenant(tenant any) (*http.Response, error) {
 	return http.Post(api.GetTenantsRoute(), "application/json", bytes.NewBuffer(jsonTenant))
 }
 
-func (api TestingAPI) ModifyTenant(tenant any) (*http.Response, error) {
-	fullEndpointURL := api.GetTenantsRoute() + "/1"
+func (api TestingAPI) ModifyTenant(tenantID int, tenant any) (*http.Response, error) {
+	fullEndpointURL := fmt.Sprintf("%s/%v", api.GetTenantsRoute(), tenantID)
 	jsonTenant, _ := json.Marshal(tenant)
 	return utils.HTTPPatch(fullEndpointURL, "application/json", bytes.NewBuffer(jsonTenant))
 }

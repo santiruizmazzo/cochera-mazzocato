@@ -113,7 +113,9 @@ func (formatter ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*ent.
 }
 
 func (formatter *ResponseFormatter) RespondCouldNotModifyTenant(err error) {
-	panic("unimplemented")
+	statusCode := http.StatusNotFound
+	responseBody := formatter.CreateErrorBodyWith(err.Error())
+	http.Error(formatter.w, responseBody, statusCode)
 }
 
 func (formatter *ResponseFormatter) RespondTenantModifiedSuccessfully(tenant *ent.Tenant) error {

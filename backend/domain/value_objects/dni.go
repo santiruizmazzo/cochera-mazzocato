@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-type DNI uint32
+type DNI int
 
 const DNI_MIN_VALUE int = 1
 const DNI_MAX_VALUE int = math.MaxUint32
@@ -22,11 +22,12 @@ func NewDNI(rawValue any) (DNI, error) {
 		return DNI(0), err
 	}
 
-	if !isInValidRange(integerDni) {
-		return DNI(0), ErrDNINotInValidRange
+	dni := DNI(integerDni)
+	if err = dni.Validate(); err != nil {
+		return DNI(0), err
 	}
 
-	return DNI(integerDni), nil
+	return dni, nil
 }
 
 func extractIntegerDNI(rawValue any) (int, error) {
@@ -43,8 +44,8 @@ func extractIntegerDNI(rawValue any) (int, error) {
 	}
 }
 
-func isInValidRange(integerDni int) bool {
-	return DNI_MIN_VALUE <= integerDni && integerDni <= DNI_MAX_VALUE
+func (dni DNI) isInValidRange() bool {
+	return DNI_MIN_VALUE <= int(dni) && int(dni) <= DNI_MAX_VALUE
 }
 
 func (dni *DNI) UnmarshalJSON(data []byte) error {
@@ -64,4 +65,11 @@ func (dni *DNI) UnmarshalJSON(data []byte) error {
 
 func (dni DNI) MarshalJSON() ([]byte, error) {
 	return json.Marshal(uint32(dni))
+}
+
+func (dni DNI) Validate() error {
+	if !dni.isInValidRange() {
+		return ErrDNINotInValidRange
+	}
+	return nil
 }

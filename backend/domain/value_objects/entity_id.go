@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-type EntityID uint32
+type EntityID int
 
 const ID_MIN_VALUE int = 0
 const ID_MAX_VALUE int = math.MaxUint32
@@ -23,7 +23,12 @@ func NewEntityID(rawValue any) (EntityID, error) {
 		return EntityID(0), err
 	}
 
-	return createValidEntityID(integerID)
+	entityID := EntityID(integerID)
+	if err = entityID.Validate(); err != nil {
+		return EntityID(0), err
+	}
+
+	return entityID, nil
 }
 
 func extractIntegerID(rawValue any) (int, error) {
@@ -37,14 +42,14 @@ func extractIntegerID(rawValue any) (int, error) {
 	}
 }
 
-func createValidEntityID(integerID int) (EntityID, error) {
-	if integerID < ID_MIN_VALUE {
-		return EntityID(0), ErrIDTooSmall
+func (id EntityID) Validate() error {
+	if int(id) < ID_MIN_VALUE {
+		return ErrIDTooSmall
 	}
-	if integerID > ID_MAX_VALUE {
-		return EntityID(0), ErrIDTooBig
+	if int(id) > ID_MAX_VALUE {
+		return ErrIDTooBig
 	}
-	return EntityID(integerID), nil
+	return nil
 }
 
 func (id *EntityID) UnmarshalJSON(data []byte) error {

@@ -20,11 +20,12 @@ func NewAddress(rawValue any) (Address, error) {
 		return Address(""), err
 	}
 
-	if len(stringAddress) > ADDRESS_MAX_LENGTH {
-		return Address(""), ErrAddressTooLong
+	address := Address(stringAddress)
+	if err = address.Validate(); err != nil {
+		return Address(""), err
 	}
 
-	return Address(stringAddress), nil
+	return address, nil
 }
 
 func extractStringAddress(rawValue any) (string, error) {
@@ -67,4 +68,11 @@ func (address Address) MarshalJSON() ([]byte, error) {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(string(address))
+}
+
+func (address Address) Validate() error {
+	if len(address) > ADDRESS_MAX_LENGTH {
+		return ErrAddressTooLong
+	}
+	return nil
 }

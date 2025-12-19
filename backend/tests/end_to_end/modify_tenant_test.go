@@ -116,3 +116,45 @@ func TestModifyTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
 
 	utils.AssertResponseContains(responseMap, "detail", "el email debe seguir el formato estándar", t)
 }
+
+func TestModifyTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	testAPI.ClearTenants()
+
+	expectedTenant := map[string]any{
+		"dni":         14571272,
+		"name":        "Juan Alberto",
+		"last_name":   "García",
+		"entry_month": "01-2025",
+		"email":       "juanalberto@garcia.com",
+	}
+
+	response, err := testAPI.CreateTenant(expectedTenant)
+	if err != nil {
+		t.Fatal("Failed creating tenant: ", err)
+	}
+
+	modifiedTenant := map[string]any{
+		"dni": nil,
+	}
+
+	response, err = testAPI.ModifyTenant(1, modifiedTenant)
+	if err != nil {
+		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un número entero", t)
+}

@@ -168,7 +168,12 @@ func TestTenantService_ModifyByID_Successfully(t *testing.T) {
 
 	service := services.NewTenantService(mockRepo)
 
-	requestBody, _ := json.Marshal(map[string]any{"dni": 666})
+	requestBody, _ := json.Marshal(map[string]any{
+		"dni":         666,
+		"name":        "Jerry",
+		"last_name":   "Martinez",
+		"entry_month": "01-2024",
+	})
 
 	modifiedTenant, err := service.ModifyByID(1, requestBody)
 

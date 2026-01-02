@@ -2,53 +2,45 @@ package unit
 
 import (
 	"cochera/application/dtos"
-	vo "cochera/domain/value_objects"
 	"encoding/json"
 	"testing"
 )
 
 func TestUnmarshallingEmptyAttributes(t *testing.T) {
+	var tenantData dtos.ModifyTenantDTO
+	requestBody := `{"dni":12424}`
 
-	mapTenant := map[string]any{
-		"dni": 12424,
-	}
-	requestBody, _ := json.Marshal(mapTenant)
-
-	var tenantData dtos.InputTenantDTO
-
-	err := json.Unmarshal(requestBody, &tenantData)
+	err := json.Unmarshal([]byte(requestBody), &tenantData)
 
 	if err != nil {
 		t.Fatal("unmarshalling of input tenant dto should not fail: ", err)
 	}
 
-	if tenantData.DNI != 12424 {
+	if *tenantData.DNI != 12424 {
 		t.Fatal("expected DNI value of 12424, got", tenantData.DNI)
 	}
 
-	if tenantData.Name != "" {
+	if tenantData.Name != nil {
 		t.Fatal("name is expected to be nil")
 	}
 
-	if tenantData.LastName != "" {
+	if tenantData.LastName != nil {
 		t.Fatal("last name is expected to be nil")
 	}
 
-	emptyMonthOfYear := vo.MonthOfYear{Month: 0, Year: 0}
-	if tenantData.EntryMonth != emptyMonthOfYear {
+	if tenantData.EntryMonth != nil {
 		t.Fatal("entry month is expected to be nil")
 	}
 
-	if tenantData.Address != "" {
+	if tenantData.Address != nil {
 		t.Fatal("address is expected to be nil")
 	}
 
-	emptyPhone := vo.Phone{CountryCode: "", LineNumber: ""}
-	if tenantData.Phone != emptyPhone {
+	if tenantData.Phone != nil {
 		t.Fatal("phone is expected to be nil")
 	}
 
-	if tenantData.Email != "" {
+	if tenantData.Email != nil {
 		t.Fatal("email is expected to be nil")
 	}
 }

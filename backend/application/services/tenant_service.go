@@ -75,33 +75,16 @@ func (service TenantService) ModifyByID(id int, requestBody []byte) (*ent.Tenant
 		return nil, err
 	}
 
-	existingTenant, err := service.GetByID(id)
+	_, err := service.GetByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	err = newTenant.Validate()
-	if err != nil {
+	if err = newTenant.Validate(); err != nil {
 		return nil, err
 	}
 
-	err = newTenant.DNI.Validate()
-	if newTenant.DNI != 0 && err != nil {
-		return nil, err
-	}
+	newTenant.SetID(id)
 
-	if newTenant.DNI != 0 {
-		existingTenant.DNI = newTenant.DNI
-	}
-
-	err = newTenant.Email.Validate()
-	if newTenant.Email != "" && err != nil {
-		return nil, err
-	}
-
-	if newTenant.Email != "" {
-		existingTenant.Email = newTenant.Email
-	}
-
-	return service.repo.Save(existingTenant)
+	return service.repo.Save(&newTenant)
 }

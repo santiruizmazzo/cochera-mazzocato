@@ -29,7 +29,7 @@ func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
 
 	response, err = testAPI.ModifyTenant(1, modifiedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending PUT request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -59,7 +59,7 @@ func TestModifyTenantThatDoesNotExist_EndToEnd(t *testing.T) {
 
 	response, err := testAPI.ModifyTenant(66666, modifiedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending PUT request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -101,7 +101,7 @@ func TestModifyTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
 
 	response, err = testAPI.ModifyTenant(1, modifiedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending PUT request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {
@@ -143,7 +143,7 @@ func TestModifyTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 
 	response, err = testAPI.ModifyTenant(1, modifiedTenant)
 	if err != nil {
-		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
+		t.Fatalf("Failed sending PUT request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
 
 	defer func() {

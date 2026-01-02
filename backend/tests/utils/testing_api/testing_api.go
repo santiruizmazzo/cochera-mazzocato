@@ -70,5 +70,5 @@ func (api TestingAPI) CreateTenant(tenant any) (*http.Response, error) {
 func (api TestingAPI) ModifyTenant(tenantID int, tenant any) (*http.Response, error) {
 	fullEndpointURL := fmt.Sprintf("%s/%v", api.GetTenantsRoute(), tenantID)
 	jsonTenant, _ := json.Marshal(tenant)
-	return utils.HTTPPatch(fullEndpointURL, "application/json", bytes.NewBuffer(jsonTenant))
+	return utils.HTTPPut(fullEndpointURL, "application/json", bytes.NewBuffer(jsonTenant))
 }

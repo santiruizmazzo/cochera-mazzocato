@@ -83,7 +83,7 @@ func (api API) tenantByIDHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		api.getTenantByID(w, r)
-	case http.MethodPut:
+	case http.MethodPatch:
 		api.modifyTenantByID(w, r)
 	default:
 		formatter := formatting.NewResponseFormatter(w)

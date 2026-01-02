@@ -129,23 +129,7 @@ func (tenant Tenant) Validate() error {
 		return ErrRequiredLastName
 	case tenant.EntryMonth.Month == 0 && tenant.EntryMonth.Year == 0:
 		return ErrRequiredEntryMonth
+	default:
+		return nil
 	}
-
-	if err := tenant.ID.Validate(); err != nil {
-		return err
-	}
-
-	if err := tenant.DNI.Validate(); err != nil {
-		return err
-	}
-
-	if err := tenant.Name.Validate(); err != nil {
-		return err
-	}
-
-	if err := tenant.LastName.Validate(); err != nil {
-		return err
-	}
-
-	return nil
 }

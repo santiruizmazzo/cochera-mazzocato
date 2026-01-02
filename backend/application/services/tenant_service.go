@@ -80,9 +80,9 @@ func (service TenantService) ModifyByID(id int, requestBody []byte) (*ent.Tenant
 		return nil, err
 	}
 
-	if err = newTenant.Validate(); err != nil {
-		return nil, err
-	}
+	// if err = newTenant.Validate(); err != nil {
+	// 	return nil, err
+	// }
 
 	newTenant.SetID(id)
 

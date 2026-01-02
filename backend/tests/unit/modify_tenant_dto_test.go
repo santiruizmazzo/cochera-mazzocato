@@ -85,3 +85,14 @@ func TestUnmarshallingComplexAttributeTypesSuccessfully(t *testing.T) {
 		t.Fatal("email is expected to be nil")
 	}
 }
+
+func TestUnmarshallingInvalidComplexAttributeTypes(t *testing.T) {
+	var tenantData dtos.ModifyTenantDTO
+	requestBody := `{"dni":90, "entry_month":"papa"}`
+
+	err := json.Unmarshal([]byte(requestBody), &tenantData)
+
+	if err != vo.ErrMonthOfYearInvalidFormat {
+		t.Fatal("unmarshalling of invalid entry month should fail: ", err)
+	}
+}

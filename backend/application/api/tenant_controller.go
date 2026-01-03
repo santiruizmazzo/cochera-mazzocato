@@ -84,7 +84,7 @@ func (api API) tenantByIDHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		api.getTenantByID(w, r)
 	case http.MethodPatch:
-		api.modifyTenantByID(w, r)
+		api.updateTenantByID(w, r)
 	default:
 		formatter := formatting.NewResponseFormatter(w)
 		formatter.RespondMethodIsNotAllowed()
@@ -118,7 +118,7 @@ func (api API) getTenantByID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api API) modifyTenantByID(w http.ResponseWriter, r *http.Request) {
+func (api API) updateTenantByID(w http.ResponseWriter, r *http.Request) {
 	formatter := formatting.NewResponseFormatter(w)
 
 	requestBody, err := io.ReadAll(r.Body)
@@ -145,13 +145,13 @@ func (api API) modifyTenantByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tenant, err := api.tenantService.ModifyByID(id, requestBody)
+	tenant, err := api.tenantService.UpdateTenant(id, requestBody)
 	if err != nil {
-		formatter.RespondCouldNotModifyTenant(err)
+		formatter.RespondCouldNotUpdateTenant(err)
 		return
 	}
 
-	err = formatter.RespondTenantModifiedSuccessfully(tenant)
+	err = formatter.RespondTenantUpdatedSuccessfully(tenant)
 	if err != nil {
 		formatter.RespondCouldNotWriteResponse(err)
 	}

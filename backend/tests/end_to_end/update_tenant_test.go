@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
+func TestUpdateTenantSuccessfully_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -29,7 +29,7 @@ func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
 	expectedTenant["entry_month"] = "02-2024"
 	modifiedTenant := expectedTenant
 
-	response, err = testAPI.ModifyTenant(1, modifiedTenant)
+	response, err = testAPI.UpdateTenant(1, modifiedTenant)
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -49,7 +49,7 @@ func TestModifyTenantSuccessfully_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "entry_month", "02-2024", t)
 }
 
-func TestModifyTenantThatDoesNotExist_EndToEnd(t *testing.T) {
+func TestUpdateTenantThatDoesNotExist_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -61,7 +61,7 @@ func TestModifyTenantThatDoesNotExist_EndToEnd(t *testing.T) {
 		"entry_month": "01-2025",
 	}
 
-	response, err := testAPI.ModifyTenant(66666, modifiedTenant)
+	response, err := testAPI.UpdateTenant(66666, modifiedTenant)
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -79,7 +79,7 @@ func TestModifyTenantThatDoesNotExist_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "inquilino no encontrado", t)
 }
 
-func TestModifyTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
+func TestUpdateTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -103,7 +103,7 @@ func TestModifyTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
 		"email": "illojuan.com",
 	}
 
-	response, err = testAPI.ModifyTenant(1, modifiedTenant)
+	response, err = testAPI.UpdateTenant(1, modifiedTenant)
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -121,7 +121,7 @@ func TestModifyTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "el email debe seguir el formato estándar", t)
 }
 
-func TestModifyTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
+func TestUpdateTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -145,7 +145,7 @@ func TestModifyTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 		"dni": nil,
 	}
 
-	response, err = testAPI.ModifyTenant(1, modifiedTenant)
+	response, err = testAPI.UpdateTenant(1, modifiedTenant)
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}
@@ -163,7 +163,7 @@ func TestModifyTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un número entero", t)
 }
 
-func TestModifyTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd(t *testing.T) {
+func TestUpdateTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd(t *testing.T) {
 	t.Skip()
 	if testing.Short() {
 		t.Skip()
@@ -190,7 +190,7 @@ func TestModifyTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd
 		"dni": 55,
 	}
 
-	response, err = testAPI.ModifyTenant(1, modifiedTenant)
+	response, err = testAPI.UpdateTenant(1, modifiedTenant)
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
 	}

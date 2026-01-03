@@ -112,18 +112,18 @@ func (formatter ResponseFormatter) RespondTenantsGotSuccessfully(tenants []*ent.
 	return json.NewEncoder(formatter.w).Encode(response)
 }
 
-func (formatter *ResponseFormatter) RespondCouldNotModifyTenant(modificationError error) {
+func (formatter *ResponseFormatter) RespondCouldNotUpdateTenant(updateError error) {
 	statusCode := http.StatusBadRequest
 
-	if errors.Is(modificationError, infra.ErrTenantNotFound) {
+	if errors.Is(updateError, infra.ErrTenantNotFound) {
 		statusCode = http.StatusNotFound
 	}
 
-	responseBody := formatter.CreateErrorBodyWith(modificationError.Error())
+	responseBody := formatter.CreateErrorBodyWith(updateError.Error())
 	http.Error(formatter.w, responseBody, statusCode)
 }
 
-func (formatter *ResponseFormatter) RespondTenantModifiedSuccessfully(tenant *ent.Tenant) error {
+func (formatter *ResponseFormatter) RespondTenantUpdatedSuccessfully(tenant *ent.Tenant) error {
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(formatter.w).Encode(tenant)

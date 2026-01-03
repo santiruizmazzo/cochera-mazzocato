@@ -4,7 +4,7 @@ import (
 	vo "cochera/domain/value_objects"
 )
 
-type ModifyTenantDTO struct {
+type UpdateTenantDTO struct {
 	DNI        *vo.DNI          `json:"dni"`
 	Name       *vo.Name         `json:"name"`
 	LastName   *vo.Name         `json:"last_name"`

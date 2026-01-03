@@ -8,7 +8,7 @@ import (
 )
 
 func TestUnmarshallingEmptyAttributes(t *testing.T) {
-	var tenantData dtos.ModifyTenantDTO
+	var tenantData dtos.UpdateTenantDTO
 	requestBody := `{"dni":12424}`
 
 	err := json.Unmarshal([]byte(requestBody), &tenantData)
@@ -47,7 +47,7 @@ func TestUnmarshallingEmptyAttributes(t *testing.T) {
 }
 
 func TestUnmarshallingComplexAttributeTypesSuccessfully(t *testing.T) {
-	var tenantData dtos.ModifyTenantDTO
+	var tenantData dtos.UpdateTenantDTO
 	requestBody := `{"dni":90, "entry_month":"01-2026"}`
 
 	err := json.Unmarshal([]byte(requestBody), &tenantData)
@@ -87,7 +87,7 @@ func TestUnmarshallingComplexAttributeTypesSuccessfully(t *testing.T) {
 }
 
 func TestUnmarshallingInvalidComplexAttributeTypes(t *testing.T) {
-	var tenantData dtos.ModifyTenantDTO
+	var tenantData dtos.UpdateTenantDTO
 	requestBody := `{"dni":90, "entry_month":"papa"}`
 
 	err := json.Unmarshal([]byte(requestBody), &tenantData)

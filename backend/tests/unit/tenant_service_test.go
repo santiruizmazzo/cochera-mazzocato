@@ -175,7 +175,7 @@ func TestTenantService_ModifyByID_Successfully(t *testing.T) {
 		"entry_month": "01-2024",
 	})
 
-	modifiedTenant, err := service.ModifyByID(1, requestBody)
+	modifiedTenant, err := service.UpdateTenant(1, requestBody)
 
 	if err != nil {
 		t.Fatal("ModifyByID should not fail: ", err)

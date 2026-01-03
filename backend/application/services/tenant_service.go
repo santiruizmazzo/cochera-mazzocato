@@ -68,7 +68,7 @@ func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error
 	return service.repo.Save(&tenant)
 }
 
-func (service TenantService) ModifyByID(id int, requestBody []byte) (*ent.Tenant, error) {
+func (service TenantService) UpdateTenant(id int, requestBody []byte) (*ent.Tenant, error) {
 	var newTenant ent.Tenant
 
 	if err := json.Unmarshal(requestBody, &newTenant); err != nil {

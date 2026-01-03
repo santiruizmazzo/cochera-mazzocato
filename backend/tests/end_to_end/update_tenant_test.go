@@ -142,7 +142,7 @@ func TestUpdateTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 	}
 
 	modifiedTenant := map[string]any{
-		"dni": nil,
+		"dni": "",
 	}
 
 	response, err = testAPI.UpdateTenant(1, modifiedTenant)

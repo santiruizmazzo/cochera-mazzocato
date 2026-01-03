@@ -1,6 +1,7 @@
 package services
 
 import (
+	"cochera/application/dtos"
 	"cochera/domain"
 	ent "cochera/domain/entities"
 	"encoding/json"
@@ -69,22 +70,35 @@ func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error
 }
 
 func (service TenantService) UpdateTenant(id int, requestBody []byte) (*ent.Tenant, error) {
-	var newTenant ent.Tenant
+	var updateDTO dtos.UpdateTenantDTO
 
-	if err := json.Unmarshal(requestBody, &newTenant); err != nil {
+	if err := json.Unmarshal(requestBody, &updateDTO); err != nil {
 		return nil, err
 	}
 
-	_, err := service.GetByID(id)
+	tenant, err := service.GetByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	// if err = newTenant.Validate(); err != nil {
-	// 	return nil, err
-	// }
+	if updateDTO.DNI != nil {
+		dniAlreadyExists, err := service.repo.ExistsWithDNI(int(*updateDTO.DNI))
+		if err != nil {
+			return nil, err
+		}
+		if dniAlreadyExists {
+			return nil, ErrDuplicateDNI
+		}
+		tenant.SetDNI(*updateDTO.DNI)
+	}
 
-	newTenant.SetID(id)
+	if updateDTO.Name != nil {
+		tenant.SetName(*updateDTO.Name)
+	}
 
-	return service.repo.Save(&newTenant)
+	if updateDTO.EntryMonth != nil {
+		tenant.SetEntryMonth(*updateDTO.EntryMonth)
+	}
+
+	return service.repo.Save(tenant)
 }

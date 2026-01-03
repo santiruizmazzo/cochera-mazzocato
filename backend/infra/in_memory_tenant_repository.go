@@ -54,7 +54,7 @@ func (repo InMemoryTenantRepository) Save(tenant *ent.Tenant) (*ent.Tenant, erro
 	return tenant, nil
 }
 
-func (repo InMemoryTenantRepository) ExistsWithDNI(dni uint32) (bool, error) {
+func (repo InMemoryTenantRepository) ExistsWithDNI(dni int) (bool, error) {
 	for _, tenant := range repo.Tenants {
 		if tenant != nil && tenant.HasDNI(dni) {
 			return true, nil

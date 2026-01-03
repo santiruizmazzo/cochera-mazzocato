@@ -98,7 +98,7 @@ func (repo PostgresTenantRepository) createListOfTenantsFromRows(rows pgx.Rows) 
 	return tenants, nil
 }
 
-func (repo PostgresTenantRepository) ExistsWithDNI(dni uint32) (bool, error) {
+func (repo PostgresTenantRepository) ExistsWithDNI(dni int) (bool, error) {
 	query := `SELECT COUNT(*) > 0 AS exists FROM tenants WHERE dni = $1;`
 
 	var exists bool

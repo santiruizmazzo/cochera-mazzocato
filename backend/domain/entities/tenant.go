@@ -20,16 +20,24 @@ func (tenant *Tenant) SetID(id int) {
 	tenant.ID = vo.EntityID(id)
 }
 
-func (tenant Tenant) GetDNI() uint32 {
-	return uint32(tenant.DNI)
+func (tenant Tenant) GetDNI() int {
+	return int(tenant.DNI)
 }
 
-func (tenant Tenant) HasDNI(dni uint32) bool {
-	return uint32(tenant.DNI) == dni
+func (tenant *Tenant) SetDNI(dni vo.DNI) {
+	tenant.DNI = dni
+}
+
+func (tenant Tenant) HasDNI(dni int) bool {
+	return int(tenant.DNI) == dni
 }
 
 func (tenant Tenant) GetName() string {
 	return string(tenant.Name)
+}
+
+func (tenant *Tenant) SetName(name vo.Name) {
+	tenant.Name = name
 }
 
 func (tenant Tenant) HasName(name string) bool {
@@ -71,6 +79,10 @@ func (tenant Tenant) HasEmail(email string) bool {
 
 func (tenant Tenant) GetEntryMonth() string {
 	return tenant.EntryMonth.String()
+}
+
+func (tenant *Tenant) SetEntryMonth(entryMonth vo.MonthOfYear) {
+	tenant.EntryMonth = entryMonth
 }
 
 func NewTenant(id, dni, name, lastName, address, phone, email, entryMonth any) (*Tenant, error) {

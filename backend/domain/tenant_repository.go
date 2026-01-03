@@ -8,6 +8,6 @@ type TenantRepository interface {
 	GetAllWithName(name string) ([]*ent.Tenant, error)
 	GetAllWithLastName(lastName string) ([]*ent.Tenant, error)
 	Save(tenant *ent.Tenant) (*ent.Tenant, error)
-	ExistsWithDNI(dni uint32) (bool, error)
+	ExistsWithDNI(dni int) (bool, error)
 	ExistsWithEmail(email string) (bool, error)
 }

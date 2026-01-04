@@ -16,6 +16,13 @@ type Tenant struct {
 	EntryMonth vo.MonthOfYear  `json:"entry_month"`
 }
 
+func (tenant Tenant) GetID() any {
+	if tenant.ID == 0 {
+		return nil
+	}
+	return tenant.ID
+}
+
 func (tenant *Tenant) SetID(id int) {
 	tenant.ID = vo.EntityID(id)
 }

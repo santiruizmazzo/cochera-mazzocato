@@ -145,14 +145,7 @@ func (repo PostgresTenantRepository) Save(tenant *ent.Tenant) (*ent.Tenant, erro
 		RETURNING id, dni, name, last_name, address, phone, email, entry_month;
 	`
 
-	var tenantID any
-	if tenant.ID == 0 {
-		tenantID = nil
-	} else {
-		tenantID = tenant.ID
-	}
-
-	row := repo.db.QueryRow(context.Background(), query, tenantID, tenant.GetDNI(), tenant.GetName(), tenant.GetLastName(), tenant.GetAddress(), tenant.GetPhone(), tenant.GetEmail(), tenant.GetEntryMonth())
+	row := repo.db.QueryRow(context.Background(), query, tenant.GetID(), tenant.GetDNI(), tenant.GetName(), tenant.GetLastName(), tenant.GetAddress(), tenant.GetPhone(), tenant.GetEmail(), tenant.GetEntryMonth())
 
 	var id, dni int
 	var name, last_name, entry_month string

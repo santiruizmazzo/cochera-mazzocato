@@ -164,7 +164,6 @@ func TestUpdateTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 }
 
 func TestUpdateTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}
@@ -178,7 +177,7 @@ func TestUpdateTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd
 		"entry_month": "01-2025",
 		"email":       "juanalberto@garcia.com",
 		"address":     "Calle Larios 123",
-		"phone":       "+5494444192929",
+		"phone":       "+544444192929",
 	}
 
 	response, err := testAPI.CreateTenant(expectedTenant)
@@ -211,5 +210,5 @@ func TestUpdateTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd
 	utils.AssertResponseContains(responseMap, "entry_month", "01-2025", t)
 	utils.AssertResponseContains(responseMap, "email", "juanalberto@garcia.com", t)
 	utils.AssertResponseContains(responseMap, "address", "Calle Larios 123", t)
-	utils.AssertResponseContains(responseMap, "phone", "+5494444192929", t)
+	utils.AssertResponseContains(responseMap, "phone", "+544444192929", t)
 }

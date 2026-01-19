@@ -365,3 +365,45 @@ func TestUpdateTenantDoesNotFailWhenUpdatingSameDNIToTenantWhoOwnsIt_EndToEnd(t 
 
 	utils.AssertResponseContains(responseMap, "dni", float64(41630284), t)
 }
+
+func TestUpdateTenantDoesNotFailWhenUpdatingSameEmailToTenantWhoOwnsIt_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	testAPI.ClearTenants()
+
+	expectedTenant := map[string]any{
+		"dni":         41630284,
+		"name":        "Nicolás",
+		"last_name":   "Ramos",
+		"entry_month": "01-2025",
+		"email":       "nico@ramos.com",
+	}
+
+	response, err := testAPI.CreateTenant(expectedTenant)
+	if err != nil {
+		t.Fatal("Failed creating tenant: ", err)
+	}
+
+	modifiedTenant := map[string]any{
+		"email": "nico@ramos.com",
+	}
+
+	response, err = testAPI.UpdateTenant(1, modifiedTenant)
+	if err != nil {
+		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetTenantsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "email", "nico@ramos.com", t)
+}

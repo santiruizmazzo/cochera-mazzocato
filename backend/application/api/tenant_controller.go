@@ -6,7 +6,6 @@ import (
 	ent "cochera/domain/entities"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -146,10 +145,6 @@ func (api API) updateTenantByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		formatter.RespondTenantIDMustBeAnInteger()
 		return
-	}
-
-	if len(requestBody) == 0 {
-		log.Println("NO HAY REQUEST BODY!")
 	}
 
 	var updateDTO dtos.UpdateTenantDTO

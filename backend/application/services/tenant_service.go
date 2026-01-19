@@ -81,7 +81,7 @@ func (service TenantService) UpdateTenant(id int, requestBody []byte) (*ent.Tena
 		return nil, err
 	}
 
-	if updateDTO.DNI != nil {
+	if updateDTO.DNI != nil && *updateDTO.DNI != tenant.DNI {
 		dniAlreadyExists, err := service.repo.ExistsWithDNI(int(*updateDTO.DNI))
 		if err != nil {
 			return nil, err

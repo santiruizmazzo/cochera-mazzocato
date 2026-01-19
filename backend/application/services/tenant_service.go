@@ -108,7 +108,7 @@ func (service TenantService) UpdateTenant(id int, requestBody []byte) (*ent.Tena
 		tenant.SetPhone(*updateDTO.Phone)
 	}
 
-	if updateDTO.Email != nil {
+	if updateDTO.Email != nil && *updateDTO.Email != tenant.Email {
 		emailAlreadyUsed, err := service.repo.ExistsWithEmail(string(*updateDTO.Email))
 		if err != nil {
 			return nil, err

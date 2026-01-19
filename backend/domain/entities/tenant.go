@@ -55,6 +55,10 @@ func (tenant Tenant) GetLastName() string {
 	return string(tenant.LastName)
 }
 
+func (tenant *Tenant) SetLastName(lastName vo.Name) {
+	tenant.LastName = lastName
+}
+
 func (tenant Tenant) HasLastName(lastName string) bool {
 	return string(tenant.LastName) == lastName
 }
@@ -66,11 +70,19 @@ func (tenant Tenant) GetAddress() any {
 	return string(tenant.Address)
 }
 
+func (tenant *Tenant) SetAddress(address vo.Address) {
+	tenant.Address = address
+}
+
 func (tenant Tenant) GetPhone() any {
 	if tenant.Phone.IsEmpty() {
 		return nil
 	}
 	return tenant.Phone.String()
+}
+
+func (tenant *Tenant) SetPhone(phone vo.Phone) {
+	tenant.Phone = phone
 }
 
 func (tenant Tenant) GetEmail() any {

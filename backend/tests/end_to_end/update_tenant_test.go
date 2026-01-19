@@ -214,7 +214,6 @@ func TestUpdateTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd
 }
 
 func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}
@@ -240,10 +239,10 @@ func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *test
 		"dni":         666,
 		"name":        "Lucifer",
 		"last_name":   "Succubus",
-		"entry_month": "02-2026",
-		"email":       "nramos@gmail.com",
-		"phone":       "+598444123456",
+		"email":       "lucifer@hell.com",
 		"address":     "33 Orientales 1234, Paysandú, Uruguay",
+		"phone":       "+59844412345",
+		"entry_month": "02-2026",
 	}
 
 	response, err = testAPI.UpdateTenant(1, modifiedTenant)
@@ -264,10 +263,10 @@ func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *test
 	utils.AssertResponseContains(responseMap, "dni", float64(666), t)
 	utils.AssertResponseContains(responseMap, "name", "Lucifer", t)
 	utils.AssertResponseContains(responseMap, "last_name", "Succubus", t)
-	utils.AssertResponseContains(responseMap, "entry_month", "02-2026", t)
-	utils.AssertResponseContains(responseMap, "email", "nramos@gmail.com", t)
-	utils.AssertResponseContains(responseMap, "phone", "+598444123456", t)
+	utils.AssertResponseContains(responseMap, "email", "lucifer@hell.com", t)
 	utils.AssertResponseContains(responseMap, "address", "33 Orientales 1234, Paysandú, Uruguay", t)
+	utils.AssertResponseContains(responseMap, "phone", "+59844412345", t)
+	utils.AssertResponseContains(responseMap, "entry_month", "02-2026", t)
 }
 
 func TestUpdateTenantFailsWhenEmailIsAlreadyTaken_EndToEnd(t *testing.T) {

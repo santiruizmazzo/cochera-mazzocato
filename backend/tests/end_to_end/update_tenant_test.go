@@ -225,6 +225,7 @@ func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *test
 		"name":        "Nicolás",
 		"last_name":   "Ramos",
 		"entry_month": "01-2025",
+		"email":       "nico@ramos.com",
 	}
 
 	response, err := testAPI.CreateTenant(expectedTenant)
@@ -233,8 +234,9 @@ func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *test
 	}
 
 	modifiedTenant := map[string]any{
-		"dni":  666,
-		"name": "Lucifer",
+		"dni":   666,
+		"name":  "Lucifer",
+		"email": "nramos@gmail.com",
 	}
 
 	response, err = testAPI.UpdateTenant(1, modifiedTenant)
@@ -259,7 +261,6 @@ func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *test
 }
 
 func TestUpdateTenantFailsWhenEmailIsAlreadyTaken_EndToEnd(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}

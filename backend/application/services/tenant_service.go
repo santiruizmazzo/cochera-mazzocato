@@ -96,6 +96,17 @@ func (service TenantService) UpdateTenant(id int, requestBody []byte) (*ent.Tena
 		tenant.SetName(*updateDTO.Name)
 	}
 
+	if updateDTO.Email != nil {
+		emailAlreadyUsed, err := service.repo.ExistsWithEmail(string(*updateDTO.Email))
+		if err != nil {
+			return nil, err
+		}
+		if emailAlreadyUsed {
+			return nil, ErrDuplicateEmail
+		}
+		tenant.SetEmail(*updateDTO.Email)
+	}
+
 	if updateDTO.EntryMonth != nil {
 		tenant.SetEntryMonth(*updateDTO.EntryMonth)
 	}

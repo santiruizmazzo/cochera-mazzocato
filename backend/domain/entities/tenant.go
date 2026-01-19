@@ -80,6 +80,10 @@ func (tenant Tenant) GetEmail() any {
 	return string(tenant.Email)
 }
 
+func (tenant *Tenant) SetEmail(email vo.EmailAddress) {
+	tenant.Email = email
+}
+
 func (tenant Tenant) HasEmail(email string) bool {
 	return string(tenant.Email) == email
 }

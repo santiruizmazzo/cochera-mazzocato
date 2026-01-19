@@ -69,13 +69,7 @@ func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error
 	return service.repo.Save(&tenant)
 }
 
-func (service TenantService) UpdateTenant(id int, requestBody []byte) (*ent.Tenant, error) {
-	var updateDTO dtos.UpdateTenantDTO
-
-	if err := json.Unmarshal(requestBody, &updateDTO); err != nil {
-		return nil, err
-	}
-
+func (service TenantService) UpdateTenant(id int, updateDTO dtos.UpdateTenantDTO) (*ent.Tenant, error) {
 	tenant, err := service.GetByID(id)
 	if err != nil {
 		return nil, err

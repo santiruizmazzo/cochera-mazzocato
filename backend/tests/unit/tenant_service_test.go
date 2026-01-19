@@ -1,6 +1,7 @@
 package unit
 
 import (
+	"cochera/application/dtos"
 	"cochera/application/services"
 	"cochera/domain"
 	ent "cochera/domain/entities"
@@ -162,7 +163,7 @@ func TestTenantService_GetAllTenantsByLastName_Successfully(t *testing.T) {
 	}
 }
 
-func TestTenantService_ModifyByID_Successfully(t *testing.T) {
+func TestTenantService_UpdateTenant_Successfully(t *testing.T) {
 	existingTenant := domain.NewTenantBuilder().Build()
 	mockRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*ent.Tenant{1: existingTenant}}
 
@@ -175,7 +176,10 @@ func TestTenantService_ModifyByID_Successfully(t *testing.T) {
 		"entry_month": "01-2024",
 	})
 
-	modifiedTenant, err := service.UpdateTenant(1, requestBody)
+	var updateDTO dtos.UpdateTenantDTO
+	_ = json.Unmarshal(requestBody, &updateDTO)
+
+	modifiedTenant, err := service.UpdateTenant(1, updateDTO)
 
 	if err != nil {
 		t.Fatal("ModifyByID should not fail: ", err)

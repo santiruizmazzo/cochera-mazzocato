@@ -1,9 +1,12 @@
 package api
 
 import (
+	"cochera/application/dtos"
 	"cochera/application/formatting"
 	ent "cochera/domain/entities"
+	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -145,7 +148,18 @@ func (api API) updateTenantByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tenant, err := api.tenantService.UpdateTenant(id, requestBody)
+	if len(requestBody) == 0 {
+		log.Println("NO HAY REQUEST BODY!")
+	}
+
+	var updateDTO dtos.UpdateTenantDTO
+
+	if err := json.Unmarshal(requestBody, &updateDTO); err != nil {
+		formatter.RespondCouldNotUpdateTenant(err)
+		return
+	}
+
+	tenant, err := api.tenantService.UpdateTenant(id, updateDTO)
 	if err != nil {
 		formatter.RespondCouldNotUpdateTenant(err)
 		return

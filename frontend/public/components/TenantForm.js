@@ -79,7 +79,6 @@ template.innerHTML = /*html*/ `
     <label for="email">Email</label>
     <input id="email" name="email" type="email" 
             maxlength="100"
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
             title="Email válido con máximo 100 caracteres"
             placeholder="lamponne@simuladores.com">
 
@@ -134,6 +133,59 @@ export default class TenantForm extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(template.content.cloneNode(true));
+    this.tenant = null;
+  }
+
+  static get observedAttributes() {
+    return ["mode"];
+  }
+
+  get mode() {
+    return this.getAttribute("mode") || "create";
+  }
+
+  set mode(value) {
+    this.setAttribute("mode", value);
+  }
+
+  loadTenant(tenantData) {
+    this.tenant = tenantData;
+    this.populateForm();
+  }
+
+  populateForm() {
+    if (!this.tenant) return;
+
+    const form = this.shadowRoot.querySelector("form");
+    form.querySelector("#name").value = this.tenant.name;
+    form.querySelector("#last-name").value = this.tenant.last_name;
+    form.querySelector("#dni").value = this.tenant.dni;
+    form.querySelector("#email").value = this.tenant.email || "";
+    form.querySelector("#address").value = this.tenant.address || "";
+    
+    if (this.tenant.phone) {
+      let dialingCode, localPhone
+
+      if (this.tenant.phone.startsWith("+54")) {
+        dialingCode = this.tenant.phone.substring(0, 3);
+        localPhone = this.tenant.phone.substring(3);
+      }
+
+      if (this.tenant.phone.startsWith("+598")) {
+        dialingCode = this.tenant.phone.substring(0, 4);
+        localPhone = this.tenant.phone.substring(4);
+      }
+      
+      form.querySelector("[name='dialing-code']").value = dialingCode;
+      form.querySelector("#phone").value = localPhone;
+    }
+    
+    const [month, year] = this.tenant.entry_month.split("-");
+    
+    const monthOption = form.querySelector(`[name='month'] option[value="${month}"]`);
+    monthOption.selected = true;
+    
+    form.querySelector("[name='year']").value = year;
   }
 
   connectedCallback() {
@@ -152,7 +204,7 @@ export default class TenantForm extends HTMLElement {
     const monthOption = this.shadowRoot.querySelector(
       `.month-selector option[value="${paddedMonth}"]`,
     );
-    monthOption.setAttribute("selected", true);
+    monthOption.selected = true;
   }
 
   generateYearSelector() {
@@ -190,12 +242,17 @@ export default class TenantForm extends HTMLElement {
 
       button.deactivate();
 
-      const jsonTenant = this.createJsonTenant(form);
+      const method = this.mode === "edit" ? "PATCH" : "POST";
+      const url = this.mode === "edit" 
+        ? `${TENANTS_URL}/${this.tenant.id}` 
+        : TENANTS_URL;
 
-      fetch(TENANTS_URL, {
-        method: "POST",
+      const tenantData = this.createJsonTenant(form);
+
+      fetch(url, {
+        method: method,
         headers: { "Content-Type": "application/json" },
-        body: jsonTenant,
+        body: tenantData,
       })
         .then(async (response) => {
           const responseBody = await response.json();
@@ -210,14 +267,21 @@ export default class TenantForm extends HTMLElement {
           return responseBody;
         })
         .then((responseBody) => {
-          const tenantCreated = new CustomEvent("tenants:update", {
+          const eventName = this.mode === "edit" 
+            ? "tenants:updated" 
+            : "tenants:created";
+
+          const tenantEvent = new CustomEvent(eventName, {
             detail: responseBody,
             bubbles: true,
             composed: true,
           });
-          this.dispatchEvent(tenantCreated);
+          this.dispatchEvent(tenantEvent);
 
-          form.reset();
+          if (this.mode === "create") {
+            form.reset();
+          }
+
           button.activate();
           errorBox.hide();
         })

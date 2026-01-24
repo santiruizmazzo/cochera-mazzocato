@@ -27,7 +27,7 @@ export default class TenantsCollection extends HTMLElement {
   }
 
   async handleEvent(event) {
-    if (event.type === "tenants:update") {
+    if (event.type === "tenants:created") {
       const container = this.shadowRoot.querySelector("div");
       const card = TenantMiniCard.fromJson(event.detail);
       container.appendChild(card);
@@ -37,7 +37,7 @@ export default class TenantsCollection extends HTMLElement {
   async connectedCallback() {
     if (this.tenants.length != 0) return;
 
-    document.addEventListener("tenants:update", this);
+    document.addEventListener("tenants:created", this);
 
     this.renderPlaceholders();
     await this.fetchTenants();

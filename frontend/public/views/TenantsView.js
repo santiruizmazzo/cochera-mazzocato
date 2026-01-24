@@ -15,7 +15,7 @@ export default class extends AbstractView {
               <svg><use href="#close"/></svg>
             </button>
           </header>
-          <tenant-form></tenant-form>
+          <tenant-form mode="create"></tenant-form>
         </dialog>
 
         <header class="section-header">
@@ -42,6 +42,6 @@ export default class extends AbstractView {
       modal.close();
       form.clear();
     });
-    modal.addEventListener("tenants:update", () => modal.close());
+    modal.addEventListener("tenants:created", () => modal.close());
   }
 }

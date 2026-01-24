@@ -97,6 +97,5 @@ export default class extends AbstractView {
       modal.close();
       form.clear();
     });
-    // modal.addEventListener("tenants:update", () => modal.close());
   }
 }

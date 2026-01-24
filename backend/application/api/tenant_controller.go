@@ -98,13 +98,13 @@ func (api API) getTenantByID(w http.ResponseWriter, r *http.Request) {
 
 	path := strings.TrimPrefix(r.URL.Path, TenantsBaseRoute+"/")
 	if path == "" {
-		formatter.RespondTenantIDMustNotBeMissing()
+		formatter.RespondResourceIDMustNotBeMissing()
 		return
 	}
 
 	id, err := strconv.Atoi(path)
 	if err != nil {
-		formatter.RespondTenantIDMustBeAnInteger()
+		formatter.RespondResourceIDMustBeAnInteger()
 		return
 	}
 
@@ -137,13 +137,13 @@ func (api API) updateTenantByID(w http.ResponseWriter, r *http.Request) {
 
 	path := strings.TrimPrefix(r.URL.Path, TenantsBaseRoute+"/")
 	if path == "" {
-		formatter.RespondTenantIDMustNotBeMissing()
+		formatter.RespondResourceIDMustNotBeMissing()
 		return
 	}
 
 	id, err := strconv.Atoi(path)
 	if err != nil {
-		formatter.RespondTenantIDMustBeAnInteger()
+		formatter.RespondResourceIDMustBeAnInteger()
 		return
 	}
 

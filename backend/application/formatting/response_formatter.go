@@ -62,13 +62,13 @@ func (formatter ResponseFormatter) RespondCouldNotWriteResponse(responseError er
 	http.Error(formatter.w, responseBody, http.StatusInternalServerError)
 }
 
-func (formatter ResponseFormatter) RespondTenantIDMustNotBeMissing() {
-	responseBody := formatter.CreateErrorBodyWith("tenant id is required")
+func (formatter ResponseFormatter) RespondResourceIDMustNotBeMissing() {
+	responseBody := formatter.CreateErrorBodyWith("id is required")
 	http.Error(formatter.w, responseBody, http.StatusBadRequest)
 }
 
-func (formatter ResponseFormatter) RespondTenantIDMustBeAnInteger() {
-	responseBody := formatter.CreateErrorBodyWith("tenant id must be an integer")
+func (formatter ResponseFormatter) RespondResourceIDMustBeAnInteger() {
+	responseBody := formatter.CreateErrorBodyWith("id must be an integer")
 	http.Error(formatter.w, responseBody, http.StatusBadRequest)
 }
 
@@ -128,3 +128,16 @@ func (formatter *ResponseFormatter) RespondTenantUpdatedSuccessfully(tenant *ent
 	formatter.w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(formatter.w).Encode(tenant)
 }
+
+// func (formatter *ResponseFormatter) RespondCouldNotUpdateSlot(updateError error) {
+// 	statusCode := http.StatusBadRequest
+
+// 	responseBody := formatter.CreateErrorBodyWith(updateError.Error())
+// 	http.Error(formatter.w, responseBody, statusCode)
+// }
+
+// func (formatter *ResponseFormatter) RespondSlotUpdatedSuccessfully(slot *ent.Slot) error {
+// 	formatter.w.Header().Set("Content-Type", "application/json")
+// 	formatter.w.WriteHeader(http.StatusOK)
+// 	return json.NewEncoder(formatter.w).Encode(slot)
+// }

@@ -162,9 +162,9 @@ export default class TenantForm extends HTMLElement {
     form.querySelector("#dni").value = this.tenant.dni;
     form.querySelector("#email").value = this.tenant.email || "";
     form.querySelector("#address").value = this.tenant.address || "";
-    
+
     if (this.tenant.phone) {
-      let dialingCode, localPhone
+      let dialingCode, localPhone;
 
       if (this.tenant.phone.startsWith("+54")) {
         dialingCode = this.tenant.phone.substring(0, 3);
@@ -175,16 +175,18 @@ export default class TenantForm extends HTMLElement {
         dialingCode = this.tenant.phone.substring(0, 4);
         localPhone = this.tenant.phone.substring(4);
       }
-      
+
       form.querySelector("[name='dialing-code']").value = dialingCode;
       form.querySelector("#phone").value = localPhone;
     }
-    
+
     const [month, year] = this.tenant.entry_month.split("-");
-    
-    const monthOption = form.querySelector(`[name='month'] option[value="${month}"]`);
+
+    const monthOption = form.querySelector(
+      `[name='month'] option[value="${month}"]`,
+    );
     monthOption.selected = true;
-    
+
     form.querySelector("[name='year']").value = year;
   }
 
@@ -243,9 +245,8 @@ export default class TenantForm extends HTMLElement {
       button.deactivate();
 
       const method = this.mode === "edit" ? "PATCH" : "POST";
-      const url = this.mode === "edit" 
-        ? `${TENANTS_URL}/${this.tenant.id}` 
-        : TENANTS_URL;
+      const url =
+        this.mode === "edit" ? `${TENANTS_URL}/${this.tenant.id}` : TENANTS_URL;
 
       const tenantData = this.createJsonTenant(form);
 
@@ -267,9 +268,8 @@ export default class TenantForm extends HTMLElement {
           return responseBody;
         })
         .then((responseBody) => {
-          const eventName = this.mode === "edit" 
-            ? "tenants:updated" 
-            : "tenants:created";
+          const eventName =
+            this.mode === "edit" ? "tenants:updated" : "tenants:created";
 
           const tenantEvent = new CustomEvent(eventName, {
             detail: responseBody,

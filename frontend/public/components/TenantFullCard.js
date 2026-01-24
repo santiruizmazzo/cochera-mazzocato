@@ -147,25 +147,16 @@ export default class TenantFullCard extends HTMLElement {
   }
 
   async connectedCallback() {
-    await this.fetchTenant();
     this.render();
   }
 
-  async fetchTenant() {
-    const TENANT_URL =
-      import.meta.env.VITE_API_URL + `/api/tenants/${this.getAttribute("id")}`;
-
-    await fetch(TENANT_URL)
-      .then((response) => response.json())
-      .then((json) => {
-        this.tenantData = json;
-      })
-      .catch((error) => {
-        console.error("Error fetching tenants:", error);
-      });
+  loadTenant(tenantData) {
+    this.tenantData = tenantData;
+    this.render();
   }
 
   render() {
+    if (!this.tenantData) return;
     this.renderDni();
     this.renderLastName();
     this.renderName();

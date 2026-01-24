@@ -129,15 +129,15 @@ func (formatter *ResponseFormatter) RespondTenantUpdatedSuccessfully(tenant *ent
 	return json.NewEncoder(formatter.w).Encode(tenant)
 }
 
-// func (formatter *ResponseFormatter) RespondCouldNotUpdateSlot(updateError error) {
-// 	statusCode := http.StatusBadRequest
+func (formatter *ResponseFormatter) RespondCouldNotUpdateSlot(updateError error) {
+	statusCode := http.StatusBadRequest
 
-// 	responseBody := formatter.CreateErrorBodyWith(updateError.Error())
-// 	http.Error(formatter.w, responseBody, statusCode)
-// }
+	responseBody := formatter.CreateErrorBodyWith(updateError.Error())
+	http.Error(formatter.w, responseBody, statusCode)
+}
 
-// func (formatter *ResponseFormatter) RespondSlotUpdatedSuccessfully(slot *ent.Slot) error {
-// 	formatter.w.Header().Set("Content-Type", "application/json")
-// 	formatter.w.WriteHeader(http.StatusOK)
-// 	return json.NewEncoder(formatter.w).Encode(slot)
-// }
+func (formatter *ResponseFormatter) RespondSlotUpdatedSuccessfully(slot *ent.Slot) error {
+	formatter.w.Header().Set("Content-Type", "application/json")
+	formatter.w.WriteHeader(http.StatusOK)
+	return json.NewEncoder(formatter.w).Encode(slot)
+}

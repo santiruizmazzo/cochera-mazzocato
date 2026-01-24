@@ -26,7 +26,8 @@ export default class extends AbstractView {
             <h2>Info del inquilino</h2>
           </div>
           <button class="new-action-btn open-modal-btn">
-            Editar inquilino
+            <svg><use href="#person_edit"/></svg>
+            Editar
           </button>
         </header>
         

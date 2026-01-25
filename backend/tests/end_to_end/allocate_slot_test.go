@@ -15,12 +15,17 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 	}
 
 	jsonBody, _ := json.Marshal(map[string]int{
-		"tenant_id": 1,
+		"tenant_id": 7,
 	})
 
 	response, err := utils.HTTPPatch(testAPI.GetSlotsRoute()+"/1", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetSlotsRoute(), err)
+	}
+
+	response, err = http.Get(testAPI.GetSlotsRoute() + "/1")
+	if err != nil {
+		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetSlotsRoute(), err)
 	}
 
 	defer func() {
@@ -35,5 +40,5 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 
 	utils.AssertResponseContains(responseMap, "id", 1, t)
 	utils.AssertResponseContains(responseMap, "number", 1, t)
-	utils.AssertResponseContains(responseMap, "tenant_id", 1, t)
+	utils.AssertResponseContains(responseMap, "tenant_id", 7, t)
 }

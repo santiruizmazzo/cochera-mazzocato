@@ -4,6 +4,7 @@ import (
 	"cochera/application/dtos"
 	"cochera/domain"
 	ent "cochera/domain/entities"
+	vo "cochera/domain/value_objects"
 )
 
 type SlotService struct {
@@ -15,5 +16,5 @@ func NewSlotService(repo domain.SlotRepository) *SlotService {
 }
 
 func (service SlotService) UpdateSlot(id int, updateDTO dtos.UpdateSlotDTO) (*ent.Slot, error) {
-	return nil, nil
+	return &ent.Slot{ID: vo.EntityID(id), Number: *updateDTO.Number, TenantID: *updateDTO.TenantID}, nil
 }

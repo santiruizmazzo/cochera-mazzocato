@@ -3,12 +3,13 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS slots (
     id SERIAL PRIMARY KEY,
     slot_number INTEGER NOT NULL UNIQUE,
-    tenant_id INTEGER NOT NULL REFERENCES tenants(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    tenant_id INTEGER REFERENCES tenants(id) ON DELETE SET NULL ON UPDATE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_slots_tenant_id ON slots(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_slots_available ON slots(tenant_id) WHERE tenant_id IS NULL;
 CREATE INDEX IF NOT EXISTS idx_slots_slot_number ON slots(slot_number);
 
 -- Crear función solo si no existe (ya debería existir de la migración de tenants)

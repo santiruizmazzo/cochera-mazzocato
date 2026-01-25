@@ -17,6 +17,7 @@ type API struct {
 	server        *http.Server
 	db            *pgxpool.Pool
 	tenantService *services.TenantService
+	slotService   *services.SlotService
 }
 
 func NewAPI(port int, db *pgxpool.Pool) *API {
@@ -25,7 +26,12 @@ func NewAPI(port int, db *pgxpool.Pool) *API {
 		Handler: nil,
 	}
 
-	return &API{server: server, db: db, tenantService: setupTenantService(db)}
+	return &API{server: server, db: db, tenantService: setupTenantService(db), slotService: setupSlotService(db)}
+}
+
+func setupSlotService(db *pgxpool.Pool) *services.SlotService {
+	repo := infra.NewPostgresTenantRepository(db)
+	return services.NewSlotService(repo)
 }
 
 func setupTenantService(db *pgxpool.Pool) *services.TenantService {

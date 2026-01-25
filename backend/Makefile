@@ -51,9 +51,13 @@ migrate-up:
 	@echo "⏭️  Running migrations..."
 	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" up
 
+.PHONY: migrate-test-down
+migrate-test-down: DATABASE_URL = $(TEST_DB_URL)
+migrate-test-down: migrate-down
+
 .PHONY: migrate-down
 migrate-down:
-	@echo "⏮️ Rolling back migrations to previous version..."
+	@echo "⏮️  Rolling back migrations to previous version..."
 	@migrate -path $(MIGRATIONS_PATH) -database "$(DATABASE_URL)" down 1
 
 .PHONY: migrate-test-reset

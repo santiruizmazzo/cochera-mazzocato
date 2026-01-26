@@ -141,3 +141,20 @@ func (formatter *ResponseFormatter) RespondSlotUpdatedSuccessfully(slot *ent.Slo
 	formatter.w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(formatter.w).Encode(slot)
 }
+
+func (formatter *ResponseFormatter) RespondCouldNotGetSlot(retrievingError error) {
+	statusCode := http.StatusInternalServerError
+
+	if errors.Is(retrievingError, infra.ErrSlotNotFound) {
+		statusCode = http.StatusNotFound
+	}
+
+	responseBody := formatter.CreateErrorBodyWith(retrievingError.Error())
+	http.Error(formatter.w, responseBody, statusCode)
+}
+
+func (formatter ResponseFormatter) RespondSlotGotSuccessfully(slot *ent.Slot) error {
+	formatter.w.Header().Set("Content-Type", "application/json")
+	formatter.w.WriteHeader(http.StatusOK)
+	return json.NewEncoder(formatter.w).Encode(slot)
+}

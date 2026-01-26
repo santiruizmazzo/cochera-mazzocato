@@ -21,7 +21,6 @@ func TestSlotService_UpdateSlot_Successfully(t *testing.T) {
 	service := services.NewSlotService(mockRepo)
 
 	requestBody, _ := json.Marshal(map[string]any{
-		"number":    12,
 		"tenant_id": 6,
 	})
 
@@ -34,7 +33,7 @@ func TestSlotService_UpdateSlot_Successfully(t *testing.T) {
 		t.Fatal("UpdateSlot should not fail: ", err)
 	}
 
-	expectedSlot := ent.Slot{ID: vo.EntityID(1), Number: 12, TenantID: 6}
+	expectedSlot := ent.Slot{ID: vo.EntityID(1), Number: 1, TenantID: 6}
 
 	if *updatedSlot != expectedSlot {
 		t.Fatal("Local Slot different from the updated one: ", updatedSlot)

@@ -32,7 +32,6 @@ func TestPostgresSlotRepository_Save_Successfully_Integration(t *testing.T) {
 }
 
 func TestPostgresSlotRepository_GetByID_Successfully_Integration(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}

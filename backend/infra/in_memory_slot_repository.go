@@ -7,6 +7,10 @@ type InMemorySlotRepository struct {
 	// err   error
 }
 
+func (repo InMemorySlotRepository) GetByID(id int) (*ent.Slot, error) {
+	panic("unimplemented")
+}
+
 func (repo InMemorySlotRepository) Save(slot *ent.Slot) (*ent.Slot, error) {
 	panic("unimplemented")
 }

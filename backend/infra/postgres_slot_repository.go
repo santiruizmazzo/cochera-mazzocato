@@ -3,7 +3,9 @@ package infra
 import (
 	ent "cochera/domain/entities"
 	"context"
+	"errors"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -11,8 +13,34 @@ type PostgresSlotRepository struct {
 	db *pgxpool.Pool
 }
 
+var (
+	ErrSlotNotFound = errors.New("plaza no encontrada")
+	// ErrNoMatchingSlotsFound = errors.New("no se encontraron plazas que coincidan")
+)
+
 func NewPostgresSlotRepository(db *pgxpool.Pool) *PostgresSlotRepository {
 	return &PostgresSlotRepository{db: db}
+}
+
+func (repo PostgresSlotRepository) GetByID(id int) (*ent.Slot, error) {
+	query := `SELECT id, slot_number, tenant_id FROM slots WHERE id = $1;`
+
+	row := repo.db.QueryRow(context.Background(), query, id)
+
+	return repo.createSlotFromRow(row)
+}
+
+func (repo PostgresSlotRepository) createSlotFromRow(row pgx.Row) (*ent.Slot, error) {
+	var (
+		id, slotNumber, tenantID int
+	)
+
+	err := row.Scan(&id, &slotNumber, &tenantID)
+	if err != nil {
+		return nil, ErrSlotNotFound
+	}
+
+	return ent.NewSlot(id, slotNumber, tenantID)
 }
 
 func (repo PostgresSlotRepository) Save(slot *ent.Slot) (*ent.Slot, error) {

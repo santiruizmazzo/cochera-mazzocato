@@ -2,6 +2,7 @@ package endtoend
 
 import (
 	"bytes"
+	"cochera/domain"
 	"cochera/tests/utils"
 	"encoding/json"
 	"net/http"
@@ -14,11 +15,14 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
+	newTenant := domain.NewTenantBuilder().Build()
+	response, err := testAPI.CreateTenant(newTenant)
+
 	jsonBody, _ := json.Marshal(map[string]int{
-		"tenant_id": 7,
+		"tenant_id": 1,
 	})
 
-	response, err := utils.HTTPPatch(testAPI.GetSlotsRoute()+"/1", "application/json", bytes.NewBuffer(jsonBody))
+	response, err = utils.HTTPPatch(testAPI.GetSlotsRoute()+"/1", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetSlotsRoute(), err)
 	}
@@ -40,5 +44,5 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 
 	utils.AssertResponseContains(responseMap, "id", 1, t)
 	utils.AssertResponseContains(responseMap, "number", 1, t)
-	utils.AssertResponseContains(responseMap, "tenant_id", 7, t)
+	utils.AssertResponseContains(responseMap, "tenant_id", 1, t)
 }

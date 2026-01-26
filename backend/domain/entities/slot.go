@@ -11,5 +11,5 @@ type Slot struct {
 }
 
 func NewSlot(id int, number int, tenantID int) (*Slot, error) {
-	panic("unimplemented")
+	return &Slot{ID: vo.EntityID(id), Number: vo.SlotNumber(number), TenantID: vo.EntityID(tenantID)}, nil
 }

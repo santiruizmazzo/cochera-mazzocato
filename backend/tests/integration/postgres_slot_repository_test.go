@@ -7,16 +7,21 @@ import (
 )
 
 func TestPostgresSlotRepository_Save_Successfully_Integration(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}
 
-	repo := infra.NewPostgresSlotRepository(db)
+	tenantsRepo := infra.NewPostgresTenantRepository(db)
+
+	localTenant, _ := ent.NewTenant(1, 123, "Santi", "Ruiz", "Rosales 54", "+543333111111", "santiruiz@live.com", "12-2022")
+
+	_, _ = tenantsRepo.Save(localTenant)
+
+	slotsRepo := infra.NewPostgresSlotRepository(db)
 
 	localSlot, _ := ent.NewSlot(1, 1, 1)
 
-	savedSlot, err := repo.Save(localSlot)
+	savedSlot, err := slotsRepo.Save(localSlot)
 	if err != nil {
 		t.Fatal(err)
 	}

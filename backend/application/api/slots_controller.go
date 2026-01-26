@@ -14,11 +14,40 @@ const SlotsBaseRoute string = "/slots"
 
 func (api API) slotByIDHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
+	case http.MethodGet:
+		api.getSlotByID(w, r)
 	case http.MethodPatch:
 		api.updateSlotByID(w, r)
 	default:
 		formatter := formatting.NewResponseFormatter(w)
 		formatter.RespondMethodIsNotAllowed()
+	}
+}
+
+func (api API) getSlotByID(w http.ResponseWriter, r *http.Request) {
+	formatter := formatting.NewResponseFormatter(w)
+
+	path := strings.TrimPrefix(r.URL.Path, SlotsBaseRoute+"/")
+	if path == "" {
+		formatter.RespondResourceIDMustNotBeMissing()
+		return
+	}
+
+	id, err := strconv.Atoi(path)
+	if err != nil {
+		formatter.RespondResourceIDMustBeAnInteger()
+		return
+	}
+
+	slot, err := api.slotService.GetByID(id)
+	if err != nil {
+		formatter.RespondCouldNotGetSlot(err)
+		return
+	}
+
+	err = formatter.RespondSlotGotSuccessfully(slot)
+	if err != nil {
+		formatter.RespondCouldNotWriteResponse(err)
 	}
 }
 

@@ -4,13 +4,21 @@ import ent "cochera/domain/entities"
 
 type InMemorySlotRepository struct {
 	Slots map[int]*ent.Slot
-	// err   error
+	err   error
 }
 
 func (repo InMemorySlotRepository) GetByID(id int) (*ent.Slot, error) {
-	panic("unimplemented")
+	slot := repo.Slots[id]
+	if slot == nil {
+		return nil, ErrSlotNotFound
+	}
+
+	return slot, nil
 }
 
 func (repo InMemorySlotRepository) Save(slot *ent.Slot) (*ent.Slot, error) {
-	panic("unimplemented")
+	if repo.err != nil {
+		return nil, repo.err
+	}
+	return slot, nil
 }

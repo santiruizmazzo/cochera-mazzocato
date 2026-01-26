@@ -13,3 +13,7 @@ type Slot struct {
 func NewSlot(id int, number int, tenantID int) (*Slot, error) {
 	return &Slot{ID: vo.EntityID(id), Number: vo.SlotNumber(number), TenantID: vo.EntityID(tenantID)}, nil
 }
+
+func (slot *Slot) SetTenantID(tenantID vo.EntityID) {
+	slot.TenantID = tenantID
+}

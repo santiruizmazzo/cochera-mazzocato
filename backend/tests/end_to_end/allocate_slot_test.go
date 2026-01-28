@@ -11,7 +11,6 @@ import (
 )
 
 func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}
@@ -44,9 +43,9 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "id", 1, t)
-	utils.AssertResponseContains(responseMap, "number", 1, t)
-	utils.AssertResponseContains(responseMap, "tenant_id", 1, t)
+	utils.AssertResponseContains(responseMap, "id", float64(1), t)
+	utils.AssertResponseContains(responseMap, "number", float64(1), t)
+	utils.AssertResponseContains(responseMap, "tenant_id", float64(1), t)
 
 	testAPI.ClearTenants()
 }

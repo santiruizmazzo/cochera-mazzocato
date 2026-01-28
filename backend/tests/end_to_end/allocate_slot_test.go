@@ -5,6 +5,7 @@ import (
 	"cochera/domain"
 	"cochera/tests/utils"
 	"encoding/json"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -16,13 +17,13 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 	}
 
 	newTenant := domain.NewTenantBuilder().Build()
-	response, err := testAPI.CreateTenant(newTenant)
+	_, _ = testAPI.CreateTenant(newTenant)
 
 	jsonBody, _ := json.Marshal(map[string]int{
 		"tenant_id": 1,
 	})
 
-	response, err = utils.HTTPPatch(testAPI.GetSlotsRoute()+"/1", "application/json", bytes.NewBuffer(jsonBody))
+	response, err := utils.HTTPPatch(testAPI.GetSlotsRoute()+"/1", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetSlotsRoute(), err)
 	}
@@ -39,10 +40,13 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 	}()
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
+	log.Println(responseMap)
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "id", 1, t)
 	utils.AssertResponseContains(responseMap, "number", 1, t)
 	utils.AssertResponseContains(responseMap, "tenant_id", 1, t)
+
+	testAPI.ClearTenants()
 }

@@ -18,12 +18,12 @@ test-unit:
 	@go test -short ./tests/unit/...
 
 .PHONY: test-integration
-test-integration: migrate-test-up
+test-integration:
 	@echo "🔌 Running integration tests..."
 	@go test -run Integration ./tests/integration/...
 
 .PHONY: test-e2e
-test-e2e: migrate-test-up
+test-e2e:
 	@echo "↔️  Running end to end tests..."
 	@go test -run EndToEnd ./tests/end_to_end/...
 

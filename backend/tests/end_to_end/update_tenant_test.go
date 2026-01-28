@@ -47,6 +47,8 @@ func TestUpdateTenantSuccessfully_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "dni", float64(43295798), t)
 	utils.AssertResponseContains(responseMap, "name", "Lance", t)
 	utils.AssertResponseContains(responseMap, "entry_month", "02-2024", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestUpdateTenantThatDoesNotExist_EndToEnd(t *testing.T) {

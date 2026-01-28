@@ -40,6 +40,8 @@ func TestGetTenantByIDThatDoesNotExist_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "inquilino no encontrado", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }
 
 func TestGetTenantByIDSuccessfully_EndToEnd(t *testing.T) {
@@ -90,4 +92,6 @@ func TestGetTenantByIDSuccessfully_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "entry_month", "07-2008", t)
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }

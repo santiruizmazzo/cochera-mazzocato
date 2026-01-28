@@ -55,7 +55,6 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithEmail("a@b.com").Build()
@@ -75,6 +74,8 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateDNI_Integration(t *testing
 	if createdTenant != nil {
 		t.Fatal("Save should not return tenant when it already exists one with same DNI")
 	}
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) {
@@ -82,7 +83,6 @@ func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) 
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithDNI(22222222).Build()
@@ -96,6 +96,8 @@ func TestPostgresTenantRepository_ExistsTenantWithDNI_Integration(t *testing.T) 
 	if err != nil || !dniAlreadyInUse {
 		t.Fatal("Method should return that DNI already exists")
 	}
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_Save_Fails_DuplicateEmail_Integration(t *testing.T) {
@@ -103,7 +105,6 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateEmail_Integration(t *testi
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithDNI(1).Build()
@@ -123,6 +124,8 @@ func TestPostgresTenantRepository_Save_Fails_DuplicateEmail_Integration(t *testi
 	if createdTenant != nil {
 		t.Fatal("Save should not return tenant when it already exists one with same email")
 	}
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T) {
@@ -130,7 +133,6 @@ func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant := domain.NewTenantBuilder().WithEmail("neo@cortex.com").Build()
@@ -144,6 +146,8 @@ func TestPostgresTenantRepository_ExistsTenantWithEmail_Integration(t *testing.T
 	if err != nil || !emailAlreadyInUse {
 		t.Fatal("Method should return that email is already in use")
 	}
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) {
@@ -151,7 +155,6 @@ func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) 
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	tenant, err := repo.GetByID(666)
@@ -162,6 +165,8 @@ func TestPostgresTenantRepository_GetTenantByID_Fails_Integration(t *testing.T) 
 	if tenant != nil {
 		t.Fatal("Tenant shouldn't be created when it is not found")
 	}
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *testing.T) {
@@ -169,7 +174,6 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant1 := domain.NewTenantBuilder().WithDNI(433).WithEmail("first@tenant.com").Build()
@@ -200,6 +204,8 @@ func TestPostgresTenantRepository_GetAllTenants_Successfully_Integration(t *test
 	if *existingTenant2 != *tenants[1] {
 		t.Fatalf("Got %v, expected %v", tenants[1], existingTenant2)
 	}
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_GetAllTenantsByName_Successfully_Integration(t *testing.T) {
@@ -207,7 +213,6 @@ func TestPostgresTenantRepository_GetAllTenantsByName_Successfully_Integration(t
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	nameToFilter := "Toni"
@@ -242,6 +247,8 @@ func TestPostgresTenantRepository_GetAllTenantsByName_Successfully_Integration(t
 	if !tenants[0].HasName(nameToFilter) || !tenants[1].HasName(nameToFilter) {
 		t.Fatal("Names of filtered tenants are incorrect")
 	}
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_GetAllTenantsByName_MatchPartially_Successfully_Integration(t *testing.T) {
@@ -249,7 +256,6 @@ func TestPostgresTenantRepository_GetAllTenantsByName_MatchPartially_Successfull
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant1 := domain.NewTenantBuilder().WithName("Mario").Build()
@@ -282,6 +288,8 @@ func TestPostgresTenantRepository_GetAllTenantsByName_MatchPartially_Successfull
 
 	utils.AssertResponseStringContains(tenants[0].GetName(), nameToFilter, t)
 	utils.AssertResponseStringContains(tenants[1].GetName(), nameToFilter, t)
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integration(t *testing.T) {
@@ -289,7 +297,6 @@ func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integrati
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	existingTenant1 := domain.NewTenantBuilder().Build()
@@ -322,6 +329,8 @@ func TestPostgresTenantRepository_GetAllTenantsByLastName_Successfully_Integrati
 
 	utils.AssertResponseStringContains(tenants[0].GetLastName(), lastNameToFilter, t)
 	utils.AssertResponseStringContains(tenants[1].GetLastName(), lastNameToFilter, t)
+
+	utils.ClearTenantsTable(db)
 }
 
 func TestPostgresTenantRepository_Save_UpdatesExistingTenant_Successfully_Integration(t *testing.T) {
@@ -329,7 +338,6 @@ func TestPostgresTenantRepository_Save_UpdatesExistingTenant_Successfully_Integr
 		t.Skip()
 	}
 
-	utils.CleanupTestDatabase(db)
 	repo := infra.NewPostgresTenantRepository(db)
 
 	localTenant := domain.NewTenantBuilder().Build()
@@ -349,4 +357,6 @@ func TestPostgresTenantRepository_Save_UpdatesExistingTenant_Successfully_Integr
 	if *modifiedTenant != *newLocalTenant {
 		t.Fatal("Expected modified tenant is different from saved tenant")
 	}
+
+	utils.ClearTenantsTable(db)
 }

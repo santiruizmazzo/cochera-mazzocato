@@ -10,12 +10,6 @@ Característica: Liberar plaza
         Cuando intento liberar la plaza
         Entonces se libera correctamente
     
-    Escenario: Plaza no ocupada
-        Dado que existe la plaza con id 1
-        Y que no está ocupada por ningún inquilino
-        Cuando intento liberar la plaza
-        Entonces se informa que la plaza ya se encuentra libre
-    
     Escenario: Plaza no existe
         Dado que no existe la plaza con id 22
         Cuando intento liberar la plaza

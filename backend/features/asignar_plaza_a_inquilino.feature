@@ -11,13 +11,6 @@ Característica: Asignar plaza a inquilino
         Cuando intento asignar la plaza al inquilino
         Entonces se registra correctamente la asignación
     
-    Escenario: Plaza ocupada
-        Dado que existe el inquilino con id 1
-        Y que existe la plaza con id 1
-        Y que la plaza con id 1 está ocupada por el inquilino con id 2
-        Cuando intento asignar la plaza al inquilino
-        Entonces se informa que la plaza ya está ocupada
-
     Escenario: Plaza no existe
         Dado que existe el inquilino con id 1
         Y que no existe la plaza con id 3

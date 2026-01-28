@@ -32,12 +32,18 @@ func (repo PostgresSlotRepository) GetByID(id int) (*ent.Slot, error) {
 
 func (repo PostgresSlotRepository) createSlotFromRow(row pgx.Row) (*ent.Slot, error) {
 	var (
-		id, slotNumber, tenantID int
+		id, slotNumber   int
+		nullableTenantID *int
 	)
 
-	err := row.Scan(&id, &slotNumber, &tenantID)
+	err := row.Scan(&id, &slotNumber, &nullableTenantID)
 	if err != nil {
 		return nil, ErrSlotNotFound
+	}
+
+	var tenantID int
+	if nullableTenantID != nil {
+		tenantID = *nullableTenantID
 	}
 
 	return ent.NewSlot(id, slotNumber, tenantID)
@@ -56,11 +62,5 @@ func (repo PostgresSlotRepository) Save(slot *ent.Slot) (*ent.Slot, error) {
 
 	row := repo.db.QueryRow(context.Background(), query, slot.Number, slot.TenantID)
 
-	var id, number, tenantID int
-
-	if err := row.Scan(&id, &number, &tenantID); err != nil {
-		return nil, err
-	}
-
-	return ent.NewSlot(id, number, tenantID)
+	return repo.createSlotFromRow(row)
 }

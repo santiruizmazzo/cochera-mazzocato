@@ -13,8 +13,6 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
-
 	firstCreatedTenant := map[string]any{
 		"id":          float64(1),
 		"dni":         float64(123),
@@ -81,14 +79,14 @@ func TestGetTenantsWithoutFilterSuccessfully_EndToEnd(t *testing.T) {
 	}
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }
 
 func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	response, err := http.Get(testAPI.GetTenantsRoute())
 	if err != nil {
@@ -106,14 +104,14 @@ func TestGetTenantsWithoutAnyTenantsCreated_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "no se encontraron inquilinos que coincidan", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }
 
 func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	nameToFilter := "Salvatore"
 	expectedTenant := domain.NewTenantBuilder().WithName(nameToFilter).Build()
@@ -157,14 +155,14 @@ func TestGetTenantsFilteredByNameMatchCompletely_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(tenantsList[1], "name", nameToFilter, t)
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }
 
 func TestGetTenantsFilteredByNameMatchPartially_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := domain.NewTenantBuilder().WithName("Martín").Build()
 	response, err := testAPI.CreateTenant(expectedTenant)
@@ -214,14 +212,14 @@ func TestGetTenantsFilteredByNameMatchPartially_EndToEnd(t *testing.T) {
 	utils.AssertResponseStringContains(tenantsList[2]["name"], "Mar", t)
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }
 
 func TestGetTenantsFilteredByNameDoesNotMatch_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := domain.NewTenantBuilder().Build()
 	response, err := testAPI.CreateTenant(expectedTenant)
@@ -245,14 +243,14 @@ func TestGetTenantsFilteredByNameDoesNotMatch_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "no se encontraron inquilinos que coincidan", t)
 
 	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }
 
 func TestGetTenantsFilteredByLastNameMatchCompletely_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	_, err = testAPI.CreateTenant(domain.NewTenantBuilder().Build())
 
@@ -288,4 +286,6 @@ func TestGetTenantsFilteredByLastNameMatchCompletely_EndToEnd(t *testing.T) {
 	utils.AssertResponseStringContains(tenantsList[0]["last_name"], "Jaoming", t)
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }

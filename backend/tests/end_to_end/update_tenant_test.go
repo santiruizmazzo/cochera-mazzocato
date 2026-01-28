@@ -84,8 +84,6 @@ func TestUpdateTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
-
 	expectedTenant := map[string]any{
 		"dni":         14571272,
 		"name":        "Juan Alberto",
@@ -119,14 +117,14 @@ func TestUpdateTenantFailsWhenChangingToInvalidEmail_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el email debe seguir el formato estándar", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestUpdateTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := map[string]any{
 		"dni":         14571272,
@@ -161,14 +159,14 @@ func TestUpdateTenantFailsWhenDeletingRequiredAttribute_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un número entero", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestUpdateTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := map[string]any{
 		"dni":         14571272,
@@ -211,14 +209,14 @@ func TestUpdateTenantDoesNotNullifyValueOfMissingAttributeInRequestBody_EndToEnd
 	utils.AssertResponseContains(responseMap, "email", "juanalberto@garcia.com", t)
 	utils.AssertResponseContains(responseMap, "address", "Calle Larios 123", t)
 	utils.AssertResponseContains(responseMap, "phone", "+544444192929", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := map[string]any{
 		"dni":         41630284,
@@ -267,14 +265,14 @@ func TestUpdateTenantSeveralAttributesAtTheSameTimeSuccessfully_EndToEnd(t *test
 	utils.AssertResponseContains(responseMap, "address", "33 Orientales 1234, Paysandú, Uruguay", t)
 	utils.AssertResponseContains(responseMap, "phone", "+59844412345", t)
 	utils.AssertResponseContains(responseMap, "entry_month", "02-2026", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestUpdateTenantFailsWhenEmailIsAlreadyTaken_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := map[string]any{
 		"dni":         41630284,
@@ -322,14 +320,14 @@ func TestUpdateTenantFailsWhenEmailIsAlreadyTaken_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el email ya está en uso", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestUpdateTenantDoesNotFailWhenUpdatingSameDNIToTenantWhoOwnsIt_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := map[string]any{
 		"dni":         41630284,
@@ -364,14 +362,14 @@ func TestUpdateTenantDoesNotFailWhenUpdatingSameDNIToTenantWhoOwnsIt_EndToEnd(t 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "dni", float64(41630284), t)
+
+	testAPI.ClearTenants()
 }
 
 func TestUpdateTenantDoesNotFailWhenUpdatingSameEmailToTenantWhoOwnsIt_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	expectedTenant := map[string]any{
 		"dni":         41630284,
@@ -406,4 +404,6 @@ func TestUpdateTenantDoesNotFailWhenUpdatingSameEmailToTenantWhoOwnsIt_EndToEnd(
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "email", "nico@ramos.com", t)
+
+	testAPI.ClearTenants()
 }

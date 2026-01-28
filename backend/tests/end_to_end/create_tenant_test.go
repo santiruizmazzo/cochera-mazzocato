@@ -13,8 +13,6 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
-
 	expectedTenant := map[string]string{
 		"name":        "Carl",
 		"last_name":   "Johnson",
@@ -37,6 +35,8 @@ func TestCreateTenantWithMissingAttributes_EndToEnd(t *testing.T) {
 	utils.AssertResponseContains(responseMap, "detail", "el DNI es obligatorio", t)
 
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
@@ -44,7 +44,6 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	existingTenant := domain.NewTenantBuilder().Build()
 
 	response, err := testAPI.CreateTenant(existingTenant)
@@ -70,14 +69,14 @@ func TestCreateTenantWithDuplicateDNI_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusConflict, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el DNI ya existe", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	newTenant := map[string]any{
 		"dni":         "hola",
@@ -102,14 +101,14 @@ func TestCreateTenantWithStringDNI_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el DNI debe ser un número entero", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
-
-	testAPI.ClearTenants()
 
 	newTenant := map[string]any{
 		"dni":         -10,
@@ -134,6 +133,8 @@ func TestCreateTenantWithNegativeDNI_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el DNI debe estar entre 1 y 4294967295", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
@@ -141,7 +142,6 @@ func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithDNI(0).Build()
 
 	response, err := testAPI.CreateTenant(newTenant)
@@ -160,6 +160,8 @@ func TestCreateTenantWithZeroDNI_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el DNI debe estar entre 1 y 4294967295", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
@@ -167,7 +169,6 @@ func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := map[string]any{
 		"id":          1,
 		"dni":         12345678,
@@ -195,6 +196,8 @@ func TestCreateTenantWithPhoneWithoutPlusSign_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el teléfono debe comenzar con un símbolo de +", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
@@ -202,7 +205,6 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := map[string]any{
 		"id":          1,
 		"dni":         12345678,
@@ -230,6 +232,8 @@ func TestCreateTenantWithPhoneWithoutNumbers_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el teléfono solo puede tener números", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
@@ -237,7 +241,6 @@ func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := map[string]any{
 		"id":          1,
 		"dni":         12345678,
@@ -265,6 +268,8 @@ func TestCreateTenantWithPhoneWithTooManyNumbers_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el teléfono debe tener 15 dígitos como máximo", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
@@ -272,7 +277,6 @@ func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := map[string]any{
 		"id":          1,
 		"dni":         12345678,
@@ -300,6 +304,8 @@ func TestCreateTenantWithPhoneFullOfZeros_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el teléfono no puede estar lleno de ceros", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
@@ -307,7 +313,6 @@ func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithEmail("hi, there").Build()
 
 	response, err := testAPI.CreateTenant(newTenant)
@@ -326,6 +331,8 @@ func TestCreateTenantWithInvalidEmail_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el email debe seguir el formato estándar", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
@@ -333,7 +340,6 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithEmail("sonny@forelliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.com").Build()
 
 	response, err := testAPI.CreateTenant(newTenant)
@@ -352,6 +358,8 @@ func TestCreateTenantWithVeryLargeEmail_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el email debe tener 100 caracteres como máximo", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
@@ -359,7 +367,6 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	existingTenant := domain.NewTenantBuilder().Build()
 
 	response, err := testAPI.CreateTenant(existingTenant)
@@ -384,6 +391,8 @@ func TestCreateTenantWithDuplicateEmail_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusConflict, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el email ya está en uso", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
@@ -391,7 +400,6 @@ func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := map[string]any{
 		"dni":         15151515,
 		"name":        "Trevor",
@@ -416,6 +424,8 @@ func TestCreateTenantWithInvalidFormatEntryMonth_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "imposible procesar este año", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
@@ -423,7 +433,6 @@ func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithName("Trevorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr").Build()
 
 	response, err := testAPI.CreateTenant(newTenant)
@@ -442,6 +451,8 @@ func TestCreateTenantWithReallyLargeName_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el nombre/apellido debe tener 50 caracteres como máximo", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
@@ -449,7 +460,6 @@ func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithLastName("Phillipssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss").Build()
 
 	response, err := testAPI.CreateTenant(newTenant)
@@ -468,6 +478,8 @@ func TestCreateTenantWithReallyLargeLastName_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el nombre/apellido debe tener 50 caracteres como máximo", t)
+
+	testAPI.ClearTenants()
 }
 
 func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
@@ -475,7 +487,6 @@ func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
 		t.Skip()
 	}
 
-	testAPI.ClearTenants()
 	newTenant := domain.NewTenantBuilder().WithAddress("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").Build()
 
 	response, err := testAPI.CreateTenant(newTenant)
@@ -494,4 +505,6 @@ func TestCreateTenantWithReallyLargeAddress_EndToEnd(t *testing.T) {
 	utils.AssertStatusCodeIs(http.StatusBadRequest, response.StatusCode, t)
 
 	utils.AssertResponseContains(responseMap, "detail", "el domicilio debe tener 100 caracteres como máximo", t)
+
+	testAPI.ClearTenants()
 }

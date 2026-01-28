@@ -7,7 +7,9 @@ import (
 )
 
 func AssertResponseContains[C comparable](response map[string]any, expectedKey string, expectedContent C, t *testing.T) {
-	if receivedContent, ok := response[expectedKey]; !ok || receivedContent != expectedContent {
+	receivedContent, ok := response[expectedKey]
+
+	if !ok || receivedContent != expectedContent {
 		t.Fatalf("Expected %s %v, got %v", expectedKey, expectedContent, receivedContent)
 	}
 }

@@ -3,7 +3,6 @@ package endtoend
 import (
 	"cochera/domain"
 	"cochera/tests/utils"
-	"log"
 	"net/http"
 	"testing"
 )
@@ -47,30 +46,21 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 	testAPI.ClearTenants()
 }
 
-func TestAllocateAlreadyTakenSlotToTenant_EndToEnd(t *testing.T) {
+func TestAllocateNonExistingSlotToTenant_EndToEnd(t *testing.T) {
 	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}
 
-	newTenant := domain.NewTenantBuilder().Build()
-	_, _ = testAPI.CreateTenant(newTenant)
-
-	newTenant = domain.NewTenantBuilder().WithName("Wade").WithLastName("Heston").Build()
-	_, _ = testAPI.CreateTenant(newTenant)
-
-	requestBody := map[string]int{
-		"tenant_id": 1,
+	tenant := domain.NewTenantBuilder().Build()
+	_, err = testAPI.CreateTenant(tenant)
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	response, err := testAPI.UpdateSlot(1, requestBody)
+	response, err := testAPI.UpdateSlot(13, map[string]int{"tenant_id": 1})
 	if err != nil {
-		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetSlotsRoute(), err)
-	}
-
-	response, err = http.Get(testAPI.GetSlotsRoute() + "/1")
-	if err != nil {
-		t.Fatalf("Failed sending GET request to %s: %v", testAPI.GetSlotsRoute(), err)
+		t.Fatal(err)
 	}
 
 	defer func() {
@@ -80,13 +70,10 @@ func TestAllocateAlreadyTakenSlotToTenant_EndToEnd(t *testing.T) {
 	}()
 
 	responseMap := utils.CreateMapFromBody(response.Body, t)
-	log.Println(responseMap)
 
-	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
+	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "id", float64(1), t)
-	utils.AssertResponseContains(responseMap, "number", float64(1), t)
-	utils.AssertResponseContains(responseMap, "tenant_id", float64(1), t)
+	utils.AssertResponseContains(responseMap, "detail", "plaza no encontrada", t)
 
 	testAPI.ClearTenants()
 }

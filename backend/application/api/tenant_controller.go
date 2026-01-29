@@ -44,7 +44,7 @@ func (api API) getTenants(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		formatter.RespondCouldNotFindAnyTenants(err)
+		formatter.RespondCouldNotFindAnyResources(err)
 		return
 	}
 

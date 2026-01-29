@@ -95,7 +95,7 @@ func (formatter ResponseFormatter) RespondCurrentHealthStatus(currentVersion str
 	return json.NewEncoder(formatter.w).Encode(response)
 }
 
-func (formatter ResponseFormatter) RespondCouldNotFindAnyTenants(retrievingError error) {
+func (formatter ResponseFormatter) RespondCouldNotFindAnyResources(retrievingError error) {
 	statusCode := http.StatusNotFound
 	responseBody := formatter.CreateErrorBodyWith(retrievingError.Error())
 	http.Error(formatter.w, responseBody, statusCode)
@@ -161,4 +161,10 @@ func (formatter ResponseFormatter) RespondSlotGotSuccessfully(slot *ent.Slot) er
 	formatter.w.Header().Set("Content-Type", "application/json")
 	formatter.w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(formatter.w).Encode(slot)
+}
+
+func (formatter ResponseFormatter) RespondSlotsGotSuccessfully(slots []*ent.Slot) error {
+	response := map[string]any{"data": slots}
+	formatter.w.Header().Set("Content-Type", "application/json")
+	return json.NewEncoder(formatter.w).Encode(response)
 }

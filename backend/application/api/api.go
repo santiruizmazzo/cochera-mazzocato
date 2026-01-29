@@ -55,6 +55,7 @@ func (api API) Routes() *http.ServeMux {
 	apiRouter.HandleFunc(HealthRoute, api.getHealthStatus)
 	apiRouter.HandleFunc(TenantsBaseRoute, api.tenantHandler)
 	apiRouter.HandleFunc(TenantsBaseRoute+"/", api.tenantByIDHandler)
+	apiRouter.HandleFunc(SlotsBaseRoute, api.slotHandler)
 	apiRouter.HandleFunc(SlotsBaseRoute+"/", api.slotByIDHandler)
 
 	mainRouter := http.NewServeMux()

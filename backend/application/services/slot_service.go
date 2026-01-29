@@ -19,6 +19,10 @@ func (service SlotService) GetByID(id int) (*ent.Slot, error) {
 	return service.slotRepo.GetByID(id)
 }
 
+func (service SlotService) GetAll() ([]*ent.Slot, error) {
+	return nil, nil
+}
+
 func (service SlotService) UpdateSlot(id int, updateDTO dtos.UpdateSlotDTO) (*ent.Slot, error) {
 	slot, err := service.GetByID(id)
 	if err != nil {

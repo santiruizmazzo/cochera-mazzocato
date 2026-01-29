@@ -12,6 +12,31 @@ import (
 
 const SlotsBaseRoute string = "/slots"
 
+func (api API) slotHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		api.getSlots(w, r)
+	default:
+		formatter := formatting.NewResponseFormatter(w)
+		formatter.RespondMethodIsNotAllowed()
+	}
+}
+
+func (api API) getSlots(w http.ResponseWriter, _ *http.Request) {
+	formatter := formatting.NewResponseFormatter(w)
+
+	slots, err := api.slotService.GetAll()
+	if err != nil {
+		formatter.RespondCouldNotFindAnyResources(err)
+		return
+	}
+
+	err = formatter.RespondSlotsGotSuccessfully(slots)
+	if err != nil {
+		formatter.RespondCouldNotWriteResponse(err)
+	}
+}
+
 func (api API) slotByIDHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:

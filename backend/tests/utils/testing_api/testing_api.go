@@ -73,6 +73,10 @@ func (api TestingAPI) UpdateTenant(tenantID int, tenant any) (*http.Response, er
 	return utils.HTTPPatch(fullEndpointURL, "application/json", bytes.NewBuffer(jsonTenant))
 }
 
+func (api TestingAPI) GetSlots() (*http.Response, error) {
+	return http.Get(api.GetSlotsRoute())
+}
+
 func (api TestingAPI) GetSlotByID(slotID int) (*http.Response, error) {
 	fullEndpointURL := fmt.Sprintf("%s/%v", api.GetSlotsRoute(), slotID)
 	return http.Get(fullEndpointURL)

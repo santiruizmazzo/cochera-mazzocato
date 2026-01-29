@@ -14,6 +14,13 @@ func NewSlot(id int, number int, tenantID int) (*Slot, error) {
 	return &Slot{ID: vo.EntityID(id), Number: vo.SlotNumber(number), TenantID: vo.EntityID(tenantID)}, nil
 }
 
-func (slot *Slot) SetTenantID(tenantID vo.EntityID) {
-	slot.TenantID = tenantID
+func (slot Slot) GetTenantID() any {
+	if slot.TenantID == 0 {
+		return nil
+	}
+	return int(slot.TenantID)
+}
+
+func (slot *Slot) SetTenantID(tenantID int) {
+	slot.TenantID = vo.EntityID(tenantID)
 }

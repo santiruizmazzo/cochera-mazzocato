@@ -25,14 +25,17 @@ func (service SlotService) UpdateSlot(id int, updateDTO dtos.UpdateSlotDTO) (*en
 		return nil, err
 	}
 
+	var tenantID int
 	if updateDTO.TenantID != nil {
-		_, err = service.tenantRepo.GetByID(int(*updateDTO.TenantID))
+		tenantID = int(*updateDTO.TenantID)
+
+		_, err = service.tenantRepo.GetByID(tenantID)
 		if err != nil {
 			return nil, err
 		}
 
-		slot.SetTenantID(*updateDTO.TenantID)
 	}
+	slot.SetTenantID(tenantID)
 
 	return service.slotRepo.Save(slot)
 }

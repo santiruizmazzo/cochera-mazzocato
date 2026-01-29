@@ -60,7 +60,7 @@ func (repo PostgresSlotRepository) Save(slot *ent.Slot) (*ent.Slot, error) {
 		RETURNING id, slot_number, tenant_id
 	`
 
-	row := repo.db.QueryRow(context.Background(), query, slot.Number, slot.TenantID)
+	row := repo.db.QueryRow(context.Background(), query, slot.Number, slot.GetTenantID())
 
 	return repo.createSlotFromRow(row)
 }

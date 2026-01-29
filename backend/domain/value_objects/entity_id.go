@@ -37,6 +37,8 @@ func extractIntegerID(rawValue any) (int, error) {
 		return value, nil
 	case float64:
 		return int(value), nil
+	case nil:
+		return 0, nil
 	default:
 		return 0, ErrIDMustBeAnInteger
 	}
@@ -68,5 +70,8 @@ func (id *EntityID) UnmarshalJSON(data []byte) error {
 }
 
 func (id EntityID) MarshalJSON() ([]byte, error) {
+	if int(id) == 0 {
+		return json.Marshal(nil)
+	}
 	return json.Marshal(uint32(id))
 }

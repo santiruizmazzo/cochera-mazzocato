@@ -7,8 +7,7 @@ import (
 	"testing"
 )
 
-func TestFreeAlreadyTakenSlot_EndToEnd(t *testing.T) {
-	t.Skip()
+func TestFreeAlreadyTakenSlotSuccessfully_EndToEnd(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -16,7 +15,7 @@ func TestFreeAlreadyTakenSlot_EndToEnd(t *testing.T) {
 	newTenant := domain.NewTenantBuilder().Build()
 	_, _ = testAPI.CreateTenant(newTenant)
 
-	response, err := testAPI.UpdateSlot(3, map[string]int{"tenant_id": 1})
+	response, err := testAPI.UpdateSlot(3, map[string]any{"tenant_id": nil})
 	if err != nil {
 		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetSlotsRoute(), err)
 	}

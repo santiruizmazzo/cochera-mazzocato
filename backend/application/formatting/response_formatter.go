@@ -132,7 +132,7 @@ func (formatter *ResponseFormatter) RespondTenantUpdatedSuccessfully(tenant *ent
 func (formatter *ResponseFormatter) RespondCouldNotUpdateSlot(updateError error) {
 	statusCode := http.StatusBadRequest
 
-	if errors.Is(updateError, infra.ErrSlotNotFound) {
+	if errors.Is(updateError, infra.ErrSlotNotFound) || errors.Is(updateError, infra.ErrTenantNotFound) {
 		statusCode = http.StatusNotFound
 	}
 

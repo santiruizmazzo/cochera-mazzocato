@@ -7,15 +7,16 @@ import (
 )
 
 type SlotService struct {
-	repo domain.SlotRepository
+	slotRepo   domain.SlotRepository
+	tenantRepo domain.TenantRepository
 }
 
-func NewSlotService(repo domain.SlotRepository) *SlotService {
-	return &SlotService{repo: repo}
+func NewSlotService(slotRepo domain.SlotRepository, tenantRepo domain.TenantRepository) *SlotService {
+	return &SlotService{slotRepo: slotRepo, tenantRepo: tenantRepo}
 }
 
 func (service SlotService) GetByID(id int) (*ent.Slot, error) {
-	return service.repo.GetByID(id)
+	return service.slotRepo.GetByID(id)
 }
 
 func (service SlotService) UpdateSlot(id int, updateDTO dtos.UpdateSlotDTO) (*ent.Slot, error) {
@@ -25,8 +26,13 @@ func (service SlotService) UpdateSlot(id int, updateDTO dtos.UpdateSlotDTO) (*en
 	}
 
 	if updateDTO.TenantID != nil {
+		_, err = service.tenantRepo.GetByID(int(*updateDTO.TenantID))
+		if err != nil {
+			return nil, err
+		}
+
 		slot.SetTenantID(*updateDTO.TenantID)
 	}
 
-	return service.repo.Save(slot)
+	return service.slotRepo.Save(slot)
 }

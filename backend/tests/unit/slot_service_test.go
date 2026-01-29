@@ -16,9 +16,15 @@ func TestSlotService_UpdateSlot_Successfully(t *testing.T) {
 		Number:   1,
 		TenantID: 1,
 	}
-	mockRepo := &infra.InMemorySlotRepository{Slots: map[int]*ent.Slot{1: &existingSlot}}
 
-	service := services.NewSlotService(mockRepo)
+	existingTenant := ent.Tenant{
+		ID: 1,
+	}
+
+	mockSlotRepo := &infra.InMemorySlotRepository{Slots: map[int]*ent.Slot{1: &existingSlot}}
+	mockTenantRepo := &infra.InMemoryTenantRepository{Tenants: map[int]*ent.Tenant{6: &existingTenant}}
+
+	service := services.NewSlotService(mockSlotRepo, mockTenantRepo)
 
 	requestBody, _ := json.Marshal(map[string]any{
 		"tenant_id": 6,

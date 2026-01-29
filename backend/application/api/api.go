@@ -30,8 +30,9 @@ func NewAPI(port int, db *pgxpool.Pool) *API {
 }
 
 func setupSlotService(db *pgxpool.Pool) *services.SlotService {
-	repo := infra.NewPostgresSlotRepository(db)
-	return services.NewSlotService(repo)
+	slotRepo := infra.NewPostgresSlotRepository(db)
+	tenantRepo := infra.NewPostgresTenantRepository(db)
+	return services.NewSlotService(slotRepo, tenantRepo)
 }
 
 func setupTenantService(db *pgxpool.Pool) *services.TenantService {

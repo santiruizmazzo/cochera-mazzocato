@@ -7,6 +7,8 @@ import (
 )
 
 func AssertResponseContains[C comparable](response map[string]any, expectedKey string, expectedContent C, t *testing.T) {
+	t.Helper()
+
 	receivedContent, ok := response[expectedKey]
 
 	if !ok || receivedContent != expectedContent {
@@ -15,12 +17,16 @@ func AssertResponseContains[C comparable](response map[string]any, expectedKey s
 }
 
 func AssertStatusCodeIs(expectedCode, receivedCode int, t *testing.T) {
+	t.Helper()
+
 	if expectedCode != receivedCode {
 		t.Fatalf("Expected status code %d, got %d", expectedCode, receivedCode)
 	}
 }
 
 func AssertSliceOfMaps(data any, t *testing.T) []map[string]any {
+	t.Helper()
+
 	// Manejar []map[string]any
 	if slice, ok := data.([]map[string]any); ok {
 		result := make([]map[string]any, len(slice))
@@ -54,6 +60,8 @@ func AssertSliceOfMaps(data any, t *testing.T) []map[string]any {
 }
 
 func AssertResponseStringContains(data any, substring string, t *testing.T) {
+	t.Helper()
+
 	responseString, ok := data.(string)
 	if !ok {
 		t.Fatal("Triying to assert content of non-string type value")
@@ -63,5 +71,18 @@ func AssertResponseStringContains(data any, substring string, t *testing.T) {
 	contains := strings.Contains(strings.ToLower(responseString), strings.ToLower(substring))
 	if !contains {
 		t.Fatalf("String %s does not contain %s substring", responseString, substring)
+	}
+}
+
+func AssertResponseIsNil(response map[string]any, key string, t *testing.T) {
+	t.Helper()
+
+	actual, ok := response[key]
+	if !ok {
+		t.Fatalf("Key '%s' not found in response", key)
+	}
+
+	if actual != nil {
+		t.Fatalf("Key '%s': expected nil, got %v (%T)", key, actual, actual)
 	}
 }

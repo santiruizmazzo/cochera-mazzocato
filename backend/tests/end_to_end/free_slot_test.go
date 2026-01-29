@@ -41,3 +41,28 @@ func TestFreeAlreadyTakenSlotSuccessfully_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 }
+
+func TestFreeNonExistingSlot_EndToEnd(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
+
+	response, err := testAPI.UpdateSlot(13, map[string]any{"tenant_id": nil})
+	if err != nil {
+		t.Fatalf("Failed sending PATCH request to %s: %v", testAPI.GetSlotsRoute(), err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatal("Failed closing response body: ", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "plaza no encontrada", t)
+
+	testAPI.ClearTenants()
+}

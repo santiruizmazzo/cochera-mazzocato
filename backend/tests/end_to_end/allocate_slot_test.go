@@ -76,3 +76,27 @@ func TestAllocateNonExistingSlotToTenant_EndToEnd(t *testing.T) {
 
 	testAPI.ClearTenants()
 }
+
+func TestAllocateSlotToNonExistingTenant_EndToEnd(t *testing.T) {
+	t.Skip()
+	if testing.Short() {
+		t.Skip()
+	}
+
+	response, err := testAPI.UpdateSlot(5, map[string]int{"tenant_id": 5})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			t.Fatalf("Failed closing response body: %v", cerr)
+		}
+	}()
+
+	responseMap := utils.CreateMapFromBody(response.Body, t)
+
+	utils.AssertStatusCodeIs(http.StatusNotFound, response.StatusCode, t)
+
+	utils.AssertResponseContains(responseMap, "detail", "inquilino no encontrado", t)
+}

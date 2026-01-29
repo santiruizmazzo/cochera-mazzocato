@@ -47,7 +47,6 @@ func TestAllocateFreeSlotToTenant_EndToEnd(t *testing.T) {
 }
 
 func TestAllocateNonExistingSlotToTenant_EndToEnd(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}

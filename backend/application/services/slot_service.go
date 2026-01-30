@@ -20,7 +20,7 @@ func (service SlotService) GetByID(id int) (*ent.Slot, error) {
 }
 
 func (service SlotService) GetAll() ([]*ent.Slot, error) {
-	return nil, nil
+	return service.slotRepo.GetAll()
 }
 
 func (service SlotService) UpdateSlot(id int, updateDTO dtos.UpdateSlotDTO) (*ent.Slot, error) {

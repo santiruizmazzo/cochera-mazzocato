@@ -7,6 +7,14 @@ type InMemorySlotRepository struct {
 	err   error
 }
 
+func (repo *InMemorySlotRepository) GetAll() ([]*ent.Slot, error) {
+	var list []*ent.Slot
+	for _, slot := range repo.Slots {
+		list = append(list, slot)
+	}
+	return list, nil
+}
+
 func (repo InMemorySlotRepository) GetByID(id int) (*ent.Slot, error) {
 	slot := repo.Slots[id]
 	if slot == nil {

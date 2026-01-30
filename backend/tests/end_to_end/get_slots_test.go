@@ -8,7 +8,6 @@ import (
 )
 
 func TestGetAllSlots_EndToEnd(t *testing.T) {
-	t.Skip()
 	if testing.Short() {
 		t.Skip()
 	}
@@ -19,7 +18,7 @@ func TestGetAllSlots_EndToEnd(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	tenant = domain.NewTenantBuilder().Build()
+	tenant = domain.NewTenantBuilder().WithDNI(7).WithEmail("caca@caca.com").Build()
 	_, err = testAPI.CreateTenant(tenant)
 	if err != nil {
 		t.Fatal(err)

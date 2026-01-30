@@ -14,8 +14,8 @@ type PostgresSlotRepository struct {
 }
 
 var (
-	ErrSlotNotFound = errors.New("plaza no encontrada")
-	// ErrNoMatchingSlotsFound = errors.New("no se encontraron plazas que coincidan")
+	ErrSlotNotFound         = errors.New("plaza no encontrada")
+	ErrNoMatchingSlotsFound = errors.New("no se encontraron plazas que coincidan")
 )
 
 func NewPostgresSlotRepository(db *pgxpool.Pool) *PostgresSlotRepository {
@@ -28,6 +28,33 @@ func (repo PostgresSlotRepository) GetByID(id int) (*ent.Slot, error) {
 	row := repo.db.QueryRow(context.Background(), query, id)
 
 	return repo.createSlotFromRow(row)
+}
+
+func (repo PostgresSlotRepository) GetAll() ([]*ent.Slot, error) {
+	query := `SELECT id, slot_number, tenant_id FROM slots ORDER BY id;`
+
+	rows, err := repo.db.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return repo.createListOfSlotsFromRows(rows)
+}
+
+func (repo PostgresSlotRepository) createListOfSlotsFromRows(rows pgx.Rows) ([]*ent.Slot, error) {
+	slots, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (*ent.Slot, error) {
+		return repo.createSlotFromRow(row)
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(slots) == 0 {
+		return nil, ErrNoMatchingSlotsFound
+	}
+
+	return slots, nil
 }
 
 func (repo PostgresSlotRepository) createSlotFromRow(row pgx.Row) (*ent.Slot, error) {

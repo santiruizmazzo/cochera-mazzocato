@@ -2,6 +2,8 @@ import TenantsCollection from "./components/TenantsCollection.js";
 import TenantMiniCard from "./components/TenantMiniCard.js";
 import TenantFullCard from "./components/TenantFullCard.js";
 import TenantForm from "./components/TenantForm.js";
+import SlotsCollection from "./components/SlotsCollection.js";
+import SlotCard from "./components/SlotCard.js";
 import SlotForm from "./components/SlotForm.js";
 import ActivatableButton from "./components/ActivatableButton.js";
 import ErrorBox from "./components/ErrorBox.js";

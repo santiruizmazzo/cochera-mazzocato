@@ -21,6 +21,7 @@ export default class SlotsCollection extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(template.content.cloneNode(true));
+    this.slots = [];
   }
 
   // async handleEvent(event) {
@@ -32,14 +33,11 @@ export default class SlotsCollection extends HTMLElement {
   // }
 
   async connectedCallback() {
-    // if (this.slots.length != 0) return;
+    if (this.slots.length != 0) return;
 
     document.addEventListener("slots:loaded", this);
 
     this.renderPlaceholders();
-    // setTimeout(() => {
-    //   console.log("Esto se ejecuta después de 2 segundos");
-    // }, 1000);
     await this.fetchSlots();
     this.render();
   }

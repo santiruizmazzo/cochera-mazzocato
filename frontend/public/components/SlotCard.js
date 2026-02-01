@@ -121,8 +121,8 @@ template.innerHTML = /*html*/ `
   </style>
 
   <div class="loading">
-    <h2 id="number"></h2>
-    <p id="owner">De <a id="tenant-id" data-link></a></p>
+    <h2 id="number">1</h2>
+    <p id="owner">De <a id="tenant-id" data-link>Lamponne</a></p>
     <button id="assign-tenant" class="invisible">
       Asignar
       <svg viewBox="0 -960 960 960">
@@ -177,13 +177,14 @@ export default class SlotCard extends HTMLElement {
   }
 
   render() {
-    this.shadowRoot.querySelector("#number").innerHTML = this.number;
+    if (!this.id) return;
 
     if (this.tenantId) {
       this.renderTakenState();
     } else {
       this.renderFreeState();
     }
+    this.shadowRoot.querySelector("#number").innerHTML = this.number;
   }
 
   renderTakenState() {

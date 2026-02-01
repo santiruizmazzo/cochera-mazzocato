@@ -141,8 +141,8 @@ export default class SlotCard extends HTMLElement {
 
   static fromJson(jsonSlot) {
     const card = new SlotCard();
-    card.id = jsonSlot["id"];
-    card.number = jsonSlot["number"];
+    card.slotId = jsonSlot["id"];
+    card.slotNumber = jsonSlot["number"];
     card.tenantId = jsonSlot["tenant_id"];
     return card;
   }
@@ -151,17 +151,17 @@ export default class SlotCard extends HTMLElement {
     event.preventDefault();
     let customEvent;
 
-    if (event.target.id === "tenant-id") {
+    if (event.target.id === "assign-tenant") {
+      customEvent = new CustomEvent("slot:selected", {
+        bubbles: true,
+        composed: true,
+        detail: { slotId: this.slotId, slotNumber: this.slotNumber },
+      });
+    } else {
       customEvent = new CustomEvent("navigate", {
         bubbles: true,
         composed: true,
         detail: { href: `/inquilinos/${this.tenantId}` },
-      });
-    } else if (event.target.id === "assign-tenant") {
-      customEvent = new CustomEvent("slot:selected", {
-        bubbles: true,
-        composed: true,
-        detail: { slotNumber: this.number },
       });
     }
 
@@ -177,14 +177,14 @@ export default class SlotCard extends HTMLElement {
   }
 
   render() {
-    if (!this.id) return;
+    if (!this.slotId) return;
 
     if (this.tenantId) {
       this.renderTakenState();
     } else {
       this.renderFreeState();
     }
-    this.shadowRoot.querySelector("#number").innerHTML = this.number;
+    this.shadowRoot.querySelector("#number").innerHTML = this.slotNumber;
   }
 
   renderTakenState() {

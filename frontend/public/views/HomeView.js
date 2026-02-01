@@ -35,6 +35,7 @@ export default class extends AbstractView {
     const view = document.querySelector(".home-view");
 
     view.addEventListener("slot:selected", (event) => {
+      form.slotId = event.detail.slotId;
       form.slotNumber = event.detail.slotNumber;
       modal.showModal();
     });
@@ -43,5 +44,7 @@ export default class extends AbstractView {
       modal.close();
       form.clear();
     });
+
+    modal.addEventListener("slot:assigned", () => modal.close());
   }
 }

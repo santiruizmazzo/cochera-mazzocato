@@ -24,18 +24,18 @@ export default class SlotsCollection extends HTMLElement {
     this.slots = [];
   }
 
-  // async handleEvent(event) {
-  //   if (event.type === "slots:loaded") {
-  //     const container = this.shadowRoot.querySelector("div");
-  //     const card = SlotCard.fromJson(event.detail);
-  //     container.appendChild(card);
-  //   }
-  // }
+  async handleEvent(event) {
+    if (event.type === "slot:assigned") {
+      this.renderPlaceholders();
+      await this.fetchSlots();
+      this.render();
+    }
+  }
 
   async connectedCallback() {
     if (this.slots.length != 0) return;
 
-    document.addEventListener("slots:loaded", this);
+    document.addEventListener("slot:assigned", this);
 
     this.renderPlaceholders();
     await this.fetchSlots();
@@ -57,6 +57,7 @@ export default class SlotsCollection extends HTMLElement {
 
   renderPlaceholders() {
     const container = this.shadowRoot.querySelector("div");
+    container.innerHTML = "";
     const COLLECTION_LENGTH = 12;
 
     for (let i = 0; i < COLLECTION_LENGTH; i++) {

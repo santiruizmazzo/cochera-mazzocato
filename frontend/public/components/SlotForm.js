@@ -59,7 +59,7 @@ template.innerHTML = /*html*/ `
   </style>
 
   <form>
-    <select name="tenant" class="tenant-selector"></select>
+    <select name="tenant-id" class="tenant-selector"></select>
     <svg class="right-arrow" viewBox="0 -960 960 960">
       <path d="m600-200-57-56 184-184H80v-80h647L544-704l56-56 280 280z"/>
     </svg>
@@ -85,7 +85,15 @@ export default class SlotForm extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["slot-number"];
+    return ["slot-id", "slot-number"];
+  }
+
+  set slotId(value) {
+    this.setAttribute("slot-id", value);
+  }
+
+  get slotId() {
+    return parseInt(this.getAttribute("slot-id"));
   }
 
   set slotNumber(value) {
@@ -94,7 +102,7 @@ export default class SlotForm extends HTMLElement {
   }
 
   get slotNumber() {
-    return this.getAttribute("slot-number");
+    return parseInt(this.getAttribute("slot-number"));
   }
 
   connectedCallback() {
@@ -103,6 +111,7 @@ export default class SlotForm extends HTMLElement {
 
   render() {
     this.generateTenantSelector();
+    this.setupFormSubmissionBehavior();
   }
 
   async generateTenantSelector() {
@@ -125,6 +134,67 @@ export default class SlotForm extends HTMLElement {
       tenantOption.setAttribute("value", tenantJson["id"]);
       tenantSelector.appendChild(tenantOption);
     });
+  }
+
+  setupFormSubmissionBehavior() {
+    const button = this.shadowRoot.querySelector("activatable-button");
+    const form = this.shadowRoot.querySelector("form");
+    const errorBox = this.shadowRoot.querySelector("error-box");
+
+    button.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!form.reportValidity()) {
+        return;
+      }
+
+      button.deactivate();
+      const url = `${import.meta.env.VITE_API_URL}/api/slots/${this.slotId}`;
+      const slotData = this.createJsonSlot(form);
+
+      fetch(url, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: slotData,
+      })
+        .then(async (response) => {
+          const responseBody = await response.json();
+
+          if (!response.ok) {
+            const errorMessage =
+              responseBody.detail ||
+              `${response.status} (${response.statusText})`;
+            throw new Error(errorMessage);
+          }
+
+          return responseBody;
+        })
+        .then((responseBody) => {
+          const slotEvent = new CustomEvent("slot:assigned", {
+            detail: responseBody,
+            bubbles: true,
+            composed: true,
+          });
+          this.dispatchEvent(slotEvent);
+
+          button.activate();
+          errorBox.hide();
+        })
+        .catch((error) => {
+          button.activate();
+          errorBox.show(error.message);
+        });
+    });
+  }
+
+  createJsonSlot(form) {
+    const slotForm = new FormData(form);
+
+    const slot = {
+      tenant_id: parseInt(slotForm.get("tenant-id")),
+    };
+
+    return JSON.stringify(slot);
   }
 
   renderSlotNumber() {

@@ -2,6 +2,7 @@ package infra
 
 import (
 	ent "cochera/domain/entities"
+	vo "cochera/domain/value_objects"
 )
 
 type InMemoryTenantRepository struct {
@@ -35,6 +36,10 @@ func (repo InMemoryTenantRepository) GetAllWithLastName(lastName string) ([]*ent
 		}
 	}
 	return list, nil
+}
+
+func (repo *InMemoryTenantRepository) GetAllWithin(tenantIDs []vo.EntityID) ([]*ent.Tenant, error) {
+	panic("unimplemented")
 }
 
 func (repo InMemoryTenantRepository) GetByID(id int) (*ent.Tenant, error) {

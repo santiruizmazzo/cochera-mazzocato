@@ -4,6 +4,7 @@ import (
 	"cochera/application/dtos"
 	"cochera/application/services"
 	ent "cochera/domain/entities"
+	vo "cochera/domain/value_objects"
 	"cochera/infra"
 	"encoding/json"
 	"errors"
@@ -163,8 +164,20 @@ func (formatter ResponseFormatter) RespondSlotGotSuccessfully(slot *ent.Slot) er
 	return json.NewEncoder(formatter.w).Encode(slot)
 }
 
-func (formatter ResponseFormatter) RespondSlotsGotSuccessfully(slots []*ent.Slot) error {
-	response := map[string]any{"data": slots}
+func (formatter ResponseFormatter) RespondSlotsGotSuccessfully(slots []*ent.Slot, tenants []*ent.Tenant) error {
+	mapOfTenants := map[vo.EntityID]*ent.Tenant{}
+	for _, tenant := range tenants {
+		mapOfTenants[tenant.ID] = tenant
+	}
+
+	listOfSlots := make([]dtos.SlotAndTenantDTO, 0, len(slots))
+	for _, slot := range slots {
+		tenant := mapOfTenants[slot.TenantID]
+		listOfSlots = append(listOfSlots, *dtos.NewSlotAndTenantDTO(slot, tenant))
+	}
+
+	response := map[string]any{"data": listOfSlots}
+
 	formatter.w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(formatter.w).Encode(response)
 }

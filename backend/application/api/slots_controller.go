@@ -3,8 +3,10 @@ package api
 import (
 	"cochera/application/dtos"
 	"cochera/application/formatting"
+	vo "cochera/domain/value_objects"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -31,7 +33,24 @@ func (api API) getSlots(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	err = formatter.RespondSlotsGotSuccessfully(slots)
+	mapOfTenantIDs := map[vo.EntityID]bool{}
+	tenantIDs := make([]vo.EntityID, 0, len(slots))
+
+	for _, slot := range slots {
+		_, exists := mapOfTenantIDs[slot.TenantID]
+
+		if slot.TenantID != 0 && !exists {
+			mapOfTenantIDs[slot.TenantID] = true
+			tenantIDs = append(tenantIDs, slot.TenantID)
+		}
+	}
+
+	tenants, err := api.tenantService.GetAllWithin(tenantIDs)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = formatter.RespondSlotsGotSuccessfully(slots, tenants)
 	if err != nil {
 		formatter.RespondCouldNotWriteResponse(err)
 	}

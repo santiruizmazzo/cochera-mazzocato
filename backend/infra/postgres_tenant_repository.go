@@ -2,6 +2,7 @@ package infra
 
 import (
 	ent "cochera/domain/entities"
+	vo "cochera/domain/value_objects"
 	"context"
 	"errors"
 
@@ -75,6 +76,18 @@ func (repo PostgresTenantRepository) GetAllWithLastName(lastName string) ([]*ent
 
 	wildcardString := "%" + lastName + "%"
 	rows, err := repo.db.Query(context.Background(), query, wildcardString)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return repo.createListOfTenantsFromRows(rows)
+}
+
+func (repo PostgresTenantRepository) GetAllWithin(tenantIDs []vo.EntityID) ([]*ent.Tenant, error) {
+	query := `SELECT id, dni, name, last_name, address, phone, email, entry_month FROM tenants WHERE id = ANY($1) ORDER BY id;`
+	rows, err := repo.db.Query(context.Background(), query, tenantIDs)
+
 	if err != nil {
 		return nil, err
 	}

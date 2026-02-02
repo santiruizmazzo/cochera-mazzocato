@@ -4,6 +4,7 @@ import (
 	"cochera/application/dtos"
 	"cochera/domain"
 	ent "cochera/domain/entities"
+	vo "cochera/domain/value_objects"
 	"encoding/json"
 	"errors"
 )
@@ -35,6 +36,10 @@ func (service TenantService) GetAllWithName(name string) ([]*ent.Tenant, error) 
 
 func (service TenantService) GetAllWithLastName(lastName string) ([]*ent.Tenant, error) {
 	return service.repo.GetAllWithLastName(lastName)
+}
+
+func (service TenantService) GetAllWithin(tenantIDs []vo.EntityID) ([]*ent.Tenant, error) {
+	return service.repo.GetAllWithin(tenantIDs)
 }
 
 func (service TenantService) CreateTenant(jsonTenant []byte) (*ent.Tenant, error) {

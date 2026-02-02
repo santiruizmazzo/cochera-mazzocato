@@ -3,7 +3,9 @@ package endtoend
 import (
 	"cochera/domain"
 	"cochera/tests/utils"
+	"encoding/json"
 	"net/http"
+	"reflect"
 	"testing"
 )
 
@@ -75,19 +77,101 @@ func TestGetAllSlots_EndToEnd(t *testing.T) {
 		t.Fatal("Expected a list of slots of size 12, got ", len(slotsList))
 	}
 
-	utils.AssertResponseContains(slotsList[0], "tenant_id", float64(1), t)
-	utils.AssertResponseContains(slotsList[1], "tenant_id", float64(1), t)
-	utils.AssertResponseContains(slotsList[2], "tenant_id", float64(1), t)
-	utils.AssertResponseContains(slotsList[3], "tenant_id", float64(1), t)
-	utils.AssertResponseContains(slotsList[4], "tenant_id", float64(2), t)
-	utils.AssertResponseContains(slotsList[5], "tenant_id", float64(2), t)
+	expectedResponseMap := map[string]any{
+		"data": []map[string]any{
+			{
+				"id":     float64(1),
+				"number": float64(1),
+				"tenant": map[string]any{
+					"id":        float64(1),
+					"name":      "Huang",
+					"last_name": "Lee",
+				},
+			},
+			{
+				"id":     float64(2),
+				"number": float64(2),
+				"tenant": map[string]any{
+					"id":        float64(1),
+					"name":      "Huang",
+					"last_name": "Lee",
+				},
+			},
+			{
+				"id":     float64(3),
+				"number": float64(3),
+				"tenant": map[string]any{
+					"id":        float64(1),
+					"name":      "Huang",
+					"last_name": "Lee",
+				},
+			},
+			{
+				"id":     float64(4),
+				"number": float64(4),
+				"tenant": map[string]any{
+					"id":        float64(1),
+					"name":      "Huang",
+					"last_name": "Lee",
+				},
+			},
+			{
+				"id":     float64(5),
+				"number": float64(5),
+				"tenant": map[string]any{
+					"id":        float64(2),
+					"name":      "Huang",
+					"last_name": "Lee",
+				},
+			},
+			{
+				"id":     float64(6),
+				"number": float64(6),
+				"tenant": map[string]any{
+					"id":        float64(2),
+					"name":      "Huang",
+					"last_name": "Lee",
+				},
+			},
+			{
+				"id":     float64(7),
+				"number": float64(7),
+				"tenant": nil,
+			},
+			{
+				"id":     float64(8),
+				"number": float64(8),
+				"tenant": nil,
+			},
+			{
+				"id":     float64(9),
+				"number": float64(9),
+				"tenant": nil,
+			},
+			{
+				"id":     float64(10),
+				"number": float64(10),
+				"tenant": nil,
+			},
+			{
+				"id":     float64(11),
+				"number": float64(11),
+				"tenant": nil,
+			},
+			{
+				"id":     float64(12),
+				"number": float64(12),
+				"tenant": nil,
+			},
+		},
+	}
 
-	utils.AssertResponseIsNil(slotsList[6], "tenant_id", t)
-	utils.AssertResponseIsNil(slotsList[7], "tenant_id", t)
-	utils.AssertResponseIsNil(slotsList[8], "tenant_id", t)
-	utils.AssertResponseIsNil(slotsList[9], "tenant_id", t)
-	utils.AssertResponseIsNil(slotsList[10], "tenant_id", t)
-	utils.AssertResponseIsNil(slotsList[11], "tenant_id", t)
+	receivedJson, _ := json.Marshal(responseMap)
+	expectedJson, _ := json.Marshal(expectedResponseMap)
+
+	if !reflect.DeepEqual(receivedJson, expectedJson) {
+		t.Fatalf("Expected %+v, got %+v", receivedJson, expectedJson)
+	}
 
 	testAPI.ClearTenants()
 }

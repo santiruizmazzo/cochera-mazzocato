@@ -122,7 +122,7 @@ template.innerHTML = /*html*/ `
 
   <div class="loading">
     <h2 id="number">1</h2>
-    <p id="owner">De <a id="tenant-id" data-link>Lamponne</a></p>
+    <p id="owner">De <a id="tenant-name" data-link>Lamponne</a></p>
     <button id="assign-tenant" class="invisible">
       Asignar
       <svg viewBox="0 -960 960 960">
@@ -143,7 +143,7 @@ export default class SlotCard extends HTMLElement {
     const card = new SlotCard();
     card.slotId = jsonSlot["id"];
     card.slotNumber = jsonSlot["number"];
-    card.tenantId = jsonSlot["tenant_id"];
+    card.tenant = jsonSlot["tenant"];
     return card;
   }
 
@@ -161,7 +161,7 @@ export default class SlotCard extends HTMLElement {
       customEvent = new CustomEvent("navigate", {
         bubbles: true,
         composed: true,
-        detail: { href: `/inquilinos/${this.tenantId}` },
+        detail: { href: `/inquilinos/${this.tenant.id}` },
       });
     }
 
@@ -170,7 +170,9 @@ export default class SlotCard extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    this.shadowRoot.querySelector("#tenant-id").addEventListener("click", this);
+    this.shadowRoot
+      .querySelector("#tenant-name")
+      .addEventListener("click", this);
     this.shadowRoot
       .querySelector("#assign-tenant")
       .addEventListener("click", this);
@@ -179,7 +181,7 @@ export default class SlotCard extends HTMLElement {
   render() {
     if (!this.slotId) return;
 
-    if (this.tenantId) {
+    if (this.tenant) {
       this.renderTakenState();
     } else {
       this.renderFreeState();
@@ -189,7 +191,8 @@ export default class SlotCard extends HTMLElement {
 
   renderTakenState() {
     this.shadowRoot.querySelector("div").className = "taken-and-not-paid";
-    this.shadowRoot.querySelector("#tenant-id").innerHTML = `#${this.tenantId}`;
+    this.shadowRoot.querySelector("#tenant-name").innerHTML =
+      this.tenant.last_name;
   }
 
   renderFreeState() {

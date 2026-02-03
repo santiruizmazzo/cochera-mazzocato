@@ -24,12 +24,10 @@ export default class SlotsCollection extends HTMLElement {
     this.slots = [];
   }
 
-  async handleEvent(event) {
-    if (event.type === "slot:assigned") {
-      this.renderPlaceholders();
-      await this.fetchSlots();
-      this.render();
-    }
+  async handleEvent() {
+    this.renderPlaceholders();
+    await this.fetchSlots();
+    this.render();
   }
 
   async connectedCallback() {

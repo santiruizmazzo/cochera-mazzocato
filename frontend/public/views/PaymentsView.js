@@ -8,7 +8,15 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="payments-view">
-        <h2>Acá se encontrarán todos los pagos de cuotas recibidos... (próximamente)</h2>
+        <header class="section-header">
+          <h2>Pagos recibidos</h2>
+          <button class="new-action-btn open-modal-btn">
+            <svg><use href="#person_edit"/></svg>
+            Nuevo pago
+          </button>
+        </header>
+
+        <div>Acá irían los pagos realizados</div>
       </section>
     `;
   }

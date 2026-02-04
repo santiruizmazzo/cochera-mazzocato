@@ -6,6 +6,7 @@ import SlotsCollection from "./components/SlotsCollection.js";
 import SlotCard from "./components/SlotCard.js";
 import SlotForm from "./components/SlotForm.js";
 import ActivatableButton from "./components/ActivatableButton.js";
+import OpenModalButton from "./components/OpenModalButton.js";
 import ErrorBox from "./components/ErrorBox.js";
 import iconsSprite from "./assets/icons.svg?raw";
 import Router from "./routing/Router.js";

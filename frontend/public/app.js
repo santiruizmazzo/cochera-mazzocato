@@ -12,7 +12,7 @@ import Router from "./routing/Router.js";
 
 const router = new Router();
 
-window.addEventListener("popstate", () => router.route());
+window.addEventListener("popstate", () => router.renderCurrentView());
 
 document.addEventListener("DOMContentLoaded", () => {
   document.body.insertAdjacentHTML(
@@ -33,5 +33,5 @@ document.addEventListener("DOMContentLoaded", () => {
     router.navigateTo(event.detail.href);
   });
 
-  router.route();
+  router.renderCurrentView();
 });

@@ -11,44 +11,43 @@ export default class Router {
     { path: "/inquilinos/:id", view: TenantDetailView },
   ];
 
-  pathToRegex(path) {
-    return new RegExp(
-      "^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$",
-    );
+  navigateTo(relativePath) {
+    if (this.currentRouteIsSameAs(relativePath)) return;
+
+    history.pushState(null, null, relativePath);
+    this.updateSelectedNavLinks(relativePath);
+    this.renderCurrentView();
   }
 
-  getParams(match) {
-    const values = match.result.slice(1);
-    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
-      (result) => result[1],
-    );
-
-    return Object.fromEntries(
-      keys.map((key, i) => {
-        return [key, values[i]];
-      }),
-    );
+  currentRouteIsSameAs(relativePath) {
+    return relativePath.endsWith(location.pathname);
   }
 
-  navigateTo(url) {
-    if (url.endsWith(location.pathname)) return;
-
-    history.pushState(null, null, url);
-    this.selectNavLink(url);
-    this.route();
-  }
-
-  selectNavLink(url) {
+  updateSelectedNavLinks(relativePath) {
     const navLinks = document.querySelectorAll(".nav-link");
 
     navLinks.forEach((navLink) => {
-      navLink.className = url.startsWith(navLink.href)
+      navLink.className = relativePath.startsWith(navLink.href)
         ? "selected nav-link"
         : "nav-link";
     });
   }
 
-  async route() {
+  async renderCurrentView() {
+    const view = this.createViewForCurrentRoute();
+
+    document.querySelector("main").innerHTML = await view.getHtml();
+    view.setUpJavascript();
+  }
+
+  createViewForCurrentRoute() {
+    const matchingRouteInfo = this.findMatchingRoute();
+    const viewParams = this.createViewParams(matchingRouteInfo);
+
+    return new matchingRouteInfo.route.view(viewParams);
+  }
+
+  findMatchingRoute() {
     const potentialMatches = this.routes.map((route) => {
       return {
         route: route,
@@ -60,16 +59,29 @@ export default class Router {
       (potentialMatch) => potentialMatch.result !== null,
     );
 
-    if (!match) {
-      match = {
-        route: this.routes[0],
-        result: [location.pathname],
-      };
-    }
+    return match
+      ? match
+      : { route: this.routes[0], result: [location.pathname] };
+  }
 
-    const view = new match.route.view(this.getParams(match));
+  createViewParams(match) {
+    const values = match.result.slice(1);
+    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+      (result) => result[1],
+    );
 
-    document.querySelector("main").innerHTML = await view.getHtml();
-    view.setUpJavascript();
+    if (values.length === 0 || keys.length === 0) return null;
+
+    return Object.fromEntries(
+      keys.map((key, i) => {
+        return [key, values[i]];
+      }),
+    );
+  }
+
+  pathToRegex(path) {
+    return new RegExp(
+      "^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$",
+    );
   }
 }

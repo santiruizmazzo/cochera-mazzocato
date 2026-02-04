@@ -11,9 +11,7 @@ export default class extends AbstractView {
         <dialog id="new-payment-modal" closedby="any">
           <header>
             <h3>Modal generica</h3>
-            <button class="close-action-btn close-modal-btn">
-              <svg><use href="#close"/></svg>
-            </button>
+            <close-modal-button></close-modal-button>
           </header>
         </dialog>
       

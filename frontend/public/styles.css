@@ -189,7 +189,7 @@ dialog[open] > header {
     font-size: 1.3rem;
   }
 
-  button {
+  close-modal-button {
     grid-column: 3 / 4;
     justify-self: end;
   }

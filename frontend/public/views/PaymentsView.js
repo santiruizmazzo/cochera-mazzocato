@@ -8,7 +8,7 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="payments-view">
-        <dialog id="new-payment-modal" closedby="any">
+        <dialog id="new-payment-modal">
           <header>
             <h3>Modal generica</h3>
             <close-modal-button></close-modal-button>
@@ -17,11 +17,10 @@ export default class extends AbstractView {
       
         <header class="section-header">
           <h2>Pagos recibidos</h2>
-          <open-modal-button></open-modal-button>
-          <!-- <button class="new-action-btn open-modal-btn">
-            <svg><use href="#person_edit"/></svg>
+          <open-modal-button>
+            <svg><use href="#person_add"></svg>
             Nuevo pago
-          </button> -->
+          </open-modal-button>
         </header>
 
         <div>Acá irían los pagos realizados</div>

@@ -25,27 +25,23 @@ template.innerHTML = /*html*/ `
       padding: var(--separation);
       font-weight: var(--font-weight);
 
-      &:hover {
+      &:hover, &:hover ::slotted(svg) {
         cursor: pointer;
         background-color: var(--stroke-color);
         color: var(--fill-color);
+        fill: var(--fill-color);
       }
     }
 
-    svg {
+    ::slotted(svg) {
       fill: var(--stroke-color);
       width: var(--icon-side-length);
       height: var(--icon-side-length);
-
-      &:hover {
-        fill: var(--fill-color);
-      }
     }
   </style>
 
   <button>
-    <svg><use href="#person_add"/></svg>
-    Abrir modal
+    <slot></slot>
   </button>
 `;
 

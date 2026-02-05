@@ -78,6 +78,16 @@ export default class ContentSection extends HTMLElement {
 
     this.setAttribute("button-text", value);
   }
+
+  connectedCallback() {
+    if (!this.hideModal) {
+      const section = this.shadowRoot.querySelector("section");
+      const modal = this.shadowRoot.querySelector("dialog");
+
+      section.addEventListener("open-modal", () => modal.showModal());
+      section.addEventListener("close-modal", () => modal.close());
+    }
+  }
 }
 
 customElements.define("content-section", ContentSection);

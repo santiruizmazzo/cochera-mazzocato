@@ -1,8 +1,15 @@
 import AbstractView from "./AbstractView.js";
+import ContentSection from "../components/ContentSection.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
+  }
+
+  render() {
+    const homeSection = new ContentSection();
+    homeSection.title = "Bienvenido a la app Cochera Mazzocato!";
+    return homeSection;
   }
 
   async getHtml() {

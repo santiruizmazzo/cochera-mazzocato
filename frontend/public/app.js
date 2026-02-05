@@ -9,6 +9,7 @@ import ActivatableButton from "./components/ActivatableButton.js";
 import OpenModalButton from "./components/OpenModalButton.js";
 import CloseModalButton from "./components/CloseModalButton.js";
 import ErrorBox from "./components/ErrorBox.js";
+import ContentSection from "./components/ContentSection.js"
 import iconsSprite from "./assets/icons.svg?raw";
 import Router from "./routing/Router.js";
 

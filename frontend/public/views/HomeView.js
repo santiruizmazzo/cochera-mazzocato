@@ -8,7 +8,7 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="home-view">
-        <dialog id="assign-tenant-to-slot-modal" closedby="any">
+        <dialog id="assign-tenant-to-slot-modal">
           <header>
             <h3>Reservar plaza</h3>
             <close-modal-button></close-modal-button>
@@ -37,12 +37,12 @@ export default class extends AbstractView {
       modal.showModal();
     });
 
-    const closeBehavior = () => {
+    const closeFormBehavior = () => {
       modal.close();
       form.clear();
     };
 
-    view.addEventListener("close-modal", closeBehavior);
-    view.addEventListener("slot:assigned", closeBehavior);
+    view.addEventListener("close-modal", closeFormBehavior);
+    view.addEventListener("slot:assigned", closeFormBehavior);
   }
 }

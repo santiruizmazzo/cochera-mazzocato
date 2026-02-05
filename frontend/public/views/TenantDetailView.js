@@ -8,7 +8,7 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="tenant-detail-view">
-        <dialog id="update-tenant-modal" closedby="any">
+        <dialog id="update-tenant-modal">
           <header>
             <h3>Editar inquilino</h3>
             <close-modal-button></close-modal-button>

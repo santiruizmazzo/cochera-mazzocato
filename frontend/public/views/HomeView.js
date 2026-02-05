@@ -11,9 +11,7 @@ export default class extends AbstractView {
         <dialog id="assign-tenant-to-slot-modal" closedby="any">
           <header>
             <h3>Reservar plaza</h3>
-            <button class="close-action-btn close-modal-btn">
-              <svg><use href="#close"/></svg>
-            </button>
+            <close-modal-button></close-modal-button>
           </header>
           <slot-form></slot-form>
         </dialog>
@@ -29,10 +27,9 @@ export default class extends AbstractView {
   }
 
   setUpJavascript() {
-    const modal = document.querySelector("#assign-tenant-to-slot-modal");
-    const closeModal = document.querySelector(".close-modal-btn");
-    const form = document.querySelector("slot-form");
     const view = document.querySelector(".home-view");
+    const modal = document.querySelector("#assign-tenant-to-slot-modal");
+    const form = document.querySelector("slot-form");
 
     view.addEventListener("slot:selected", (event) => {
       form.slotId = event.detail.slotId;
@@ -40,11 +37,12 @@ export default class extends AbstractView {
       modal.showModal();
     });
 
-    closeModal.addEventListener("click", () => {
+    const closeBehavior = () => {
       modal.close();
       form.clear();
-    });
+    };
 
-    modal.addEventListener("slot:assigned", () => modal.close());
+    view.addEventListener("close-modal", closeBehavior);
+    view.addEventListener("slot:assigned", closeBehavior);
   }
 }

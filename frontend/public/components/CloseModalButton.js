@@ -1,13 +1,12 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
-    * {
-      --icon-side-length: 1.5rem;
-    }
-
     button {
       border: none;
       background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         cursor: pointer;
@@ -16,6 +15,8 @@ template.innerHTML = /*html*/ `
     }
 
     svg {
+      --icon-side-length: 1.5rem;
+
       fill: var(--clr-contrast);
       width: var(--icon-side-length);
       height: var(--icon-side-length);

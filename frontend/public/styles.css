@@ -192,6 +192,7 @@ dialog[open] > header {
   close-modal-button {
     grid-column: 3 / 4;
     justify-self: end;
+    align-self: center;
   }
 }
 

@@ -202,11 +202,6 @@ dialog[open] > header {
   justify-content: space-between;
   height: 100%;
   gap: var(--vertical-spacing);
-
-  span {
-    font-weight: bold;
-    font-style: italic;
-  }
 }
 
 .payments-view {

@@ -25,6 +25,7 @@ export default class extends AbstractView {
         </header>
         
         <tenants-collection></tenants-collection>
+        <div></div>
       </section>
     `;
   }

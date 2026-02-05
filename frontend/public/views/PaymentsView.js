@@ -24,6 +24,7 @@ export default class extends AbstractView {
         </header>
 
         <div>Acá irían los pagos realizados</div>
+        <div></div>
       </section>
     `;
   }

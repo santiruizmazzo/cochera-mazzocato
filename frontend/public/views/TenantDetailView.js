@@ -11,9 +11,7 @@ export default class extends AbstractView {
         <dialog id="update-tenant-modal" closedby="any">
           <header>
             <h3>Editar inquilino</h3>
-            <button class="close-action-btn close-modal-btn">
-              <svg><use href="#close"/></svg>
-            </button>
+            <close-modal-button></close-modal-button>
           </header>
           <tenant-form mode="edit"></tenant-form>
         </dialog>
@@ -25,10 +23,10 @@ export default class extends AbstractView {
             </a>
             <h2>Info del inquilino</h2>
           </div>
-          <button class="new-action-btn open-modal-btn">
+          <open-modal-button>
             <svg><use href="#person_edit"/></svg>
             Editar
-          </button>
+          </open-modal-button>
         </header>
         
         <tenant-full-card id="${this.params.id}"></tenant-full-card>
@@ -38,16 +36,14 @@ export default class extends AbstractView {
   }
 
   async setUpJavascript() {
+    const view = document.querySelector(".tenant-detail-view");
     const modal = document.querySelector("#update-tenant-modal");
-    const openModal = document.querySelector(".open-modal-btn");
-    const closeModal = document.querySelector(".close-modal-btn");
     const form = document.querySelector("tenant-form");
 
-    openModal.addEventListener("click", () => modal.showModal());
-    closeModal.addEventListener("click", () => {
-      modal.close();
-    });
-    modal.addEventListener("tenants:updated", async (event) => {
+    view.addEventListener("open-modal", () => modal.showModal());
+    view.addEventListener("close-modal", () => modal.close());
+
+    view.addEventListener("tenants:updated", async (event) => {
       const tenantData = event.detail;
       tenantCard.loadTenant(tenantData);
       modal.close();

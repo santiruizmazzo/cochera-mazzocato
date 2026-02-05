@@ -10,4 +10,8 @@ export default class {
   setUpJavascript() {
     return;
   }
+
+  render() {
+    return "";
+  }
 }

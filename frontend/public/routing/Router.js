@@ -36,6 +36,8 @@ export default class Router {
   async renderCurrentView() {
     const view = this.createViewForCurrentRoute();
 
+    // document.querySelector("main").innerHTML = view.render();
+
     document.querySelector("main").innerHTML = await view.getHtml();
     view.setUpJavascript();
   }

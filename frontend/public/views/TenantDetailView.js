@@ -8,13 +8,9 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="tenant-detail-view">
-        <dialog id="update-tenant-modal">
-          <header>
-            <h3>Editar inquilino</h3>
-            <close-modal-button></close-modal-button>
-          </header>
+        <custom-modal title="Editar inquilino">
           <tenant-form mode="edit"></tenant-form>
-        </dialog>
+        </custom-modal>
       
         <header class="section-header">
           <div class="section-title">
@@ -37,11 +33,8 @@ export default class extends AbstractView {
 
   async setUpJavascript() {
     const view = document.querySelector(".tenant-detail-view");
-    const modal = document.querySelector("#update-tenant-modal");
+    const modal = document.querySelector("custom-modal");
     const form = document.querySelector("tenant-form");
-
-    view.addEventListener("open-modal", () => modal.showModal());
-    view.addEventListener("close-modal", () => modal.close());
 
     view.addEventListener("tenants:updated", async (event) => {
       const tenantData = event.detail;

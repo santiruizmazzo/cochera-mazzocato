@@ -15,13 +15,9 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="home-view">
-        <dialog id="assign-tenant-to-slot-modal">
-          <header>
-            <h3>Reservar plaza</h3>
-            <close-modal-button></close-modal-button>
-          </header>
+        <custom-modal title="Reservar plaza">
           <slot-form></slot-form>
-        </dialog>
+        </custom-modal>
   
         <header class="section-header">
           <h2>¡Bienvenido!</h2>
@@ -35,21 +31,15 @@ export default class extends AbstractView {
 
   setUpJavascript() {
     const view = document.querySelector(".home-view");
-    const modal = document.querySelector("#assign-tenant-to-slot-modal");
+    const modal = document.querySelector("custom-modal");
     const form = document.querySelector("slot-form");
 
     view.addEventListener("slot:selected", (event) => {
       form.slotId = event.detail.slotId;
       form.slotNumber = event.detail.slotNumber;
-      modal.showModal();
+      modal.show();
     });
 
-    const closeFormBehavior = () => {
-      modal.close();
-      form.clear();
-    };
-
-    view.addEventListener("close-modal", closeFormBehavior);
-    view.addEventListener("slot:assigned", closeFormBehavior);
+    view.addEventListener("slot:assigned", () => modal.close());
   }
 }

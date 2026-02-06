@@ -15,12 +15,7 @@ export default class extends AbstractView {
   async getHtml() {
     return /*html*/ `
       <section class="payments-view">
-        <dialog id="new-payment-modal">
-          <header>
-            <h3>Modal generica</h3>
-            <close-modal-button></close-modal-button>
-          </header>
-        </dialog>
+        <custom-modal title="Registrar pago"></custom-modal>
       
         <header class="section-header">
           <h2>Pagos recibidos</h2>
@@ -36,11 +31,5 @@ export default class extends AbstractView {
     `;
   }
 
-  setUpJavascript() {
-    const view = document.querySelector(".payments-view");
-    const modal = document.querySelector("#new-payment-modal");
-
-    view.addEventListener("open-modal", () => modal.showModal());
-    view.addEventListener("close-modal", () => modal.close());
-  }
+  setUpJavascript() {}
 }

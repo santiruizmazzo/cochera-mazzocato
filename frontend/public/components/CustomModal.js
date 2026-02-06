@@ -92,6 +92,9 @@ export default class CustomModal extends HTMLElement {
 
   connectedCallback() {
     this.title = this.title;
+
+    this.parentElement.addEventListener("open-modal", () => this.show());
+    this.addEventListener("close-modal", () => this.close());
   }
 }
 

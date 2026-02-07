@@ -6,10 +6,16 @@ export default class extends AbstractView {
     super(params);
   }
 
-  render() {
-    const homeSection = new ContentSection();
-    homeSection.title = "Pagos recibidos";
-    return homeSection;
+  renderWithin(mainElement) {
+    // this.fetchPayments().then((payments) => {
+    //   this.paymentsCollection.loadPayments(payments);
+    // });
+
+    this.homeSection = new ContentSection();
+
+    this.homeSection.title = "Pagos recibidos";
+    
+    mainElement.appendChild(this.homeSection);
   }
 
   async getHtml() {
@@ -30,6 +36,4 @@ export default class extends AbstractView {
       </section>
     `;
   }
-
-  setUpJavascript() {}
 }

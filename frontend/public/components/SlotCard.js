@@ -152,7 +152,7 @@ export default class SlotCard extends HTMLElement {
     let customEvent;
 
     if (event.target.id === "assign-tenant") {
-      customEvent = new CustomEvent("slot:selected", {
+      customEvent = new CustomEvent("open-modal", {
         bubbles: true,
         composed: true,
         detail: { slotId: this.slotId, slotNumber: this.slotNumber },

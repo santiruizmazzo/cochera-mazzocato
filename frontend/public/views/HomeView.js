@@ -1,15 +1,45 @@
 import AbstractView from "./AbstractView.js";
 import ContentSection from "../components/ContentSection.js";
+import SlotsCollection from "../components/SlotsCollection.js";
+import SlotForm from "../components/SlotForm.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
   }
 
-  render() {
-    const homeSection = new ContentSection();
-    homeSection.title = "Bienvenido a la app Cochera Mazzocato!";
-    return homeSection;
+  renderWithin(mainElement) {
+    this.fetchSlots().then((slots) => {
+      this.slotsCollection.loadSlots(slots);
+    });
+
+    this.homeSection = new ContentSection();
+
+    this.homeSection.title = "¡Bienvenido a la Cochera Mazzocato!";
+    this.homeSection.hideButton = true;
+
+    this.slotForm = new SlotForm();
+    this.homeSection.modalContent = this.slotForm;
+
+    this.slotsCollection = new SlotsCollection();
+    this.homeSection.content = this.slotsCollection;
+
+    mainElement.appendChild(this.homeSection);
+
+    this.setUpJavascript();
+  }
+
+  async fetchSlots() {
+    const SLOTS_URL = import.meta.env.VITE_API_URL + "/api/slots";
+
+    return await fetch(SLOTS_URL)
+      .then((response) => response.json())
+      .then((json) => {
+        return json["data"];
+      })
+      .catch((error) => {
+        console.error("Error fetching slots:", error);
+      });
   }
 
   async getHtml() {
@@ -30,16 +60,11 @@ export default class extends AbstractView {
   }
 
   setUpJavascript() {
-    const view = document.querySelector(".home-view");
-    const modal = document.querySelector("custom-modal");
-    const form = document.querySelector("slot-form");
-
-    view.addEventListener("slot:selected", (event) => {
-      form.slotId = event.detail.slotId;
-      form.slotNumber = event.detail.slotNumber;
-      modal.show();
+    this.homeSection.addEventListener("slot:assigned", () => {
+      this.homeSection.modal.close();
+      this.fetchSlots().then((slots) => {
+        this.slotsCollection.loadSlots(slots);
+      });
     });
-
-    view.addEventListener("slot:assigned", () => modal.close());
   }
 }

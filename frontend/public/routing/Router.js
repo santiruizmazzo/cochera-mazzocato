@@ -37,11 +37,14 @@ export default class Router {
     const view = this.createViewForCurrentRoute();
     const main = document.querySelector("main");
 
-    // main.innerHTML = "";
-    // main.appendChild(view.render());
+    main.innerHTML = "";
+    await view.renderWithin(main);
 
-    main.innerHTML = await view.getHtml();
-    view.setUpJavascript();
+    // main.innerHTML = "";
+    // main.appendChild(await view.render());
+
+    // main.innerHTML = await view.getHtml();
+    // view.setUpJavascript();
   }
 
   createViewForCurrentRoute() {

@@ -26,13 +26,9 @@ template.innerHTML = /*html*/ `
   </style>
 
   <section>
-    <dialog>
-      <header>
-        <h3>Título del modal</h3>
-        <close-modal-button></close-modal-button>
-      </header>
-      <slot name="form"></slot>
-    </dialog>
+    <custom-modal>
+      <slot name="modal-content"></slot>
+    </custom-modal>
 
     <header>
       <h2>Título de la sección</h2>
@@ -43,6 +39,7 @@ template.innerHTML = /*html*/ `
     </header>
     
     <slot name="content"></slot>
+    <div></div>
   </section>
 `;
 
@@ -57,12 +54,24 @@ export default class ContentSection extends HTMLElement {
     return ["hide-modal", "title", "button-text"];
   }
 
+  get modal() {
+    return this.shadowRoot.querySelector("custom-modal");
+  }
+
   set hideModal(value) {
     if (value) {
       this.shadowRoot.querySelector("dialog").remove();
     }
 
     this.setAttribute("hide-modal", value);
+  }
+
+  set hideButton(value) {
+    if (value) {
+      this.shadowRoot.querySelector("open-modal-button").remove();
+    }
+
+    this.setAttribute("hide-button", value);
   }
 
   set title(value) {
@@ -79,14 +88,33 @@ export default class ContentSection extends HTMLElement {
     this.setAttribute("button-text", value);
   }
 
-  connectedCallback() {
-    if (!this.hideModal) {
-      const section = this.shadowRoot.querySelector("section");
-      const modal = this.shadowRoot.querySelector("dialog");
+  set content(element) {
+    element.setAttribute("slot", "content");
+    this.appendChild(element);
+  }
 
-      section.addEventListener("open-modal", () => modal.showModal());
-      section.addEventListener("close-modal", () => modal.close());
+  set modalContent(element) {
+    element.setAttribute("slot", "modal-content");
+    this.appendChild(element);
+  }
+
+  connectedCallback() {
+    if (this.hideModal) {
+      return;
     }
+    const section = this.shadowRoot.querySelector("section");
+    const modal = this.shadowRoot.querySelector("custom-modal");
+    const form = this.shadowRoot
+      .querySelector('slot[name="modal-content"]')
+      .assignedElements()[0];
+
+    section.addEventListener("open-modal", (event) => {
+      if (event.detail) {
+        form.loadData(event.detail);
+      }
+      modal.show();
+    });
+    section.addEventListener("close-modal", () => modal.close());
   }
 }
 

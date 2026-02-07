@@ -21,36 +21,23 @@ export default class SlotsCollection extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(template.content.cloneNode(true));
+    this.shadowRoot
+      .querySelector("div")
+      .addEventListener("slot:assigned", this);
     this.slots = [];
   }
 
-  async handleEvent() {
+  handleEvent(event) {
     this.renderPlaceholders();
-    await this.fetchSlots();
-    this.render();
+    this.dispatchEvent(event);
   }
 
-  async connectedCallback() {
-    if (this.slots.length != 0) return;
-
-    document.addEventListener("slot:assigned", this);
-
-    this.renderPlaceholders();
-    await this.fetchSlots();
+  connectedCallback() {
+    if (this.slots.length === 0) {
+      this.renderPlaceholders();
+      return;
+    }
     this.render();
-  }
-
-  async fetchSlots() {
-    const SLOTS_URL = import.meta.env.VITE_API_URL + "/api/slots";
-
-    await fetch(SLOTS_URL)
-      .then((response) => response.json())
-      .then((json) => {
-        this.slots = json["data"];
-      })
-      .catch((error) => {
-        console.error("Error fetching slots:", error);
-      });
   }
 
   renderPlaceholders() {
@@ -61,6 +48,11 @@ export default class SlotsCollection extends HTMLElement {
     for (let i = 0; i < COLLECTION_LENGTH; i++) {
       container.appendChild(new SlotCard());
     }
+  }
+
+  loadSlots(slots) {
+    this.slots = slots;
+    this.render();
   }
 
   render() {

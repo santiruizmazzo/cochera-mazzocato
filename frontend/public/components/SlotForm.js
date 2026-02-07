@@ -107,8 +107,8 @@ export default class SlotForm extends HTMLElement {
   }
 
   loadData(data) {
-    this.slotId = data['slotId'];
-    this.slotNumber = data['slotNumber'];
+    this.slotId = data["slotId"];
+    this.slotNumber = data["slotNumber"];
   }
 
   connectedCallback() {

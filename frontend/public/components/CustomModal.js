@@ -90,11 +90,6 @@ export default class CustomModal extends HTMLElement {
     this.removeAttribute("open");
   }
 
-  loadData() {
-    const form = this.shadowRoot.querySelector('slot').children;
-    console.log(form);
-  }
-
   connectedCallback() {
     this.title = this.title ? this.title : "Título del modal";
 

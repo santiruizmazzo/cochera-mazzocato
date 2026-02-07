@@ -82,6 +82,7 @@ export default class SlotForm extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(template.content.cloneNode(true));
+    this.tenants = [];
   }
 
   static get observedAttributes() {
@@ -105,11 +106,17 @@ export default class SlotForm extends HTMLElement {
     return parseInt(this.getAttribute("slot-number"));
   }
 
+  loadData(data) {
+    this.slotId = data['slotId'];
+    this.slotNumber = data['slotNumber'];
+  }
+
   connectedCallback() {
     this.render();
   }
 
   render() {
+    if (this.tenants.length > 0) return;
     this.generateTenantSelector();
     this.setupFormSubmissionBehavior();
   }

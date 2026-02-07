@@ -55,7 +55,7 @@ template.innerHTML = /*html*/ `
   <div id="backdrop"></div>
   <div id="content">
     <header>
-      <h3>Título del modal</h3>
+      <h3></h3>
       <close-modal-button></close-modal-button>
     </header>
     <slot></slot>
@@ -90,8 +90,13 @@ export default class CustomModal extends HTMLElement {
     this.removeAttribute("open");
   }
 
+  loadData() {
+    const form = this.shadowRoot.querySelector('slot').children;
+    console.log(form);
+  }
+
   connectedCallback() {
-    this.title = this.title;
+    this.title = this.title ? this.title : "Título del modal";
 
     this.parentElement.addEventListener("open-modal", () => this.show());
     this.addEventListener("close-modal", () => this.close());

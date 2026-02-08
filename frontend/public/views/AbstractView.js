@@ -3,15 +3,11 @@ export default class {
     this.params = params;
   }
 
-  async getHtml() {
-    return "";
-  }
-
-  setUpJavascript() {
+  setUpEventListeners() {
     return;
   }
 
   render() {
-    return "";
+    return;
   }
 }

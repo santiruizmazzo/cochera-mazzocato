@@ -146,17 +146,17 @@ export default class TenantFullCard extends HTMLElement {
     this.shadowRoot.append(template.content.cloneNode(true));
   }
 
-  async connectedCallback() {
+  connectedCallback() {
     this.render();
   }
 
-  loadTenant(tenantData) {
-    this.tenantData = tenantData;
+  load(tenant) {
+    this.tenant = tenant;
     this.render();
   }
 
   render() {
-    if (!this.tenantData) return;
+    if (!this.tenant) return;
     this.renderDni();
     this.renderLastName();
     this.renderName();
@@ -168,31 +168,31 @@ export default class TenantFullCard extends HTMLElement {
 
   renderDni() {
     const dni = this.shadowRoot.querySelector(".dni");
-    dni.innerHTML = formatDni(this.tenantData["dni"]);
+    dni.innerHTML = formatDni(this.tenant["dni"]);
     dni.className = "dni";
   }
 
   renderLastName() {
     const lastName = this.shadowRoot.querySelector("#last-name p");
-    lastName.innerHTML = this.tenantData["last_name"];
+    lastName.innerHTML = this.tenant["last_name"];
     lastName.className = "";
   }
 
   renderName() {
     const name = this.shadowRoot.querySelector("#name p");
-    name.innerHTML = this.tenantData["name"];
+    name.innerHTML = this.tenant["name"];
     name.className = "";
   }
 
   renderEntryMonth() {
     const entryMonth = this.shadowRoot.querySelector("#entry-month p");
-    entryMonth.innerHTML = formatEntryMonth(this.tenantData["entry_month"]);
+    entryMonth.innerHTML = formatEntryMonth(this.tenant["entry_month"]);
     entryMonth.className = "";
   }
 
   renderPhone() {
     const phone = this.shadowRoot.querySelector("#phone p");
-    const formattedPhone = formatPhone(this.tenantData["phone"]);
+    const formattedPhone = formatPhone(this.tenant["phone"]);
 
     if (!formattedPhone) {
       phone.innerHTML = "Desconocido";
@@ -207,26 +207,26 @@ export default class TenantFullCard extends HTMLElement {
   renderAddress() {
     const address = this.shadowRoot.querySelector("#address p");
 
-    if (!this.tenantData["address"]) {
+    if (!this.tenant["address"]) {
       address.innerHTML = "Desconocido";
       address.className = "unknown";
       return;
     }
 
-    address.innerHTML = this.tenantData["address"];
+    address.innerHTML = this.tenant["address"];
     address.className = "";
   }
 
   renderEmail() {
     const email = this.shadowRoot.querySelector("#email p");
 
-    if (!this.tenantData["email"]) {
+    if (!this.tenant["email"]) {
       email.innerHTML = "Desconocido";
       email.className = "unknown";
       return;
     }
 
-    email.innerHTML = this.tenantData["email"];
+    email.innerHTML = this.tenant["email"];
     email.className = "";
   }
 }

@@ -148,8 +148,8 @@ export default class TenantForm extends HTMLElement {
     this.setAttribute("mode", value);
   }
 
-  loadTenant(tenantData) {
-    this.tenant = tenantData;
+  load(tenant) {
+    this.tenant = tenant;
     this.populateForm();
   }
 
@@ -248,12 +248,12 @@ export default class TenantForm extends HTMLElement {
       const url =
         this.mode === "edit" ? `${TENANTS_URL}/${this.tenant.id}` : TENANTS_URL;
 
-      const tenantData = this.createJsonTenant(form);
+      const tenant = this.createJsonTenant(form);
 
       fetch(url, {
         method: method,
         headers: { "Content-Type": "application/json" },
-        body: tenantData,
+        body: tenant,
       })
         .then(async (response) => {
           const responseBody = await response.json();

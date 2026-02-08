@@ -14,7 +14,7 @@ export default class extends AbstractView {
     this.homeSection = new ContentSection();
 
     this.homeSection.title = "Pagos recibidos";
-    
+
     mainElement.appendChild(this.homeSection);
   }
 

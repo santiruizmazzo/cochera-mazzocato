@@ -93,6 +93,11 @@ export default class ContentSection extends HTMLElement {
     this.appendChild(element);
   }
 
+  set modalTitle(title) {
+    const modal = this.shadowRoot.querySelector("custom-modal");
+    modal.title = title;
+  }
+
   set modalContent(element) {
     element.setAttribute("slot", "modal-content");
     this.appendChild(element);

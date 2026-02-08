@@ -25,7 +25,7 @@ export default class TenantsCollection extends HTMLElement {
     this.tenants = [];
   }
 
-  async handleEvent(event) {
+  handleEvent(event) {
     if (event.type === "tenants:created") {
       const container = this.shadowRoot.querySelector("div");
       const card = TenantMiniCard.fromJson(event.detail);

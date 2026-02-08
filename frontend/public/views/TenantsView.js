@@ -27,6 +27,8 @@ export default class extends AbstractView {
     this.homeSection.content = this.tenantsCollection;
 
     mainElement.appendChild(this.homeSection);
+
+    this.setUpJavascript();
   }
 
   async fetchTenants() {
@@ -64,9 +66,11 @@ export default class extends AbstractView {
   }
 
   setUpJavascript() {
-    const view = document.querySelector(".tenants-view");
-    const modal = document.querySelector("custom-modal");
-
-    view.addEventListener("tenants:created", () => modal.close());
+    this.homeSection.addEventListener("tenants:created", () => {
+      this.homeSection.modal.close();
+      this.fetchTenants().then((tenants) => {
+        this.tenantsCollection.load(tenants);
+      });
+    });
   }
 }

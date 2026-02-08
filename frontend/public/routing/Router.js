@@ -38,13 +38,7 @@ export default class Router {
     const main = document.querySelector("main");
 
     main.innerHTML = "";
-    await view.renderWithin(main);
-
-    // main.innerHTML = "";
-    // main.appendChild(await view.render());
-
-    // main.innerHTML = await view.getHtml();
-    // view.setUpJavascript();
+    view.renderWithin(main);
   }
 
   createViewForCurrentRoute() {

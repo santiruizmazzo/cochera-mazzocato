@@ -27,7 +27,7 @@ export default class extends AbstractView {
 
     mainElement.appendChild(this.homeSection);
 
-    this.setUpJavascript();
+    this.setUpEventListeners();
   }
 
   async fetchSlots() {
@@ -43,24 +43,7 @@ export default class extends AbstractView {
       });
   }
 
-  async getHtml() {
-    return /*html*/ `
-      <section class="home-view">
-        <custom-modal title="Reservar plaza">
-          <slot-form></slot-form>
-        </custom-modal>
-  
-        <header class="section-header">
-          <h2>¡Bienvenido!</h2>
-        </header>
-        
-        <slots-collection></slots-collection>
-        <div></div>
-      </section>
-    `;
-  }
-
-  setUpJavascript() {
+  setUpEventListeners() {
     this.homeSection.addEventListener("slot:assigned", () => {
       this.homeSection.modal.close();
       this.fetchSlots().then((slots) => {

@@ -10,7 +10,7 @@ export default class extends AbstractView {
 
   renderWithin(mainElement) {
     this.fetchSlots().then((slots) => {
-      this.slotsCollection.loadSlots(slots);
+      this.slotsCollection.load(slots);
     });
 
     this.homeSection = new ContentSection();
@@ -19,6 +19,7 @@ export default class extends AbstractView {
     this.homeSection.hideButton = true;
 
     this.slotForm = new SlotForm();
+    this.homeSection.modalTitle = "Reservar plaza";
     this.homeSection.modalContent = this.slotForm;
 
     this.slotsCollection = new SlotsCollection();
@@ -63,7 +64,7 @@ export default class extends AbstractView {
     this.homeSection.addEventListener("slot:assigned", () => {
       this.homeSection.modal.close();
       this.fetchSlots().then((slots) => {
-        this.slotsCollection.loadSlots(slots);
+        this.slotsCollection.load(slots);
       });
     });
   }

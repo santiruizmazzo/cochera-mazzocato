@@ -14,6 +14,8 @@ export default class extends AbstractView {
     this.homeSection = new ContentSection();
 
     this.homeSection.title = "Pagos recibidos";
+    this.homeSection.buttonText = "Nuevo pago";
+    this.homeSection.modalTitle = "Registrar pago";
 
     mainElement.appendChild(this.homeSection);
   }

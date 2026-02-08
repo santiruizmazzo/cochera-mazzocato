@@ -50,7 +50,7 @@ export default class SlotsCollection extends HTMLElement {
     }
   }
 
-  loadSlots(slots) {
+  load(slots) {
     this.slots = slots;
     this.render();
   }

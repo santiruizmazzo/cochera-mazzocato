@@ -1,7 +1,7 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
   <style>
-    p {
+    p, h2 {
       margin: 0;
       padding: 0;
     }
@@ -23,6 +23,16 @@ template.innerHTML = /*html*/ `
         font-size: 1.75rem;
       }
     }
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    go-back-icon {
+      display: none;
+    }
   </style>
 
   <section>
@@ -31,7 +41,11 @@ template.innerHTML = /*html*/ `
     </custom-modal>
 
     <header>
-      <h2>Título de la sección</h2>
+      <div class="title">
+        <go-back-icon></go-back-icon>
+        <h2>Título de la sección</h2>
+      </div>
+      
       <open-modal-button>
         <slot name="button-icon"></slot>
         <p>Acción principal</p>
@@ -70,8 +84,6 @@ export default class ContentSection extends HTMLElement {
     if (value) {
       this.shadowRoot.querySelector("open-modal-button").remove();
     }
-
-    this.setAttribute("hide-button", value);
   }
 
   set title(value) {
@@ -101,6 +113,12 @@ export default class ContentSection extends HTMLElement {
   set modalContent(element) {
     element.setAttribute("slot", "modal-content");
     this.appendChild(element);
+  }
+
+  set showGoBackIcon(value) {
+    if (value) {
+      this.shadowRoot.querySelector("go-back-icon").style.display = "flex";
+    }
   }
 
   connectedCallback() {

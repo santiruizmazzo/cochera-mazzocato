@@ -18,6 +18,7 @@ export default class extends AbstractView {
 
     this.homeSection.title = "Info del inquilino";
     this.homeSection.buttonText = "Editar";
+    this.homeSection.showGoBackIcon = true;
 
     this.tenantForm = new TenantForm();
     this.tenantForm.mode = "edit";

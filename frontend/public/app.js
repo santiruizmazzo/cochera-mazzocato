@@ -11,6 +11,7 @@ import CloseModalButton from "./components/CloseModalButton.js";
 import ErrorBox from "./components/ErrorBox.js";
 import ContentSection from "./components/ContentSection.js";
 import CustomModal from "./components/CustomModal.js";
+import GoBackIcon from "./components/GoBackIcon.js";
 import iconsSprite from "./assets/icons.svg?raw";
 import Router from "./routing/Router.js";
 

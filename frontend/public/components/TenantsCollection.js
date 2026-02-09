@@ -26,11 +26,9 @@ export default class TenantsCollection extends HTMLElement {
   }
 
   handleEvent(event) {
-    if (event.type === "tenants:created") {
-      const container = this.shadowRoot.querySelector("div");
-      const card = TenantMiniCard.fromJson(event.detail);
-      container.appendChild(card);
-    }
+    const container = this.shadowRoot.querySelector("div");
+    const card = TenantMiniCard.fromJson(event.detail);
+    container.appendChild(card);
   }
 
   connectedCallback() {
@@ -39,8 +37,6 @@ export default class TenantsCollection extends HTMLElement {
     document.addEventListener("tenants:created", this);
 
     this.renderPlaceholders();
-    // await this.fetchTenants();
-    // this.render();
   }
 
   renderPlaceholders() {

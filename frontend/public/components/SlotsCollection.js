@@ -15,21 +15,17 @@ template.innerHTML = /*html*/ `
 `;
 
 export default class SlotsCollection extends HTMLElement {
-  tenants = [];
-
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(template.content.cloneNode(true));
-    this.shadowRoot
-      .querySelector("div")
-      .addEventListener("slot:assigned", this);
+    this.addEventListener("slot:assigned", this);
     this.slots = [];
+    this.tenants = [];
   }
 
-  handleEvent(event) {
+  handleEvent() {
     this.renderPlaceholders();
-    this.dispatchEvent(event);
   }
 
   connectedCallback() {

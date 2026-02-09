@@ -133,7 +133,6 @@ export default class TenantForm extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(template.content.cloneNode(true));
-    this.tenant = null;
   }
 
   static get observedAttributes() {

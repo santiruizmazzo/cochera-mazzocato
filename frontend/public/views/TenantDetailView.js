@@ -9,10 +9,7 @@ export default class extends AbstractView {
   }
 
   renderWithin(mainElement) {
-    this.fetchTenant().then((tenant) => {
-      this.tenantFullCard.load(tenant);
-      this.tenantForm.load(tenant);
-    });
+    this.fetchTenant();
 
     this.homeSection = new ContentSection();
 
@@ -36,13 +33,19 @@ export default class extends AbstractView {
   async fetchTenant() {
     const TENANT_URL = `${import.meta.env.VITE_API_URL}/api/tenants/${this.params.id}`;
 
-    return await fetch(TENANT_URL)
-      .then((response) => response.json())
-      .then((json) => {
-        return json;
+    await fetch(TENANT_URL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((tenant) => {
+        this.tenantFullCard.load(tenant);
+        this.tenantForm.load(tenant);
       })
       .catch((error) => {
-        console.error("Error fetching tenants:", error);
+        this.homeSection.errorMessage = error;
       });
   }
 

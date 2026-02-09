@@ -33,6 +33,17 @@ template.innerHTML = /*html*/ `
     go-back-icon {
       display: none;
     }
+
+    .error-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      h2 {
+        font-size: 4rem;
+        color: rgb(198, 11, 11);
+      }
+    }
   </style>
 
   <section>
@@ -119,6 +130,15 @@ export default class ContentSection extends HTMLElement {
     if (value) {
       this.shadowRoot.querySelector("go-back-icon").style.display = "flex";
     }
+  }
+
+  set errorMessage(error) {
+    const section = this.shadowRoot.querySelector("section");
+    const errorMessage = document.createElement("h2");
+    errorMessage.innerHTML = error.message;
+    section.className = "error-state";
+    section.innerHTML = "";
+    section.appendChild(errorMessage);
   }
 
   connectedCallback() {

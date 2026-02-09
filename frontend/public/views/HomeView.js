@@ -9,9 +9,13 @@ export default class extends AbstractView {
   }
 
   renderWithin(mainElement) {
-    this.fetchSlots().then((slots) => {
-      this.slotsCollection.load(slots);
-    });
+    this.fetchSlots()
+      .then(({ data }) => {
+        this.slotsCollection.load(data);
+      })
+      .catch((error) => {
+        this.homeSection.errorMessage = error;
+      });
 
     this.homeSection = new ContentSection();
 
@@ -31,16 +35,13 @@ export default class extends AbstractView {
   }
 
   async fetchSlots() {
-    const SLOTS_URL = import.meta.env.VITE_API_URL + "/api/slots";
+    const SLOTS_URL = import.meta.env.VITE_API_URL + "/api/slotss";
 
-    return await fetch(SLOTS_URL)
-      .then((response) => response.json())
-      .then((json) => {
-        return json["data"];
-      })
-      .catch((error) => {
-        console.error("Error fetching slots:", error);
-      });
+    const response = await fetch(SLOTS_URL);
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}`);
+    }
+    return await response.json();
   }
 
   setUpEventListeners() {

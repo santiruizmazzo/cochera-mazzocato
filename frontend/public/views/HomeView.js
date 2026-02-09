@@ -9,13 +9,7 @@ export default class extends AbstractView {
   }
 
   renderWithin(mainElement) {
-    this.fetchSlots()
-      .then(({ data }) => {
-        this.slotsCollection.load(data);
-      })
-      .catch((error) => {
-        this.homeSection.errorMessage = error;
-      });
+    this.fetchSlots();
 
     this.homeSection = new ContentSection();
 
@@ -35,21 +29,27 @@ export default class extends AbstractView {
   }
 
   async fetchSlots() {
-    const SLOTS_URL = import.meta.env.VITE_API_URL + "/api/slotss";
+    const SLOTS_URL = import.meta.env.VITE_API_URL + "/api/slots";
 
-    const response = await fetch(SLOTS_URL);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}`);
-    }
-    return await response.json();
+    await fetch(SLOTS_URL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(({ data }) => {
+        this.slotsCollection.load(data);
+      })
+      .catch((error) => {
+        this.homeSection.errorMessage = error;
+      });
   }
 
   setUpEventListeners() {
     this.homeSection.addEventListener("slot:assigned", () => {
       this.homeSection.modal.close();
-      this.fetchSlots().then((slots) => {
-        this.slotsCollection.load(slots);
-      });
+      this.fetchSlots();
     });
   }
 }

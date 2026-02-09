@@ -17,7 +17,10 @@ import Router from "./routing/Router.js";
 
 const router = new Router();
 
-window.addEventListener("popstate", () => router.renderCurrentView());
+window.addEventListener("popstate", () => {
+  router.updateSelectedNavLinks(location.href);
+  router.renderCurrentView();
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   document.body.insertAdjacentHTML(

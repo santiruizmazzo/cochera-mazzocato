@@ -104,6 +104,18 @@ export default class ContentSection extends HTMLElement {
     this.setAttribute("title", value);
   }
 
+  set buttonIcon(iconId) {
+    const NAMESPACE_URL = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NAMESPACE_URL, "svg");
+    const use = document.createElementNS(NAMESPACE_URL, "use");
+
+    use.setAttribute("href", `#${iconId}`);
+    svg.appendChild(use);
+
+    svg.setAttribute("slot", "button-icon");
+    this.appendChild(svg);
+  }
+
   set buttonText(value) {
     const buttonText = this.shadowRoot.querySelector("open-modal-button p");
     buttonText.innerHTML = value;

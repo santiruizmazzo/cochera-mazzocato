@@ -14,6 +14,7 @@ export default class extends AbstractView {
     this.homeSection = new ContentSection();
 
     this.homeSection.title = "Info del inquilino";
+    this.homeSection.buttonIcon = "person_edit";
     this.homeSection.buttonText = "Editar";
     this.homeSection.showGoBackIcon = true;
 

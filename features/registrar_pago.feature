@@ -5,6 +5,11 @@ Característica: Registrar pago de inquilino
     para dejar asentado el pago mensual de su cochera
 
     Regla de negocio: Monto es entero mayor a 1
+        Escenario: Monto positivo
+            Dado que ingresé un monto igual a 1000
+            Cuando intento registrar el pago
+            Entonces se informa que el pago se creó correctamente
+
         Escenario: Monto vacío
             Dado que no ingresé ningún monto
             Cuando intento registrar el pago
@@ -37,12 +42,6 @@ Característica: Registrar pago de inquilino
             Cuando intento registrar el pago
             Entonces se informa que el inquilino no existe
 
-        Escenario: ID de inquilino existente
-            Dado que existen inquilinos
-            Y que seleccioné al inquilino con id 1
-            Cuando intento registrar el pago
-            Entonces se registra correctamente
-
     Regla de negocio: Método de pago es válido
         Escenario: Método de pago vacío
             Dado que no ingresé ningún método de pago
@@ -58,11 +57,6 @@ Característica: Registrar pago de inquilino
             Dado que seleccioné el método de pago 10
             Cuando intento registrar el pago
             Entonces se informa que el método de pago debe ser un texto dentro de las opciones válidas
-
-        Escenario: Método de pago válido
-            Dado que seleccioné el método de pago "efectivo" o "transferencia"
-            Cuando intento registrar el pago
-            Entonces se registra correctamente
 
     Regla de negocio: Período abonado es válido
         Escenario: Período abonado anterior a registro de inquilino

@@ -10,11 +10,9 @@ WORKDIR /app
 USER bun
 
 # Copiar package.json y lockfile primero
-COPY --chown=bun:bun package*.json bun.lockb* ./
+COPY --chown=bun:bun package.json bun.lock ./
 
 RUN bun install
-
-COPY --chown=bun:bun . .
 
 EXPOSE 5173
 

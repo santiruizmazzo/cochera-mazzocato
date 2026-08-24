@@ -52,7 +52,16 @@ func CleanupTestDatabase(db *pgxpool.Pool) {
 
 	if slotCount != 12 {
 		log.Printf("⚠️ Only %d slots, re-seeding...", slotCount)
-		return
+
+		_, err = db.Exec(ctx, `
+			INSERT INTO slots (slot_number, tenant_id)
+			SELECT generate_series(1, 12), NULL
+			ON CONFLICT (slot_number) DO NOTHING
+		`)
+		if err != nil {
+			log.Println("⚠️ Failed to re-seed slots: ", err)
+			return
+		}
 	}
 }
 

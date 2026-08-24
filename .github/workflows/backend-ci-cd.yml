@@ -2,7 +2,7 @@ name: Backend CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, test, dev ]
+    branches: [ main, dev ]
     paths:
       - backend/**
   workflow_dispatch:
@@ -64,22 +64,21 @@ jobs:
         echo "Running unit tests..."
         make test-unit
   
-  test-deploy:
-    name: Deploy to Test Environment
+  deploy:
+    name: Deploy to Production
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/test'
-    
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
     env:
       DEPLOY_URL: ${{ secrets.TEST_API_DEPLOY_HOOK }}
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Deploy to test server
+
+    - name: Deploy to production server
       run: |
-        echo "Deploying to test environment..."
-        echo "Binary size: $(ls -lh api)"
+        echo "Deploying to production environment..."
         curl "$DEPLOY_URL"
-        echo "✅ Deployment to test environment completed!"
+        echo "✅ Deployment to production environment completed!"

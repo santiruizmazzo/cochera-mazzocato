@@ -84,7 +84,3 @@ func (api *API) Run() {
 		log.Printf("Could not start server: %v", err)
 	}
 }
-
-func (api *API) CloseDB() {
-	api.db.Close()
-}

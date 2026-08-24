@@ -91,7 +91,7 @@ func (formatter ResponseFormatter) RespondTenantGotSuccessfully(tenant *ent.Tena
 }
 
 func (formatter ResponseFormatter) RespondCurrentHealthStatus(currentVersion string) error {
-	response := map[string]string{"status": "operational", "version": currentVersion}
+	response := map[string]string{"status": "live", "version": currentVersion}
 	formatter.w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(formatter.w).Encode(response)
 }

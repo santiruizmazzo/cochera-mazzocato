@@ -27,7 +27,7 @@ func TestHealthStatus_EndToEnd(t *testing.T) {
 
 	utils.AssertStatusCodeIs(http.StatusOK, response.StatusCode, t)
 
-	utils.AssertResponseContains(responseMap, "status", "operational", t)
+	utils.AssertResponseContains(responseMap, "status", "live", t)
 
 	utils.AssertResponseContains(responseMap, "version", application.CurrentVersion(), t)
 }

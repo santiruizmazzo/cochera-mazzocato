@@ -57,4 +57,9 @@ release:
 	@git commit -m "chore(release): v$(VERSION)"
 	@git tag -a "v$(VERSION)" -m "v$(VERSION)"
 	@echo "✅ Release v$(VERSION) preparado. Para publicarlo:"
-	@echo "   git push origin main --follow-tags"
+	@echo "   make push-release"
+
+.PHONY: push-release
+push-release:
+	@echo "🚀 Publicando main y sus tags..."
+	@git push origin main --follow-tags

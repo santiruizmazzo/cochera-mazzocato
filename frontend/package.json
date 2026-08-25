@@ -1,6 +1,6 @@
 {
   "name": "cochera-frontend",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "author": "",
   "devDependencies": {
     "eslint": "9.33.0",

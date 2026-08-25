@@ -1,4 +1,4 @@
-name: Backend CI/CD Pipeline
+name: Backend CI Pipeline
 
 on:
   push:
@@ -22,12 +22,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: ${{ env.GO_VERSION }}
-    
+
     - name: Cache Go modules
       uses: actions/cache@v4
       with:
@@ -37,12 +37,12 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
-    
+
     - name: Download dependencies
       run: |
         pwd && ls
         go mod download
-    
+
     - name: Verify dependencies
       run: go mod verify
 
@@ -51,34 +51,15 @@ jobs:
         echo "Building Go API..."
         make build-dev
         echo "Build successful!"
-    
+
     - name: Run linter
       uses: golangci/golangci-lint-action@v8
       with:
         version: latest
         args: --timeout=5m
         working-directory: backend
-    
+
     - name: Run unit tests
       run: |
         echo "Running unit tests..."
         make test-unit
-  
-  deploy:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    env:
-      DEPLOY_URL: ${{ secrets.TEST_API_DEPLOY_HOOK }}
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Deploy to production server
-      run: |
-        echo "Deploying to production environment..."
-        curl "$DEPLOY_URL"
-        echo "✅ Deployment to production environment completed!"

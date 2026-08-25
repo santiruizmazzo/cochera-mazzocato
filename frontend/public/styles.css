@@ -96,6 +96,7 @@ body {
   display: flex;
   flex-direction: column;
   align-content: center;
+  justify-content: space-between;
   gap: 3rem;
   border-right: var(--border-width) dotted var(--clr-main-darkest);
   padding: 1rem;
@@ -160,4 +161,9 @@ body {
 main {
   height: 100%;
   padding: var(--vertical-spacing);
+}
+
+.app-version {
+  font-size: 0.87rem;
+  color: var(--clr-main-darkest);
 }

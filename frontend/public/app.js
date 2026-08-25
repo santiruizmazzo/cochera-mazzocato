@@ -43,3 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   router.renderCurrentView();
 });
+
+const HEALTH_URL = import.meta.env.VITE_API_URL + "/api/health";
+
+await fetch(HEALTH_URL)
+  .then((response) => response.json())
+  .then((json) => {
+    const appVersionText = document.createElement("p");
+    appVersionText.innerHTML = `v${json["version"]}`;
+    const appVersionDiv = document.querySelector(".app-version");
+    appVersionDiv.appendChild(appVersionText);
+  })
+  .catch((error) => {
+    console.error("Error fetching tenants:", error);
+  });
